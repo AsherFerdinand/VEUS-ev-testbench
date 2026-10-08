@@ -20,6 +20,21 @@ Calculates wheel torque through multi-speed gear reductions and solves aerodynam
 Uses a **Fixed-Step Explicit Euler Integration** scheme ($\Delta t = 0.01\text{ s} - 0.1\text{ s}$) to advance vehicle speed, motor RPM, current draw, and battery SOC forward in time while maintaining deterministic execution for real-time HIL (Hardware-in-the-Loop) streaming.
 
 ---
+## System Workflow 🔄
+
+```mermaid
+flowchart LR
+    F[FastAPI Server] -- "WebSocket WS/8770" --> W[Web Studio Dashboard]
+    W -- "JSON Telemetry" --> L[(Telemetry Logger)]
+
+    D[Driver Throttle] -- "Power Demand" --> B[Battery Pack]
+    B -- "Voltage Sag / Current" --> I[Inverter]
+    I -- "Phase Current" --> M[PMSM Motor]
+    M -- "Motor Torque" --> T[2-Speed Transmission]
+    T -- "Traction Force" --> V[Vehicle Dynamics]
+```
+
+---
 
 ## 📁 Project Structure
 

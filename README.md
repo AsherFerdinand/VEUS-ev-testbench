@@ -21,26 +21,6 @@ Uses a **Fixed-Step Explicit Euler Integration** scheme ($\Delta t = 0.01\text{ 
 
 ---
 
-## System Workflow 🔄
-
-The diagram below illustrates how driver inputs, physics calculations, and telemetry data flow through the VEUS framework in real time:
-
-```mermaid
-graph LR
-    subgraph Studio_Flow["VEUS Studio Data Flow"]
-        A[FastAPI Server] -->|WebSocket WS/8770| B[Web Studio Dashboard]
-        B -->|JSON Telemetry| C[(Telemetry Data Logger)]
-    end
-
-    subgraph Physics_Flow["Powertrain Physics Coupling"]
-        D[Driver Throttle] -->|Power Demand| E[Battery Pack]
-        E -->|Voltage Sag / Current| F[Inverter]
-        F -->|Phase Current| G[PMSM Motor]
-        G -->|Motor Torque| H[2-Speed Transmission]
-        H -->|Traction Force| I[Vehicle Dynamics]
-    end
-
-
 ## 📁 Project Structure
 
 ```text

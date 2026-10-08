@@ -20,6 +20,28 @@ Calculates wheel torque through multi-speed gear reductions and solves aerodynam
 Uses a **Fixed-Step Explicit Euler Integration** scheme ($\Delta t = 0.01\text{ s} - 0.1\text{ s}$) to advance vehicle speed, motor RPM, current draw, and battery SOC forward in time while maintaining deterministic execution for real-time HIL (Hardware-in-the-Loop) streaming.
 
 ---
+## System Workflow 🔄
+
+The diagram below illustrates how driver inputs, physics calculations, and telemetry data flow through the VEUS framework in real time:
+
+````mermaid
+graph LR
+    %% 1. Telemetry Web Studio Flow
+    subgraph VEUS Studio Data Flow
+        A[FastAPI Server] -->|WebSocket WS/8770| B[Web Studio Dashboard]
+        B -->|JSON Telemetry| C[(Telemetry Data Logger)]
+    end
+
+    %% 2. Powertrain Math Coupling Flow
+    subgraph Powertrain Physics Coupling
+        D[Driver Throttle] -->|Power Demand| E[Battery Pack]
+        E -->|Voltage Sag / Current| F[Inverter]
+        F -->|Phase Current| G[PMSM Motor]
+        G -->|Motor Torque| H[2-Speed Transmission]
+        H -->|Traction Force| I[Vehicle Dynamics]
+    end
+```
+---
 
 ## 📁 Project Structure
 

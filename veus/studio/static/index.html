@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VEUS Studio | Dashboard</title>
+    <style>
+        body { background: #0d1117; color: #c9d1d9; font-family: monospace; padding: 20px; }
+        .card { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; margin-bottom: 10px; }
+        .val { font-size: 1.5em; color: #58a6ff; }
+    </style>
+</head>
+<body>
+    <h2>VEUS Studio Telemetry</h2>
+    <div class="card">Speed: <span id="speed" class="val">0</span> km/h</div>
+    <div class="card">Power: <span id="power" class="val">0</span> kW</div>
+    <div class="card">Bus Voltage: <span id="vbus" class="val">0</span> V</div>
+    <div class="card">Motor RPM: <span id="rpm" class="val">0</span> RPM</div>
+
+    <script>
+        const ws = new WebSocket(`ws://${location.host}/ws/telemetry`);
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            document.getElementById('speed').innerText = data.velocity_kmh.toFixed(1);
+            document.getElementById('power').innerText = data.p_battery_kw.toFixed(1);
+            document.getElementById('vbus').innerText = data.v_pack_v.toFixed(1);
+            document.getElementById('rpm').innerText = data.motor_rpm.toFixed(0);
+        };
+    </script>
+</body>
+</html>

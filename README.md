@@ -99,3 +99,13 @@ CSV exports include cumulative battery/conversion/braking losses and road work.
 The battery uses fixed OCV with resistance, not a detailed chemistry model.
 Motor/inverter efficiencies are constant; transmission efficiency is applied
 separately in both directions. No auxiliary loads, thermal dynamics or ADAS yet.
+
+
+### Inspecting small SOC changes
+
+The SOC plot spans the available width and automatically zooms its vertical axis
+around the measured SOC, with three-decimal tick labels. It is explicitly not a
+zero-based axis. The SOC card reports change from run start in percentage points,
+so a rise from 80.000% to 80.072% is shown as +0.072 percentage points. Each chart
+has an **Expand** button for a large dialog view; use **Close graph** or Escape
+to return. Physics and recorded telemetry are unchanged by display zoom.

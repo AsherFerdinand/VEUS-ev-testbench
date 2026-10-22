@@ -25,7 +25,10 @@ function render(data) {
   $('status').textContent = data.status.toUpperCase();
   const values = {speed: [data.velocity_kmh,1], accel: [data.acceleration_ms2,2], power: [data.motor_power_kw,1], distance: [data.position_m,1]};
   for (const [id, [value, digits]] of Object.entries(values)) $(id).textContent = value.toFixed(digits);
-  $('soc').textContent = (data.soc*100).toFixed(2);
+  $('soc').textContent = (data.soc*100).toFixed(3);
+  const initialSoc = samples.length ? samples[0].soc : data.soc;
+  const change = (data.soc-initialSoc)*100;
+  $('socChange').textContent = `Δ ${change>=0?'+':''}${change.toFixed(3)} percentage points`;
   $('batteryPower').textContent = data.battery_power_kw.toFixed(1);
   $('consumed').textContent = data.energy_consumed_kwh.toFixed(3);
   $('recovered').textContent = data.energy_recovered_kwh.toFixed(3);
@@ -45,17 +48,28 @@ function draw(canvasId, key, color) {
   const scale = window.devicePixelRatio || 1;
   canvas.width = width*scale; canvas.height = height*scale;
   const ctx = canvas.getContext('2d'); ctx.scale(scale,scale);
-  const left=48, right=width-12, top=12, bottom=height-28;
+  const left=64, right=width-12, top=12, bottom=height-28;
   const values = samples.map(s => s[key]);
-  let lo = Math.min(0,...values), hi = Math.max(1,...values); hi += (hi-lo)*0.1;
+  const zoomSoc = key === 'soc_percent';
+  let lo, hi;
+  if (zoomSoc) {
+    const initial = (appliedConfig?.initial_soc ?? 0.8)*100;
+    const min = values.length ? Math.min(...values) : initial;
+    const max = values.length ? Math.max(...values) : initial;
+    const padding = Math.max(0.005, (max-min)*0.15);
+    lo = Math.max(0,min-padding); hi = Math.min(100,max+padding);
+  } else {
+    lo = Math.min(0,...values); hi = Math.max(1,...values); hi += (hi-lo)*0.1;
+  }
+  canvas.dataset.axisMin = String(lo); canvas.dataset.axisMax = String(hi);
   const duration = Math.max(1, samples[samples.length-1]?.time_s || 0);
-  ctx.font='11px system-ui'; ctx.fillStyle='#a1afc3';
+  ctx.font='13px system-ui'; ctx.fillStyle='#a1afc3';
   for(let i=0;i<=4;i++) { const y=top+(bottom-top)*i/4;
     ctx.strokeStyle='#2b3a50'; ctx.beginPath(); ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
-    ctx.fillText((hi-(hi-lo)*i/4).toFixed(1),2,y+4);
+    ctx.fillText((hi-(hi-lo)*i/4).toFixed(zoomSoc ? 3 : 1),2,y+4);
   }
   ctx.fillText('0 s',left,bottom+20);ctx.fillText(duration.toFixed(1)+' s',Math.max(left,right-45),bottom+20);
-  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();
   samples.forEach((s,i)=> {const x=left+s.time_s/duration*(right-left), y=bottom-(s[key]-lo)/(hi-lo)*(bottom-top);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();
 }
 function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce');draw('accelChart','acceleration_ms2','#6ea9ff');draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');}
@@ -67,6 +81,42 @@ $('start').onclick=()=>{send({action:'controls',controls:controls()});send({acti
 $('pause').onclick=()=>send({action:'pause'});
 $('export').onclick=()=>{if(!samples.length)return;const keys=Object.keys(samples[0]).filter(k=>k!=='type');download('veus-telemetry.csv',keys.join(',')+'\n'+samples.map(s=>keys.map(k=>s[k]).join(',')).join('\n'),'text/csv');};
 $('metadata').onclick=()=>download('veus-run.json',JSON.stringify({schema_version:1,model_version:'veus-energy-v2',config:appliedConfig,dt_s:0.01,frames:samples.length,controls:'Manual pedal history is not recorded; CSV contains delivered forces.',limitations:['Constant-OCV battery; no thermal model','Constant drive and regen efficiencies','No ADAS','Uncalibrated parameters','Forward motion only']},null,2),'application/json');
+// Native dialog supplies focus containment, Escape handling and backdrop.
+let expandedPanel = null, chartMarker = null, expandedButton = null;
+const chartDialog = $('chartDialog');
+chartDialog.addEventListener('close', () => {
+  if (!expandedPanel) return;
+  chartMarker.replaceWith(expandedPanel);
+  expandedButton.textContent = 'Expand';
+  expandedButton.setAttribute('aria-expanded','false');
+  expandedButton.setAttribute('aria-label','Expand '+expandedPanel.querySelector('h2').textContent);
+  expandedButton.focus();
+  expandedPanel = null; chartMarker = null; expandedButton = null;
+  drawCharts();
+});
+for (const canvas of document.querySelectorAll('.charts canvas')) {
+  const panel = canvas.closest('.panel'), title = panel.querySelector('h2');
+  title.id = canvas.id+'Title';
+  const head = document.createElement('div'); head.className = 'chart-head';
+  title.before(head); head.append(title);
+  const button = document.createElement('button'); button.type = 'button';
+  button.textContent = 'Expand';button.setAttribute('aria-expanded','false');
+  button.setAttribute('aria-label','Expand '+title.textContent);
+  button.onclick = () => {
+    if (chartDialog.open) { chartDialog.close(); return; }
+    expandedPanel=panel;expandedButton=button;chartMarker=document.createComment('chart position');
+    panel.before(chartMarker);chartDialog.append(panel);
+    chartDialog.setAttribute('aria-labelledby',title.id);chartDialog.showModal();
+    button.textContent='Close graph';button.setAttribute('aria-expanded','true');
+    button.setAttribute('aria-label','Close expanded '+title.textContent);drawCharts();button.focus();
+  };
+  head.append(button);
+  const note=document.createElement('small');note.className='chart-note';
+  note.textContent = canvas.id==='socChart'
+    ? 'Zoomed SOC axis · not zero-based. Read the tick labels; Δ SOC is shown above in percentage points.'
+    : 'Horizontal axis: simulation time in seconds. Expand for a larger view.';
+  panel.append(note);
+}
 window.addEventListener('resize',drawCharts);
 function connect() {
   socket=new WebSocket(`${location.protocol==='https:'?'wss':'ws'}://${location.host}/ws/simulation`);

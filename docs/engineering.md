@@ -57,8 +57,8 @@ and the first repeated frame, in addition to checking both HTML routes.
 
 ## Known limitations and remaining work
 
-- Battery SOC, energy and thermal states are not integrated. Forward dynamics
-  is mechanical only; battery constraints do not yet limit drive force (Phase 2).
+- The interactive session now integrates battery energy/SOC and limits drive
+  power; temperature, aging and SOC-dependent OCV remain unmodelled.
 - Operating-point electrical coupling uses four unchecked fixed iterations and a
   voltage floor. A high-demand audit case (20 m/s, requested 20 m/s², SOC 0.9)
   left about 461 W terminal-power mismatch. Robust convergence and feasibility
@@ -72,8 +72,7 @@ and the first repeated frame, in addition to checking both HTML routes.
   The interactive dashboard provides basic plots, configuration and exports.
 - No production safety, real-time timing, HIL or measured vehicle fidelity claim.
 
-Next: Phase 2 power/energy consistency, SOC integration and electrical operating
-limits; then controllers, scenario configuration, sensors, requirements evaluation,
+Next: controllers, scenario configuration, sensors, requirements evaluation,
 dashboard extensions and integration exports. Keep the existing models and public
 example working while adding these capabilities incrementally.
 
@@ -102,3 +101,46 @@ The legacy /ws/telemetry endpoint and operating-point calculator are preserved.
 Additional tests exercise configuration-dependent acceleration, reduced-friction
 response, braking and coasting, repeatability, pause/reset, brake priority,
 invalid inputs, completion timing, WebSocket errors and isolation across clients.
+
+
+## Phase 2: interactive EV energy model
+
+The interactive session uses EnergyBattery, separate from the preserved legacy
+cell/pack operating-point calculator. Capacity is a chemical-energy reservoir;
+SOC = stored_energy / capacity. Constant OCV is configurable (default 400 V).
+Terminal power P = (Voc - I R) I is solved analytically on the high-voltage branch:
+I = 2 P / (Voc + sqrt(Voc² - 4 R P)). Positive current means discharge.
+Chemical power = Voc I; battery heat = I² R. Integrate chemical power at each
+0.01 s step. Both charge/discharge current and remaining energy limit power.
+Terminal voltage stays between 0.5 and 1.1 times OCV; these are illustrative
+model constraints, not manufacturer cell safety limits.
+
+Driving electrical energy = wheel drive work / (transmission_eta * drive_eta).
+Recovered electrical energy = regen wheel work * transmission_eta * regen_eta.
+The UI efficiencies represent motor/inverter conversion; transmission eta stays
+0.97. This intentionally replaces uncalibrated legacy speed/current loss formulas
+for the interactive path. It has no copper/stall loss or auxiliary consumption.
+
+For a held-force physics step, wheel work uses the displacement integrated from
+mean endpoint velocity over the moving portion of the step, including stopping
+boundary events. This makes force work consistent with kinetic-energy change.
+Position retains the documented explicit Euler approximation; it differs slightly
+from this energy-integration distance and converges as the timestep decreases.
+A bounded bisection reduces drive torque when requested step energy exceeds
+battery capability. Regeneration is limited by actual tyre-limited brake work,
+motor torque/power/RPM, battery charge current and available capacity. Friction
+braking supplies the remainder, including when SOC is full or regen is disabled.
+No automatic regeneration occurs while coasting.
+
+The energy residual is initial battery plus initial kinetic energy minus current
+battery/kinetic energy, battery heat, conversion losses, friction-brake heat and
+road work. Road work includes signed gradient work (negative downhill). Stored
+energy increases under regeneration but is bounded by the initial kinetic energy
+and downhill work after losses. A small residual demonstrates numerical accounting,
+not validation against a physical vehicle. The old inverse solver still uses its
+legacy electrical iteration and should not be used as the Phase 2 energy reference.
+
+Tests check analytic current/power identities with/without resistance, SOC/current/
+voltage limits, empty-pack torque reduction, regeneration versus friction-only
+stopping, full-pack friction fallback, low-friction/downhill runs, repeatability
+and cumulative energy residual below 1e-5 J for the selected 5-second runs.

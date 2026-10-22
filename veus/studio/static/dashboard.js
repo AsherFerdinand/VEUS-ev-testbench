@@ -1,9 +1,9 @@
 'use strict';
 const $ = id => document.getElementById(id);
-const fields = ['mass_kg','max_power_kw','max_torque_nm','friction','grade_percent','initial_speed_kmh','duration_s'];
+const fields = ['mass_kg','max_power_kw','max_torque_nm','friction','grade_percent','initial_speed_kmh','duration_s','battery_capacity_kwh','initial_soc','battery_voltage_v','battery_resistance_ohm','discharge_limit_a','charge_limit_a','drive_efficiency','regen_efficiency'];
 let socket, samples = [], appliedConfig = null, connected = false, pendingReset = false;
 const controls = () => ({throttle: Number($('throttle').value)/100, brake: Number($('brake').value)/100});
-function config() { return Object.fromEntries([...fields.map(k => [k, Number($(k).value)]), ['mode', $('mode').value]]); }
+function config() { return Object.fromEntries([...fields.map(k => [k, Number($(k).value)]), ['mode', $('mode').value], ['regen_enabled', $('regen_enabled').checked]]); }
 function send(value) { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(value)); }
 function buttons(status) {
   $('start').disabled = !connected || status === 'running' || status === 'completed';
@@ -25,12 +25,19 @@ function render(data) {
   $('status').textContent = data.status.toUpperCase();
   const values = {speed: [data.velocity_kmh,1], accel: [data.acceleration_ms2,2], power: [data.motor_power_kw,1], distance: [data.position_m,1]};
   for (const [id, [value, digits]] of Object.entries(values)) $(id).textContent = value.toFixed(digits);
+  $('soc').textContent = (data.soc*100).toFixed(2);
+  $('batteryPower').textContent = data.battery_power_kw.toFixed(1);
+  $('consumed').textContent = data.energy_consumed_kwh.toFixed(3);
+  $('recovered').textContent = data.energy_recovered_kwh.toFixed(3);
+  $('electrical').textContent = data.battery_voltage_v.toFixed(1)+' V / '+data.battery_current_a.toFixed(1)+' A';
+  $('brakeSplit').textContent = Math.round(data.regen_force_n)+' / '+Math.round(data.friction_brake_force_n)+' N';
+  $('balance').textContent = data.energy_balance_error_j.toFixed(3)+' J';
   $('time').textContent = data.time_s.toFixed(1)+' s';
   $('rpm').textContent = Math.round(data.motor_rpm)+' rpm / '+data.current_gear;
   $('forces').textContent = [data.drive_force_n,data.brake_force_n,data.resistance_force_n].map(Math.round).join(' / ')+' N';
-  $('limits').textContent = [data.traction_limited ? 'Tyre traction' : '', data.torque_limited ? 'Motor torque / power / RPM' : ''].filter(Boolean).join(', ') || 'None';
+  $('limits').textContent = [data.battery_limited ? 'Battery discharge' : '', data.traction_limited ? 'Tyre traction' : '', data.torque_limited ? 'Motor torque / power / RPM' : ''].filter(Boolean).join(', ') || 'None';
   $('lane').style.transform = `translateX(-${data.position_m % 40}px)`;
-  if (!samples.length || data.time_s > samples[samples.length-1].time_s) samples.push(data);
+  if (!samples.length || data.time_s > samples[samples.length-1].time_s) samples.push({...data, soc_percent:data.soc*100});
   buttons(data.status); drawCharts();
 }
 function draw(canvasId, key, color) {
@@ -51,7 +58,7 @@ function draw(canvasId, key, color) {
   ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
   samples.forEach((s,i)=> {const x=left+s.time_s/duration*(right-left), y=bottom-(s[key]-lo)/(hi-lo)*(bottom-top);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();
 }
-function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce');draw('accelChart','acceleration_ms2','#6ea9ff');draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');}
+function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce');draw('accelChart','acceleration_ms2','#6ea9ff');draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');}
 function download(name, text, mime) {const url=URL.createObjectURL(new Blob([text],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('configuration').addEventListener('submit', event => {event.preventDefault();pendingReset=true;send({action:'reset',config:config()});});
 $('mode').addEventListener('change',()=> {if($('mode').value==='braking' || $('mode').value==='coast') $('initial_speed_kmh').value='80';$('message').textContent='Apply & reset to use the new experiment.';});
@@ -59,7 +66,7 @@ for(const id of ['throttle','brake']) $(id).addEventListener('input',()=> {$(id+
 $('start').onclick=()=>{send({action:'controls',controls:controls()});send({action:'start'});};
 $('pause').onclick=()=>send({action:'pause'});
 $('export').onclick=()=>{if(!samples.length)return;const keys=Object.keys(samples[0]).filter(k=>k!=='type');download('veus-telemetry.csv',keys.join(',')+'\n'+samples.map(s=>keys.map(k=>s[k]).join(',')).join('\n'),'text/csv');};
-$('metadata').onclick=()=>download('veus-run.json',JSON.stringify({schema_version:1,model_version:'veus-mechanical-v1',config:appliedConfig,dt_s:0.01,frames:samples.length,controls:'Manual pedal history is not recorded; CSV contains delivered forces.',limitations:['No battery or regenerative braking','Uncalibrated parameters','Forward motion only']},null,2),'application/json');
+$('metadata').onclick=()=>download('veus-run.json',JSON.stringify({schema_version:1,model_version:'veus-energy-v2',config:appliedConfig,dt_s:0.01,frames:samples.length,controls:'Manual pedal history is not recorded; CSV contains delivered forces.',limitations:['Constant-OCV battery; no thermal model','Constant drive and regen efficiencies','No ADAS','Uncalibrated parameters','Forward motion only']},null,2),'application/json');
 window.addEventListener('resize',drawCharts);
 function connect() {
   socket=new WebSocket(`${location.protocol==='https:'?'wss':'ws'}://${location.host}/ws/simulation`);

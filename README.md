@@ -1,8 +1,9 @@
 # VEUS — EV Simulation Workbench
 
-VEUS is an educational Python vehicle simulation project. Phase 1 provides a
+VEUS is an educational Python vehicle simulation project. The current version provides a
 forward longitudinal dynamics model, reusable EV component calculations,
-analytical regression tests, and a FastAPI telemetry demonstration. Parameters
+a constant-OCV battery energy model, regenerative brake blending, analytical
+regression tests, and an interactive FastAPI dashboard. Parameters
 are illustrative and uncalibrated. This is not a production ADAS or safety tool.
 
 ## Run locally
@@ -57,8 +58,8 @@ Each browser tab owns an independent simulation, with 0.01 s physics steps and
 0.1 s telemetry frames at nominal 1× playback. Slow networks can slow playback;
 simulation time is authoritative. Runs stop after 1–120 s. Closing the tab loses
 server state; export results before reloading. Live pedal-command history is not
-recorded, so exported manual runs are not yet fully replayable. Battery energy,
-SOC, regen, ADAS and engineering acceptance reports remain future work.
+recorded, so exported manual runs are not yet fully replayable. Battery energy, SOC, charge/discharge limits and regenerative brake blending are
+implemented. ADAS and engineering acceptance reports remain future work.
 
 The old prescribed launch is retained at `/ws/telemetry` for compatibility;
 the dashboard uses `/ws/simulation`. The old launch has fixed SOC and is a
@@ -81,3 +82,20 @@ flowchart LR
 
 See [engineering assumptions and validation](docs/engineering.md) for equations,
 limitations, test evidence and the remaining roadmap.
+
+
+## Battery and energy experiments (Phase 2)
+
+Expand **Battery & energy settings**, edit capacity/initial SOC/current limits and
+regeneration settings, then **Apply & reset**. Battery power is positive during
+discharge and negative during charging. Compare braking from 80 km/h with regen
+on/off, or with initial SOC=1: friction brakes preserve stopping demand when the
+pack cannot accept charge. An initial SOC of zero disables powered acceleration.
+Lower the discharge-current limit to see battery-limited acceleration.
+
+The dashboard shows SOC, terminal voltage/current/power, consumed and recovered
+energy, regenerative/friction brake force, and an energy-accounting residual.
+CSV exports include cumulative battery/conversion/braking losses and road work.
+The battery uses fixed OCV with resistance, not a detailed chemistry model.
+Motor/inverter efficiencies are constant; transmission efficiency is applied
+separately in both directions. No auxiliary loads, thermal dynamics or ADAS yet.

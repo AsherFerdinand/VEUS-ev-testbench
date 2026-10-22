@@ -1,4 +1,4 @@
-# Phase 1 engineering assumptions and validation
+# Engineering assumptions and validation
 
 ## Conventions and equations
 
@@ -62,17 +62,18 @@ and the first repeated frame, in addition to checking both HTML routes.
 - Operating-point electrical coupling uses four unchecked fixed iterations and a
   voltage floor. A high-demand audit case (20 m/s, requested 20 m/s², SOC 0.9)
   left about 461 W terminal-power mismatch. Robust convergence and feasibility
-  handling remain Phase 2; do not treat these outputs as energy validation.
+  handling remain legacy-solver work; do not treat these outputs as energy validation.
 - Operating-point acceleration remains requested rather than achieved. Use the
   forward simulator for achieved motion. Legacy total losses omit transmission.
 - Motor overspeed now cuts torque; it is a simple policy without hysteresis.
 - Legacy component parameter validation is incomplete beyond vehicle/motor.
 - Friction brakes are ideal commands; no actuator lag, fade or regenerative split.
-- No ADAS, sensor faults, scenario-file engine or requirement evaluator yet.
+- Simplified ADAS is now available; sensor faults, scenario-file engine and
+  requirement evaluation remain future work.
   The interactive dashboard provides basic plots, configuration and exports.
 - No production safety, real-time timing, HIL or measured vehicle fidelity claim.
 
-Next: controllers, scenario configuration, sensors, requirements evaluation,
+Next: scenario configuration, sensors, requirements evaluation,
 dashboard extensions and integration exports. Keep the existing models and public
 example working while adding these capabilities incrementally.
 
@@ -144,3 +145,48 @@ Tests check analytic current/power identities with/without resistance, SOC/curre
 voltage limits, empty-pack torque reduction, regeneration versus friction-only
 stopping, full-pack friction fallback, low-friction/downhill runs, repeatability
 and cumulative energy residual below 1e-5 J for the selected 5-second runs.
+
+
+## Phase 3: cruise, ACC and AEB
+
+Controllers live in `veus/control/longitudinal.py`, independent of the plant/API.
+A command is desired longitudinal acceleration. Speed feedback is proportional:
+`a_speed = 0.7 (v_target - v_ego)`. ACC selects the smaller of speed feedback and
+`a_gap = 0.3 (gap - (d0 + h v_ego)) + 0.9 (v_lead - v_ego)`.
+Comfort acceleration/deceleration limits clip these commands. No integral term,
+jerk limit or actuator dynamics beyond a pure delay is included. Road-load
+feedforward converts the acceleration request to wheel force; actual motor,
+friction and battery limits can prevent the requested acceleration being achieved.
+
+AEB mode uses speed control until `TTC <= threshold` or `gap <= d0`.
+TTC is `gap / (v_ego - v_lead)` only when closing speed > 1e-6 m/s. Otherwise
+it is undefined/null; the graph leaves missing segments. AEB latches emergency
+braking until reset, requesting m*g friction/regen brake force before tyre limiting.
+It does not automatically reaccelerate after a stop. ACC has no AEB overlay in
+this increment. A successful scenario is not proof of collision avoidance elsewhere.
+
+Each physics tick observes exact plant speed/gap and a prescribed lead vehicle.
+Detection delay stores observation history; actuator delay stores acceleration
+commands, both rounded to 0.01 s. Before a detection history fills, the initial
+observation is held. Before an actuator history fills, propulsion/braking is zero
+(coasting). There is no noise, dropout, fault injection or sensor range model yet.
+The detection timestamp precedes actuator delay; telemetry reports applied
+controller state separately. Settings apply on reset, not live during a run.
+
+The lead position is its rear bumper; ego position is its front bumper. Initial
+gap is bumper-to-bumper. Lead speed is constant for ACC. In AEB, lead position
+is integrated analytically with constant deceleration after the configured brake
+time, stopping at zero speed. Ego position retains fixed-step explicit Euler.
+Minimum gap is sampled at every physics tick. If gap <= 0, record collision and
+stop the run without faking zero vehicle speed or simulating crash dynamics.
+Result timing/gaps are therefore discretization-dependent; no safety certification
+or quantified detection accuracy is implied.
+
+Reference runs (default 1,800 kg EV, 30 s, 80 km/h target): cruise ends within
+0.05 km/h of target; ACC starting at 80 km/h follows a 60 km/h lead and converges
+within 0.1 km/h and 0.2 m of the desired headway gap. AEB starting with both at
+80 km/h, gap 35 m, lead braking at 3 s / 6 m/s², friction 0.9 triggers at 4.96 s
+and stops with minimum gap about 5.12 m. Friction 0.1 produces a collision in the
+same scenario. These are outputs of this illustrative model, not measured data.
+Tests also verify TTC domains, command limits, latch/reset, delayed responses,
+analytical lead stopping, collision restart rejection and continued energy balance.

@@ -1,9 +1,11 @@
 """Per-client EV runs with mechanical dynamics and conserved energy accounting."""
 import math
+from collections import deque
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from veus.control.longitudinal import Command, LongitudinalController, Observation
 from veus.model.energy_battery import EnergyBattery
 from veus.model.motor import ElectricMotor
 from veus.model.vehicle import HighPerformanceVehicle
@@ -28,7 +30,19 @@ class RunConfig(BaseModel):
     drive_efficiency: float = Field(default=0.9, gt=0, le=1)
     regen_efficiency: float = Field(default=0.7, gt=0, le=1)
     regen_enabled: bool = True
-    mode: Literal['manual', 'acceleration', 'braking', 'coast'] = 'manual'
+    target_speed_kmh: float = Field(default=80, ge=0, le=160)
+    lead_speed_kmh: float = Field(default=60, ge=0, le=160)
+    initial_gap_m: float = Field(default=50, ge=1, le=300)
+    time_headway_s: float = Field(default=1.8, ge=0.5, le=4)
+    standstill_gap_m: float = Field(default=5, ge=1, le=20)
+    max_acceleration_ms2: float = Field(default=2, gt=0, le=4)
+    comfort_deceleration_ms2: float = Field(default=3, gt=0, le=6)
+    aeb_ttc_s: float = Field(default=2, ge=0.5, le=5)
+    detection_delay_s: float = Field(default=0, ge=0, le=2)
+    actuation_delay_s: float = Field(default=0, ge=0, le=2)
+    lead_brake_start_s: float = Field(default=3, ge=0, le=120)
+    lead_deceleration_ms2: float = Field(default=6, gt=0, le=10)
+    mode: Literal['manual', 'acceleration', 'braking', 'coast', 'cruise', 'acc', 'aeb'] = 'manual'
 
 
 class Controls(BaseModel):
@@ -68,6 +82,21 @@ class SimulationSession:
                                voltage_v=config.battery_voltage_v)
         self.regen_force_n = 0.
         self.battery_limited = False
+        self.has_lead = config.mode in {'acc', 'aeb'}
+        self.controller = (LongitudinalController(
+            config.mode, config.target_speed_kmh/3.6, config.time_headway_s,
+            config.standstill_gap_m, config.max_acceleration_ms2,
+            config.comfort_deceleration_ms2, config.aeb_ttc_s)
+            if config.mode in {'cruise','acc','aeb'} else None)
+        self.controller_state = 'inactive'
+        self.requested_acceleration = 0.
+        self.collision = False
+        self.minimum_gap = config.initial_gap_m if self.has_lead else None
+        self.aeb_trigger_time_s = None
+        self.sensor_delay_ticks = round(config.detection_delay_s/self.dt_s)
+        self.actuator_delay_ticks = round(config.actuation_delay_s/self.dt_s)
+        self.observations = deque(maxlen=self.sensor_delay_ticks+1)
+        self.commands = deque(maxlen=self.actuator_delay_ticks+1)
 
     def advance(self) -> dict:
         if self.status != 'running':
@@ -82,13 +111,64 @@ class SimulationSession:
             if self.ticks >= round(self.config.duration_s/self.dt_s):
                 break
             self.sim.transmission.current_gear = 1 if self.state.velocity_ms > 27.7 else 0
+            if self.controller:
+                torque, brake_n = self._controller_inputs()
             self._energy_step(torque, brake_n)
             self.ticks += 1
             self.state = VehicleState(self.ticks*self.dt_s, self.last.state.position_m,
                                       self.last.state.velocity_ms)
-        if self.ticks >= round(self.config.duration_s/self.dt_s):
+            if self.has_lead:
+                gap = self._observation().gap_m
+                self.minimum_gap = min(self.minimum_gap, gap)
+                if gap <= 0:
+                    self.collision = True
+                    self.status = 'collision'
+                    break
+        if self.status == 'running' and self.ticks >= round(self.config.duration_s/self.dt_s):
             self.status = 'completed'
         return self.telemetry()
+
+    def _lead_state(self, time_s: float) -> tuple[float, float]:
+        speed = self.config.lead_speed_kmh/3.6
+        if self.config.mode != 'aeb' or time_s <= self.config.lead_brake_start_s:
+            return self.config.initial_gap_m+speed*time_s, speed
+        elapsed = min(time_s-self.config.lead_brake_start_s,
+                      speed/self.config.lead_deceleration_ms2)
+        position = (self.config.initial_gap_m+speed*self.config.lead_brake_start_s
+                    +speed*elapsed-0.5*self.config.lead_deceleration_ms2*elapsed**2)
+        return position, max(0., speed-self.config.lead_deceleration_ms2*elapsed)
+
+    def _observation(self) -> Observation:
+        lead_position, lead_speed = self._lead_state(self.state.time_s)
+        return Observation(self.state.velocity_ms,
+                           lead_position-self.state.position_m if self.has_lead else None,
+                           lead_speed if self.has_lead else 0.)
+
+    def _controller_inputs(self) -> tuple[float, float]:
+        observation = self._observation()
+        self.observations.append(observation)
+        delayed = self.observations[0]
+        command = self.controller.update(delayed)
+        if command.state == 'emergency_braking' and self.aeb_trigger_time_s is None:
+            self.aeb_trigger_time_s = self.state.time_s
+        self.commands.append(command)
+        applied = (self.commands[0] if len(self.commands)>self.actuator_delay_ticks
+                   else Command(0., 'actuator_wait'))
+        self.controller_state = applied.state
+        self.requested_acceleration = applied.acceleration_ms2
+        # Feed-forward road load converts desired acceleration to wheel force.
+        v = self.sim.vehicle
+        road = (0.5*self.sim.air_density_kg_m3*v.cd*v.frontal_area_m2*self.state.velocity_ms**2
+                +v.rr_coeff*v.mass_kg*9.81*math.cos(self.sim.gradient_rad)
+                +v.mass_kg*9.81*math.sin(self.sim.gradient_rad))
+        force = v.mass_kg*applied.acceleration_ms2+road
+        if applied.state in {'emergency_braking', 'actuator_wait'}:
+            # Full emergency brake demand; tyre limit sets achievable deceleration.
+            force = -v.mass_kg*9.81 if applied.state == 'emergency_braking' else 0.
+        tr = self.sim.transmission
+        if force >= 0:
+            return force*v.wheel_radius_m/(tr.active_ratio*tr.mechanical_efficiency), 0.
+        return 0., -force
 
     def _work_distance(self, result) -> float:
         # Integrate the held acceleration over the moving part of the interval.
@@ -142,7 +222,18 @@ class SimulationSession:
         shaft_torque = (result.delivered_motor_torque_nm if result else 0.)
         if self.regen_force_n > 0:
             shaft_torque = -self.regen_force_n*self.sim.vehicle.wheel_radius_m*self.sim.transmission.mechanical_efficiency/self.sim.transmission.active_ratio
+        observation = self._observation()
         return {
+            'controller_state': self.controller_state,
+            'requested_acceleration_ms2': self.requested_acceleration,
+            'target_speed_kmh': self.config.target_speed_kmh if self.controller else None,
+            'lead_speed_kmh': observation.lead_speed_ms*3.6 if self.has_lead else None,
+            'gap_m': observation.gap_m,
+            'desired_gap_m': self.config.standstill_gap_m+self.config.time_headway_s*self.state.velocity_ms if self.has_lead else None,
+            'ttc_s': observation.ttc_s if self.has_lead else None,
+            'collision': self.collision,
+            'minimum_gap_m': self.minimum_gap,
+            'aeb_trigger_time_s': self.aeb_trigger_time_s,
             'type': 'state', 'status': self.status,
             'time_s': self.state.time_s, 'position_m': self.state.position_m,
             'velocity_kmh': self.state.velocity_ms*3.6,

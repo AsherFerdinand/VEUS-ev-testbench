@@ -59,7 +59,8 @@ Each browser tab owns an independent simulation, with 0.01 s physics steps and
 simulation time is authoritative. Runs stop after 1–120 s. Closing the tab loses
 server state; export results before reloading. Live pedal-command history is not
 recorded, so exported manual runs are not yet fully replayable. Battery energy, SOC, charge/discharge limits and regenerative brake blending are
-implemented. ADAS and engineering acceptance reports remain future work.
+implemented. Simplified cruise control, ACC and AEB are available. Engineering
+acceptance reports remain future work.
 
 The old prescribed launch is retained at `/ws/telemetry` for compatibility;
 the dashboard uses `/ws/simulation`. The old launch has fixed SOC and is a
@@ -98,7 +99,7 @@ energy, regenerative/friction brake force, and an energy-accounting residual.
 CSV exports include cumulative battery/conversion/braking losses and road work.
 The battery uses fixed OCV with resistance, not a detailed chemistry model.
 Motor/inverter efficiencies are constant; transmission efficiency is applied
-separately in both directions. No auxiliary loads, thermal dynamics or ADAS yet.
+separately in both directions. No auxiliary loads or thermal dynamics yet.
 
 
 ### Inspecting small SOC changes
@@ -109,3 +110,25 @@ zero-based axis. The SOC card reports change from run start in percentage points
 so a rise from 80.000% to 80.072% is shown as +0.072 percentage points. Each chart
 has an **Expand** button for a large dialog view; use **Close graph** or Escape
 to return. Physics and recorded telemetry are unchanged by display zoom.
+
+
+## ADAS experiments (Phase 3)
+
+Choose one of the controller experiments, **Apply & reset**, then **Run**:
+
+- **Cruise control**: target 80 km/h from standstill; run 30 s. Inspect ego speed
+  against the dashed target line. Acceleration is constrained by motor, battery
+  and tyre capability even when the controller requests more.
+- **ACC**: ego initially 80 km/h, lead 60 km/h, gap 50 m. Compare actual gap with
+  desired gap `standstill_gap + headway * ego_speed`. Lead speed remains constant.
+- **AEB**: both vehicles start at 80 km/h, gap 35 m. The lead brakes at 3 s with
+  6 m/s² deceleration. The ego uses cruise until the TTC/gap threshold triggers
+  latched emergency braking. Try friction 0.9 versus 0.1 and compare outcomes.
+
+Controller and lead settings include target speed, headway, TTC threshold,
+detection/actuation delays and lead-braking timing. A lead-vehicle schematic,
+following-gap plot, TTC plot, controller state, detection time, minimum gap and
+collision indicator are provided. TTC is undefined when not closing, shown as
+missing rather than zero. AEB stays latched until reset. Collision stops the run;
+reset is required to restart. These algorithms demonstrate defined behaviours,
+not production ADAS safety. ACC does not include AEB override in this increment.

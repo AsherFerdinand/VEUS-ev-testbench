@@ -1,12 +1,12 @@
 'use strict';
 const $ = id => document.getElementById(id);
-const fields = ['mass_kg','max_power_kw','max_torque_nm','friction','grade_percent','initial_speed_kmh','duration_s','battery_capacity_kwh','initial_soc','battery_voltage_v','battery_resistance_ohm','discharge_limit_a','charge_limit_a','drive_efficiency','regen_efficiency'];
+const fields = ['mass_kg','max_power_kw','max_torque_nm','friction','grade_percent','initial_speed_kmh','duration_s','battery_capacity_kwh','initial_soc','battery_voltage_v','battery_resistance_ohm','discharge_limit_a','charge_limit_a','drive_efficiency','regen_efficiency','target_speed_kmh','lead_speed_kmh','initial_gap_m','time_headway_s','standstill_gap_m','max_acceleration_ms2','comfort_deceleration_ms2','aeb_ttc_s','detection_delay_s','actuation_delay_s','lead_brake_start_s','lead_deceleration_ms2'];
 let socket, samples = [], appliedConfig = null, connected = false, pendingReset = false;
 const controls = () => ({throttle: Number($('throttle').value)/100, brake: Number($('brake').value)/100});
 function config() { return Object.fromEntries([...fields.map(k => [k, Number($(k).value)]), ['mode', $('mode').value], ['regen_enabled', $('regen_enabled').checked]]); }
 function send(value) { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(value)); }
 function buttons(status) {
-  $('start').disabled = !connected || status === 'running' || status === 'completed';
+  $('start').disabled = !connected || status === 'running' || ['completed','collision'].includes(status);
   $('pause').disabled = !connected || status !== 'running';
   $('reset').disabled = !connected;
   $('export').disabled = samples.length === 0;
@@ -22,6 +22,17 @@ function render(data) {
     appliedConfig = config();
     $('message').textContent = '';
   }
+  $('adasPanel').hidden = data.target_speed_kmh === null;
+  $('controllerState').textContent = data.controller_state.replaceAll('_',' ');
+  $('gapValue').textContent = data.gap_m === null ? 'No lead vehicle' : data.gap_m.toFixed(1)+' / '+data.desired_gap_m.toFixed(1)+' m';
+  $('ttcValue').textContent = data.ttc_s === null ? 'Undefined · not closing' : data.ttc_s.toFixed(2)+' s';
+  $('collisionValue').textContent = data.minimum_gap_m === null ? 'No lead vehicle' : data.minimum_gap_m.toFixed(2)+' m / '+(data.collision?'COLLISION':'No collision');
+  $('commandValue').textContent = data.requested_acceleration_ms2.toFixed(2)+' m/s²';
+  $('triggerValue').textContent = data.aeb_trigger_time_s === null ? 'Not triggered' : data.aeb_trigger_time_s.toFixed(2)+' s';
+  $('leadCar').style.display = data.gap_m === null ? 'none' : 'block';
+  $('leadCar').style.left = Math.min(85, Math.max(24, 24+(data.gap_m??0)*0.7))+'%';
+  $('gapLabel').textContent = data.gap_m === null ? '' : 'Gap '+data.gap_m.toFixed(1)+' m';
+  if (data.collision) $('message').textContent='Collision detected. Run stopped; change gap, friction or delays, then reset.';
   $('status').textContent = data.status.toUpperCase();
   const values = {speed: [data.velocity_kmh,1], accel: [data.acceleration_ms2,2], power: [data.motor_power_kw,1], distance: [data.position_m,1]};
   for (const [id, [value, digits]] of Object.entries(values)) $(id).textContent = value.toFixed(digits);
@@ -43,13 +54,13 @@ function render(data) {
   if (!samples.length || data.time_s > samples[samples.length-1].time_s) samples.push({...data, soc_percent:data.soc*100});
   buttons(data.status); drawCharts();
 }
-function draw(canvasId, key, color) {
+function draw(canvasId, key, color, extra = []) {
   const canvas = $(canvasId), width = canvas.clientWidth, height = canvas.clientHeight;
   const scale = window.devicePixelRatio || 1;
   canvas.width = width*scale; canvas.height = height*scale;
   const ctx = canvas.getContext('2d'); ctx.scale(scale,scale);
   const left=64, right=width-12, top=12, bottom=height-28;
-  const values = samples.map(s => s[key]);
+  const values = samples.flatMap(s => [s[key], ...extra.map(e=>s[e.key])]).filter(Number.isFinite);
   const zoomSoc = key === 'soc_percent';
   let lo, hi;
   if (zoomSoc) {
@@ -69,18 +80,30 @@ function draw(canvasId, key, color) {
     ctx.fillText((hi-(hi-lo)*i/4).toFixed(zoomSoc ? 3 : 1),2,y+4);
   }
   ctx.fillText('0 s',left,bottom+20);ctx.fillText(duration.toFixed(1)+' s',Math.max(left,right-45),bottom+20);
-  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();
-  samples.forEach((s,i)=> {const x=left+s.time_s/duration*(right-left), y=bottom-(s[key]-lo)/(hi-lo)*(bottom-top);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();
+  const series = [{key,color},...extra];
+  for (const line of series) {
+    ctx.strokeStyle=line.color;ctx.lineWidth=2.5;ctx.setLineDash(line.dashed?[6,4]:[]);ctx.beginPath();
+    let started=false;
+    for (const s of samples) {
+      if (!Number.isFinite(s[line.key])) { started=false;continue; }
+      const x=left+s.time_s/duration*(right-left), y=bottom-(s[line.key]-lo)/(hi-lo)*(bottom-top);
+      if(started)ctx.lineTo(x,y);else ctx.moveTo(x,y);started=true;
+    }
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  if (!values.length) ctx.fillText('No defined samples for this experiment',left,top+30);
+
 }
-function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce');draw('accelChart','acceleration_ms2','#6ea9ff');draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');}
+function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce',[{key:'target_speed_kmh',color:'#a1afc3',dashed:true},{key:'lead_speed_kmh',color:'#ffc273',dashed:true}]);draw('accelChart','acceleration_ms2','#6ea9ff',[{key:'requested_acceleration_ms2',color:'#ffc273',dashed:true}]);draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');draw('gapChart','gap_m','#5ce0ce',[{key:'desired_gap_m',color:'#ffc273',dashed:true}]);draw('ttcChart','ttc_s','#6ea9ff');}
 function download(name, text, mime) {const url=URL.createObjectURL(new Blob([text],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('configuration').addEventListener('submit', event => {event.preventDefault();pendingReset=true;send({action:'reset',config:config()});});
-$('mode').addEventListener('change',()=> {if($('mode').value==='braking' || $('mode').value==='coast') $('initial_speed_kmh').value='80';$('message').textContent='Apply & reset to use the new experiment.';});
+$('mode').addEventListener('change',()=> {if(['braking','coast','acc','aeb'].includes($('mode').value)) $('initial_speed_kmh').value='80';if($('mode').value==='aeb'){$('lead_speed_kmh').value='80';$('initial_gap_m').value='35';}if($('mode').value==='acc'){$('lead_speed_kmh').value='60';$('initial_gap_m').value='50';}$('message').textContent='Apply & reset to use the new experiment.';});
 for(const id of ['throttle','brake']) $(id).addEventListener('input',()=> {$(id+'_value').value=$(id).value+'%';send({action:'controls',controls:controls()});});
 $('start').onclick=()=>{send({action:'controls',controls:controls()});send({action:'start'});};
 $('pause').onclick=()=>send({action:'pause'});
 $('export').onclick=()=>{if(!samples.length)return;const keys=Object.keys(samples[0]).filter(k=>k!=='type');download('veus-telemetry.csv',keys.join(',')+'\n'+samples.map(s=>keys.map(k=>s[k]).join(',')).join('\n'),'text/csv');};
-$('metadata').onclick=()=>download('veus-run.json',JSON.stringify({schema_version:1,model_version:'veus-energy-v2',config:appliedConfig,dt_s:0.01,frames:samples.length,controls:'Manual pedal history is not recorded; CSV contains delivered forces.',limitations:['Constant-OCV battery; no thermal model','Constant drive and regen efficiencies','No ADAS','Uncalibrated parameters','Forward motion only']},null,2),'application/json');
+$('metadata').onclick=()=>download('veus-run.json',JSON.stringify({schema_version:1,model_version:'veus-adas-v3',config:appliedConfig,dt_s:0.01,frames:samples.length,controls:'Manual pedal history is not recorded; CSV contains delivered forces.',limitations:['Constant-OCV battery; no thermal model','Constant drive and regen efficiencies','Educational ADAS; no production safety validation','Uncalibrated parameters','Forward motion only']},null,2),'application/json');
 // Native dialog supplies focus containment, Escape handling and backdrop.
 let expandedPanel = null, chartMarker = null, expandedButton = null;
 const chartDialog = $('chartDialog');
@@ -112,7 +135,7 @@ for (const canvas of document.querySelectorAll('.charts canvas')) {
   };
   head.append(button);
   const note=document.createElement('small');note.className='chart-note';
-  note.textContent = canvas.id==='socChart'
+  note.textContent = canvas.id==='speedChart' ? 'Solid cyan: ego speed. Dashed grey: target. Dashed amber: lead.' : canvas.id==='accelChart' ? 'Solid blue: achieved acceleration. Dashed amber: controller request (zero when inactive).' : canvas.id==='gapChart' ? 'Solid cyan: actual gap. Dashed amber: desired gap.' : canvas.id==='ttcChart' ? 'TTC shown only when closing on a lead vehicle; missing values are not zero.' : canvas.id==='socChart'
     ? 'Zoomed SOC axis · not zero-based. Read the tick labels; Δ SOC is shown above in percentage points.'
     : 'Horizontal axis: simulation time in seconds. Expand for a larger view.';
   panel.append(note);

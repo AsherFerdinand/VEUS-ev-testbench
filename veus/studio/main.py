@@ -67,8 +67,8 @@ async def interactive_simulation(websocket: WebSocket):
                 elif action == 'controls':
                     session.controls = Controls.model_validate(command.get('controls', {}))
                 elif action == 'start':
-                    if session.status == 'completed':
-                        raise ValueError('Reset before starting a completed run')
+                    if session.status in {'completed', 'collision'}:
+                        raise ValueError('Reset before starting a finished run')
                     session.status = 'running'
                     next_tick = time.monotonic()+0.1
                 elif action == 'pause':

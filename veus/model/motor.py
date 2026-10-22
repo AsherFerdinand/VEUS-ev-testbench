@@ -16,11 +16,21 @@ class ElectricMotor:
     friction_coeff: float = 0.05
 
     def max_available_torque(self, rpm: float) -> float:
+        if (not math.isfinite(rpm) or rpm < 0
+                or any(not math.isfinite(x) or x <= 0 for x in
+                       (self.max_torque_nm, self.max_power_kw, self.max_rpm, self.k_t_nm_a))
+                or any(not math.isfinite(x) or x < 0 for x in
+                       (self.r_phase_ohms, self.friction_coeff))):
+            raise ValueError("Forward RPM and valid motor parameters required")
+        if rpm >= self.max_rpm:
+            return 0.0
         rad_s = max(0.1, (rpm * math.pi) / 30.0)
         power_limited_torque = (self.max_power_kw * 1000.0) / rad_s
         return min(self.max_torque_nm, power_limited_torque)
 
     def solve_mechanical_output(self, requested_torque_nm: float, rpm: float) -> dict:
+        if not math.isfinite(requested_torque_nm):
+            raise ValueError("Requested torque must be finite")
         rad_s = (rpm * math.pi) / 30.0
         avail = self.max_available_torque(rpm)
         actual_torque = max(-avail, min(avail, requested_torque_nm))
@@ -31,7 +41,7 @@ class ElectricMotor:
         total_loss_w = copper_loss_w + friction_loss_w
 
         p_mech_w = actual_torque * rad_s
-        p_elec_w = p_mech_w + total_loss_w if p_mech_w >= 0 else p_mech_w + total_loss_w
+        p_elec_w = p_mech_w + total_loss_w
 
         return {
             "actual_torque_nm": actual_torque,

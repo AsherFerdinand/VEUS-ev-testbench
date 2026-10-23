@@ -5,7 +5,8 @@
 All internal calculations use SI units; RPM and dashboard km/h are explicit
 conversions. Forward speed is nonnegative. Positive motor torque drives forward;
 positive brake force opposes motion. Grade angle is in radians, positive uphill.
-Forward simulation rejects negative drive torque; regenerative energy is deferred.
+The mechanical step rejects negative drive torque; the session models regenerative
+energy separately by blending the delivered braking force.
 
 - Normal force: `N = m g cos(grade)`; `g = 9.81 m/s²`.
 - Aerodynamic resistance: `F_aero = 0.5 rho Cd A v²`, default rho 1.225 kg/m³.
@@ -67,13 +68,14 @@ and the first repeated frame, in addition to checking both HTML routes.
   forward simulator for achieved motion. Legacy total losses omit transmission.
 - Motor overspeed now cuts torque; it is a simple policy without hysteresis.
 - Legacy component parameter validation is incomplete beyond vehicle/motor.
-- Friction brakes are ideal commands; no actuator lag, fade or regenerative split.
-- Simplified ADAS is now available; sensor faults, scenario-file engine and
-  requirement evaluation remain future work.
+- Brakes use ideal force commands with configurable pure actuation delay; no
+  brake fade or detailed actuator dynamics. Regenerative/friction blending is modelled.
+- Simplified ADAS, scenario files and requirement reports are now available;
+  sensor noise/fault injection and measured-vehicle validation remain future work.
   The interactive dashboard provides basic plots, configuration and exports.
 - No production safety, real-time timing, HIL or measured vehicle fidelity claim.
 
-Next: scenario configuration, sensors, requirements evaluation,
+Next: sensor noise/fault injection, calibrated model evidence,
 dashboard extensions and integration exports. Keep the existing models and public
 example working while adding these capabilities incrementally.
 
@@ -190,3 +192,14 @@ and stops with minimum gap about 5.12 m. Friction 0.1 produces a collision in th
 same scenario. These are outputs of this illustrative model, not measured data.
 Tests also verify TTC domains, command limits, latch/reset, delayed responses,
 analytical lead stopping, collision restart rejection and continued energy balance.
+
+
+## Offline verification and reporting
+
+The incremental audit is in development-audit.md. The offline batch runner now
+records every physics tick using the additive SimulationSession.step() API;
+advance() retains the existing ten-tick dashboard behaviour. Versioned scenario
+and result contracts, analytical reference trajectories, explicit requirement
+criteria, and report artifact/metric definitions are documented in validation.md.
+The separate SOH project boundary is documented in soh-integration.md. This
+increment does not change controller algorithms or claim measured validation.

@@ -99,31 +99,35 @@ class SimulationSession:
         self.commands = deque(maxlen=self.actuator_delay_ticks+1)
 
     def advance(self) -> dict:
+        """Advance one dashboard frame, preserving the original ten-tick API."""
+        for _ in range(self.steps_per_frame):
+            self.step()
+            if self.status != 'running':
+                break
+        return self.telemetry()
+
+    def step(self) -> dict:
+        """Advance exactly one physics tick; offline runners record every event."""
         if self.status != 'running':
             return self.telemetry()
         modes = {'acceleration': Controls(throttle=1), 'braking': Controls(brake=1),
                  'coast': Controls()}
         controls = modes.get(self.config.mode, self.controls)
-        # Brake overrides throttle; no simultaneous propulsion/braking command.
         torque = 0 if controls.brake > 0 else controls.throttle*self.config.max_torque_nm
         brake_n = controls.brake*self.config.mass_kg*9.81
-        for _ in range(self.steps_per_frame):
-            if self.ticks >= round(self.config.duration_s/self.dt_s):
-                break
-            self.sim.transmission.current_gear = 1 if self.state.velocity_ms > 27.7 else 0
-            if self.controller:
-                torque, brake_n = self._controller_inputs()
-            self._energy_step(torque, brake_n)
-            self.ticks += 1
-            self.state = VehicleState(self.ticks*self.dt_s, self.last.state.position_m,
-                                      self.last.state.velocity_ms)
-            if self.has_lead:
-                gap = self._observation().gap_m
-                self.minimum_gap = min(self.minimum_gap, gap)
-                if gap <= 0:
-                    self.collision = True
-                    self.status = 'collision'
-                    break
+        self.sim.transmission.current_gear = 1 if self.state.velocity_ms > 27.7 else 0
+        if self.controller:
+            torque, brake_n = self._controller_inputs()
+        self._energy_step(torque, brake_n)
+        self.ticks += 1
+        self.state = VehicleState(self.ticks*self.dt_s, self.last.state.position_m,
+                                  self.last.state.velocity_ms)
+        if self.has_lead:
+            gap = self._observation().gap_m
+            self.minimum_gap = min(self.minimum_gap, gap)
+            if gap <= 0:
+                self.collision = True
+                self.status = 'collision'
         if self.status == 'running' and self.ticks >= round(self.config.duration_s/self.dt_s):
             self.status = 'completed'
         return self.telemetry()

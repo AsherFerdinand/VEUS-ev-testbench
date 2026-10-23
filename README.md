@@ -59,8 +59,8 @@ Each browser tab owns an independent simulation, with 0.01 s physics steps and
 simulation time is authoritative. Runs stop after 1–120 s. Closing the tab loses
 server state; export results before reloading. Live pedal-command history is not
 recorded, so exported manual runs are not yet fully replayable. Battery energy, SOC, charge/discharge limits and regenerative brake blending are
-implemented. Simplified cruise control, ACC and AEB are available. Engineering
-acceptance reports remain future work.
+implemented. Simplified cruise control, ACC and AEB are available. Offline scenario reports now provide explicit numerical acceptance criteria;
+see the reproducible verification workflow below.
 
 The old prescribed launch is retained at `/ws/telemetry` for compatibility;
 the dashboard uses `/ws/simulation`. The old launch has fixed SOC and is a
@@ -132,3 +132,39 @@ collision indicator are provided. TTC is undefined when not closing, shown as
 missing rather than zero. AEB stays latched until reset. Collision stops the run;
 reset is required to restart. These algorithms demonstrate defined behaviours,
 not production ADAS safety. ACC does not include AEB override in this increment.
+
+
+## Reproducible verification and batch scenarios
+
+The offline runner reuses the dashboard physics/controllers and records every
+0.01 s tick. It accepts versioned JSON scenarios, including timed manual pedals,
+and emits standalone HTML engineering reports, plots, metrics and raw CSV/JSON.
+
+```bat
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+python -m veus.testing physics --output reports/physics-001
+python -m veus.testing run scenarios --output reports/batch-001
+```
+
+Open `reports/batch-001/report.html` in a browser. No running web server is needed.
+Use a new output directory per run. **The example batch intentionally returns exit
+code 1**: six scenarios pass, while delayed and low-grip AEB scenarios fail
+collision avoidance. Those failures remain visible in the report. Exit 0 means
+all checks passed; exit 1 includes FAIL or INCONCLUSIVE; exit 2 is an input/setup
+error. Empty requirement lists and unavailable metrics never silently pass.
+
+Reports preserve original and resolved scenario settings, source/config hashes,
+software versions, all tick telemetry, TTC/minimum gap, first-overlap impact
+speeds, brake onset/stop distances and controller response. Eleven analytical
+reference traces include acceleration, braking, quadratic-drag coasting, gradient,
+battery energy, coupled drive energy and regenerative energy, with documented timestep error bounds.
+These are **equation/software verification**, not measured-vehicle validation.
+
+- [Pre-change audit](docs/development-audit.md)
+- [Equations, tolerances, metrics, output schema and Windows commands](docs/validation.md)
+- [Future NASA capacity-SOH integration contracts and required evidence](docs/soh-integration.md)
+
+SOH integration is an interface design only. Capacity SOH does not by itself
+specify voltage, internal resistance or allowable battery power. No estimator,
+NASA data fitting or unvalidated SOH-to-electrical-parameter mapping is included.

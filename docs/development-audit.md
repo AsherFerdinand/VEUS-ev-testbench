@@ -59,3 +59,10 @@ batch runner, persisted pedal schedule or automated engineering report.
    SOH to resistance, voltage or allowable power; document required calibration.
 6. Run unit/integration/regression tests, example batches, coverage and CLI failure
    checks. Publish numerical evidence separately from any real-world claim.
+
+## Executed follow-up
+
+The implementation preserves the dashboard and adds an offline per-tick runner.
+See [executed evidence](verification/README.md) for measured test/coverage results,
+analytical plots and scenario failures. These are software verification outcomes,
+not measured-vehicle validation.

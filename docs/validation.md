@@ -160,3 +160,8 @@ Python statement/branch coverage. This does not cover JavaScript or establish
 physics validity. Missing lines/branches are reported rather than hidden behind
 an arbitrary coverage target. See development-audit.md and engineering.md for
 remaining model limits, and soh-integration.md for the future external interface.
+
+A checked-in [execution snapshot](verification/README.md) preserves the source
+commit, numerical results and example HTML report. Error ratios for roundoff-
+dominated energy traces are not convergence rates; first-order convergence
+assertions apply to the documented mechanical position/coasting cases.

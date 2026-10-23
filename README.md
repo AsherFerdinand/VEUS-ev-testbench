@@ -168,3 +168,7 @@ These are **equation/software verification**, not measured-vehicle validation.
 SOH integration is an interface design only. Capacity SOH does not by itself
 specify voltage, internal resistance or allowable battery power. No estimator,
 NASA data fitting or unvalidated SOH-to-electrical-parameter mapping is included.
+
+[Executed evidence and sample HTML report](docs/verification/README.md) includes
+the actual reference plots, measured coverage and the two failed avoidance cases.
+Download the repository and open the sample report HTML locally to view it.

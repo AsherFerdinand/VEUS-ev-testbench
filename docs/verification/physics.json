@@ -1,0 +1,117 @@
+{
+  "status": "PASS",
+  "dt_s": 0.01,
+  "assumptions": "Isolated constant-force, quadratic-drag and constant-OCV reference cases; see docs/validation.md.",
+  "cases": [
+    {
+      "name": "acceleration_speed",
+      "unit": "m/s",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 1e-09,
+      "max_absolute_error": 4.1300296516055823e-14,
+      "status": "PASS",
+      "half_dt_error": 6.306066779870889e-14,
+      "error_ratio": 0.6549295774647887
+    },
+    {
+      "name": "acceleration_position",
+      "unit": "m",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 0.020000001,
+      "max_absolute_error": 0.020000000000038654,
+      "status": "PASS",
+      "half_dt_error": 0.010000000000094822,
+      "error_ratio": 1.999999999984901
+    },
+    {
+      "name": "braking_speed",
+      "unit": "m/s",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 1e-09,
+      "max_absolute_error": 1.283417816466681e-13,
+      "status": "PASS",
+      "half_dt_error": 1.7141843500212417e-13,
+      "error_ratio": 0.7487046632124352
+    },
+    {
+      "name": "braking_position",
+      "unit": "m",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 0.050100001000000005,
+      "max_absolute_error": 0.0500000000004448,
+      "status": "PASS",
+      "half_dt_error": 0.02500000000051017,
+      "error_ratio": 1.9999999999769784
+    },
+    {
+      "name": "gradient_speed",
+      "unit": "m/s",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 1e-09,
+      "max_absolute_error": 6.465938895416912e-13,
+      "status": "PASS",
+      "half_dt_error": 6.465938895416912e-13,
+      "error_ratio": 1.0
+    },
+    {
+      "name": "gradient_position",
+      "unit": "m",
+      "equation": "v=max(0,v0+a*t); x=v0*t_moving+0.5*a*t_moving\u00b2; a=(Fdrive-Fbrake)/m-g*sin(grade)",
+      "tolerance": 0.019587317346107688,
+      "max_absolute_error": 0.01958731634738342,
+      "status": "PASS",
+      "half_dt_error": 0.009793658174316988,
+      "error_ratio": 1.9999999998723097
+    },
+    {
+      "name": "coasting_speed",
+      "unit": "m/s",
+      "equation": "v=v0/(1+k*v0*t); x=ln(1+k*v0*t)/k; k=rho*Cd*A/(2m)",
+      "tolerance": 0.000108046,
+      "max_absolute_error": 9.047978636900211e-05,
+      "status": "PASS",
+      "half_dt_error": 4.523765161579263e-05,
+      "error_ratio": 2.0000991019042043
+    },
+    {
+      "name": "coasting_position",
+      "unit": "m",
+      "equation": "v=v0/(1+k*v0*t); x=ln(1+k*v0*t)/k; k=rho*Cd*A/(2m)",
+      "tolerance": 0.014773986850023286,
+      "max_absolute_error": 0.0063674655949910175,
+      "status": "PASS",
+      "half_dt_error": 0.0031835915108899826,
+      "error_ratio": 2.000088759255101
+    },
+    {
+      "name": "battery_chemical_energy",
+      "unit": "J",
+      "equation": "I=(Voc-sqrt(Voc\u00b2-4*R*P))/(2R); E_drawn=Voc*I*t",
+      "tolerance": 0.0001,
+      "max_absolute_error": 3.0372757464647293e-06,
+      "status": "PASS",
+      "half_dt_error": 3.0372757464647293e-06,
+      "error_ratio": 1.0
+    },
+    {
+      "name": "coupled_drive_energy",
+      "unit": "J",
+      "equation": "a=T/(r*m)=0.6 m/s\u00b2; E_terminal=0.5*m*(a*t)\u00b2/eta; eta=0.8, R=0",
+      "tolerance": 0.0001,
+      "max_absolute_error": 3.183231456205249e-12,
+      "status": "PASS",
+      "half_dt_error": 3.501554601825774e-11,
+      "error_ratio": 0.09090909090909091
+    },
+    {
+      "name": "regenerative_energy",
+      "unit": "J",
+      "equation": "a=-0.05*g; E_recovered=eta*0.5*m*(v0\u00b2-(v0+a*t)\u00b2); eta=0.7, R=0",
+      "tolerance": 0.0001,
+      "max_absolute_error": 6.093614501878619e-11,
+      "status": "PASS",
+      "half_dt_error": 6.002665031701326e-11,
+      "error_ratio": 1.0151515151515151
+    }
+  ]
+}

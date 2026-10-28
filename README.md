@@ -172,3 +172,26 @@ NASA data fitting or unvalidated SOH-to-electrical-parameter mapping is included
 [Executed evidence and sample HTML report](docs/verification/README.md) includes
 the actual reference plots, measured coverage and the two failed avoidance cases.
 Download the repository and open the sample report HTML locally to view it.
+
+
+## Virtual sensors and fault injection (Phase 7)
+
+Virtual speed/radar sensors are optional and disabled by default. Enable them in
+**Sensors & Fault Injection** to compare true/measured speed and gap, sampling,
+noise, bias, latency and timed dropout/freeze events. Missing or stale observations
+invoke explicit comfort-braking fallback; latched AEB stays active. No perfect
+measurement is silently substituted. Sensor settings/RNG state reset per run.
+
+```bat
+python -m veus.testing run scenarios/sensors --output reports/sensors-001
+```
+
+The seven sensor cases are separate from the original eight-scenario baseline.
+Current sensor examples retain three failures (radar bias, radar latency and speed
+tracking under bias); reproducing a fault is not equivalent to meeting avoidance
+or tracking requirements. Reports include valid-only error statistics, availability,
+executed fault events and like-for-like ideal sensor comparisons.
+
+[Architecture, timing/overlap/fallback rules and worked example](docs/virtual-sensors.md).
+No new runtime dependency, hardware or ML library is required. This remains
+software verification of illustrative models, not real-world sensor validation.

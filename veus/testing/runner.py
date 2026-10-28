@@ -8,10 +8,11 @@ from veus.testing.schema import (
     Scenario,
     ScenarioResult,
     UNITS,
+    IdealBaseline,
 )
 
 
-def run_scenario(scenario: Scenario) -> ScenarioResult:
+def run_scenario(scenario: Scenario, *, compare_ideal: bool = True) -> ScenarioResult:
     session = SimulationSession(scenario.config)
     session.status = "running"
     frames = [session.telemetry()]
@@ -96,6 +97,87 @@ def run_scenario(scenario: Scenario) -> ScenarioResult:
             abs(f["energy_balance_error_j"]) for f in frames
         ),
     )
+    metrics.acc_target_speed_error_kmh = (
+        abs(final["velocity_kmh"] - scenario.config.target_speed_kmh)
+        if scenario.config.mode == "acc" and final["status"] == "completed"
+        else None
+    )
+    sensor_events = session.sensor_suite.events if session.sensor_suite else []
+    baseline = None
+    if session.sensor_suite:
+        for prefix, key in [
+            ("speed", "speed_measurement_error_ms"),
+            ("radar_distance", "radar_distance_error_m"),
+            ("radar_closing_speed", "radar_closing_speed_error_ms"),
+        ]:
+            values = [abs(f[key]) for f in frames if f[key] is not None]
+            unit = "m" if prefix == "radar_distance" else "ms"
+            setattr(
+                metrics,
+                prefix + "_mae_" + unit,
+                sum(values) / len(values) if values else None,
+            )
+            if prefix != "radar_closing_speed":
+                setattr(
+                    metrics,
+                    prefix + "_max_abs_error_" + unit,
+                    max(values) if values else None,
+                )
+        metrics.speed_unavailable_fraction = sum(
+            not f["speed_sensor_valid"] for f in frames
+        ) / len(frames)
+        metrics.radar_unavailable_fraction = (
+            sum(not f["radar_sensor_valid"] for f in frames) / len(frames)
+            if session.has_lead
+            else None
+        )
+        metrics.controller_fallback_fraction = (
+            sum(
+                f["applied_input_health"]
+                in {"stale", "unavailable", "inconsistent-measurements"}
+                for f in frames
+            )
+            / len(frames)
+            if session.controller
+            else None
+        )
+        metrics.fault_activation_count = sum(
+            e["event"] == "activated" for e in sensor_events
+        )
+        if compare_ideal and scenario.config.sensors.mode == "configured":
+            from veus.sensors.config import SensorSuiteConfig
+
+            config = scenario.config.model_copy(
+                update={
+                    "sensors": SensorSuiteConfig(
+                        enabled=True, mode="ideal", seed=scenario.config.sensors.seed
+                    )
+                }
+            )
+            ideal = run_scenario(
+                scenario.model_copy(update={"config": config}), compare_ideal=False
+            )
+            baseline = IdealBaseline(
+                config=config,
+                metrics=ideal.metrics,
+                termination=ideal.termination,
+                duration_executed_s=ideal.duration_executed_s,
+                telemetry=ideal.telemetry,
+            )
+            if (
+                metrics.minimum_separation_m is not None
+                and ideal.metrics.minimum_separation_m is not None
+            ):
+                metrics.minimum_separation_delta_m = (
+                    metrics.minimum_separation_m - ideal.metrics.minimum_separation_m
+                )
+            if (
+                metrics.aeb_detection_time_s is not None
+                and ideal.metrics.aeb_detection_time_s is not None
+            ):
+                metrics.aeb_detection_delay_vs_ideal_s = (
+                    metrics.aeb_detection_time_s - ideal.metrics.aeb_detection_time_s
+                )
     requirements = []
     compare = {"<=": operator.le, ">=": operator.ge, "==": operator.eq}
     for criterion in scenario.criteria:
@@ -137,4 +219,6 @@ def run_scenario(scenario: Scenario) -> ScenarioResult:
         metrics=metrics,
         requirements=requirements,
         telemetry=frames,
+        sensor_fault_events=sensor_events,
+        ideal_baseline=baseline,
     )

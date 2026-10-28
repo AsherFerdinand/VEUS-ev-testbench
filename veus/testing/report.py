@@ -15,7 +15,7 @@ import subprocess
 from veus.validation.physics import physics_references
 
 
-MODEL_VERSION = "veus-verification-v4"
+MODEL_VERSION = "veus-sensors-v5"
 
 
 def write_json(path: Path, value) -> None:
@@ -261,6 +261,51 @@ def scenario_plot(output: Path, result) -> None:
     plt.close(fig)
 
 
+def sensor_plot(output: Path, result) -> None:
+    plt = pyplot()
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8), layout="constrained")
+    frames = result.telemetry
+    time = [f["time_s"] for f in frames]
+
+    def series(ax, key, label, valid=None):
+        vals = [
+            f[key] if f[key] is not None and (not valid or f[valid]) else float("nan")
+            for f in frames
+        ]
+        if any(f[key] is not None for f in frames):
+            ax.plot(time, vals, label=label)
+
+    series(axes[0, 0], "actual_speed_ms", "True speed")
+    series(
+        axes[0, 0], "measured_speed_ms", "Valid measured speed", "speed_sensor_valid"
+    )
+    series(axes[0, 1], "actual_gap_m", "True gap")
+    series(axes[0, 1], "measured_gap_m", "Valid measured gap", "radar_sensor_valid")
+    series(axes[1, 0], "radar_distance_error_m", "Radar distance error")
+    series(axes[1, 1], "speed_sensor_age_s", "Speed acquisition age")
+    series(axes[1, 1], "radar_sensor_age_s", "Radar acquisition age")
+    for ax, label in zip(
+        axes.flat, ["Speed (m/s)", "Gap (m)", "Radar error (m)", "Age (s)"]
+    ):
+        ax.set(xlabel="Simulation time (s)", ylabel=label)
+        ax.grid(alpha=0.25)
+        starts = {}
+        for event in result.sensor_fault_events:
+            if event["event"] == "activated":
+                starts[event["id"]] = event["time_s"]
+            elif event["id"] in starts:
+                ax.axvspan(
+                    starts.pop(event["id"]), event["time_s"], color="orange", alpha=0.12
+                )
+        for start in starts.values():
+            ax.axvspan(start, time[-1], color="orange", alpha=0.12)
+        if ax.lines:
+            ax.legend(fontsize=8)
+    fig.suptitle(result.scenario_id + " — truth versus valid sensor measurements")
+    fig.savefig(output / "sensors.png", dpi=120)
+    plt.close(fig)
+
+
 def save_batch(
     output: Path, scenarios: list, results: list, root: Path, originals: dict
 ) -> dict:
@@ -282,11 +327,15 @@ def save_batch(
             )
         write_json(
             directory / "result.json",
-            result.model_dump(mode="json", exclude={"telemetry"}),
+            result.model_dump(
+                mode="json",
+                exclude={"telemetry": True, "ideal_baseline": {"telemetry": True}},
+            ),
         )
         write_csv(directory / "telemetry.csv", result.telemetry)
         suffix_units = [
             ("_ms2", "m/s²"),
+            ("_ms", "m/s"),
             ("_kmh", "km/h"),
             ("_kwh", "kWh"),
             ("_rpm", "rpm"),
@@ -304,6 +353,8 @@ def save_batch(
             unit = next((u for suffix, u in suffix_units if key.endswith(suffix)), None)
             if key == "soc" or key.startswith("manual_"):
                 unit = "fraction"
+            if key.endswith("discarded_packets"):
+                unit = "count"
             if key == "current_gear":
                 unit = "one-based index"
             if unit is None:
@@ -325,6 +376,20 @@ def save_batch(
                 [r.model_dump() for r in result.requirements],
             )
         scenario_plot(directory, result)
+        write_json(directory / "sensor-events.json", result.sensor_fault_events)
+        if result.sensor_fault_events:
+            write_csv(directory / "sensor-events.csv", result.sensor_fault_events)
+        if result.ideal_baseline:
+            write_json(
+                directory / "ideal-baseline.json",
+                result.ideal_baseline.model_dump(mode="json", exclude={"telemetry"}),
+            )
+            write_csv(
+                directory / "ideal-baseline-telemetry.csv",
+                result.ideal_baseline.telemetry,
+            )
+        if scenario.config.sensors.enabled:
+            sensor_plot(directory, result)
         config_hash = hashlib.sha256(
             json.dumps(resolved, sort_keys=True).encode()
         ).hexdigest()
@@ -364,6 +429,35 @@ def save_batch(
             ],
         )
         body += table(["Metric", "Value"], list(result.metrics.model_dump().items()))
+        if scenario.config.sensors.enabled:
+            body += "<h3>Virtual sensors and fault events</h3>" + table(
+                ["ID", "Sensor", "Fault", "Event", "Time (s)"],
+                [
+                    [e["id"], e["sensor"], e["fault"], e["event"], e["time_s"]]
+                    for e in result.sensor_fault_events
+                ],
+            )
+            body += "<p>Error statistics use valid tick measurements only; missing/stale values are excluded, not zero. Communication and sample/hold error is included. Shading marks injected fault activity, not automatic fault diagnosis.</p>"
+            body += inline_image(
+                directory / "sensors.png",
+                "Ground truth, valid measurements, error and acquisition age",
+            )
+        if result.ideal_baseline:
+            baseline = result.ideal_baseline
+            body += "<h3>Like-for-like ideal sensor baseline</h3>" + table(
+                ["Metric", "Ideal", "Faulted"],
+                [
+                    [k, getattr(baseline.metrics, k), getattr(result.metrics, k)]
+                    for k in [
+                        "minimum_separation_m",
+                        "aeb_detection_time_s",
+                        "collision_count",
+                        "final_speed_error_kmh",
+                        "final_gap_error_m",
+                    ]
+                ],
+            )
+            body += f"<p>Ideal executed horizon: {baseline.duration_executed_s} s; faulted horizon: {result.duration_executed_s} s. Collision can truncate a run; comparisons use each complete executed trajectory.</p>"
         body += inline_image(directory / "signals.png", scenario.id + " time histories")
         body += (
             "<details><summary>Resolved scenario / configuration</summary><pre>"

@@ -19,6 +19,18 @@ MetricName = Literal[
     "final_speed_error_kmh",
     "final_gap_error_m",
     "max_energy_balance_error_j",
+    "acc_target_speed_error_kmh",
+    "speed_mae_ms",
+    "speed_max_abs_error_ms",
+    "radar_distance_mae_m",
+    "radar_distance_max_abs_error_m",
+    "radar_closing_speed_mae_ms",
+    "speed_unavailable_fraction",
+    "radar_unavailable_fraction",
+    "controller_fallback_fraction",
+    "fault_activation_count",
+    "minimum_separation_delta_m",
+    "aeb_detection_delay_vs_ideal_s",
 ]
 UNITS = dict(
     collision_count="count",
@@ -34,6 +46,18 @@ UNITS = dict(
     final_speed_error_kmh="km/h",
     final_gap_error_m="m",
     max_energy_balance_error_j="J",
+    acc_target_speed_error_kmh="km/h",
+    speed_mae_ms="m/s",
+    speed_max_abs_error_ms="m/s",
+    radar_distance_mae_m="m",
+    radar_distance_max_abs_error_m="m",
+    radar_closing_speed_mae_ms="m/s",
+    speed_unavailable_fraction="fraction",
+    radar_unavailable_fraction="fraction",
+    controller_fallback_fraction="fraction",
+    fault_activation_count="count",
+    minimum_separation_delta_m="m",
+    aeb_detection_delay_vs_ideal_s="s",
 )
 
 
@@ -103,6 +127,18 @@ class Metrics(StrictModel):
     final_speed_error_kmh: float | None
     final_gap_error_m: float | None
     max_energy_balance_error_j: float
+    acc_target_speed_error_kmh: float | None = None
+    speed_mae_ms: float | None = None
+    speed_max_abs_error_ms: float | None = None
+    radar_distance_mae_m: float | None = None
+    radar_distance_max_abs_error_m: float | None = None
+    radar_closing_speed_mae_ms: float | None = None
+    speed_unavailable_fraction: float | None = None
+    radar_unavailable_fraction: float | None = None
+    controller_fallback_fraction: float | None = None
+    fault_activation_count: int = 0
+    minimum_separation_delta_m: float | None = None
+    aeb_detection_delay_vs_ideal_s: float | None = None
 
 
 class RequirementResult(StrictModel):
@@ -118,6 +154,14 @@ class RequirementResult(StrictModel):
     evidence: str
 
 
+class IdealBaseline(StrictModel):
+    config: RunConfig
+    metrics: Metrics
+    termination: Literal["completed", "collision"]
+    duration_executed_s: float
+    telemetry: list[dict]
+
+
 class ScenarioResult(StrictModel):
     schema_version: Literal[1] = 1
     scenario_id: str
@@ -127,3 +171,5 @@ class ScenarioResult(StrictModel):
     metrics: Metrics
     requirements: list[RequirementResult]
     telemetry: list[dict]
+    sensor_fault_events: list[dict] = Field(default_factory=list)
+    ideal_baseline: IdealBaseline | None = None

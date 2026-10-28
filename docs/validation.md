@@ -165,3 +165,14 @@ A checked-in [execution snapshot](verification/README.md) preserves the source
 commit, numerical results and example HTML report. Error ratios for roundoff-
 dominated energy traces are not convergence rates; first-order convergence
 assertions apply to the documented mechanical position/coasting cases.
+
+
+## Optional sensor robustness reports
+
+Phase 7 adds default-disabled sensor settings without changing the original eight
+scenario files or acceptance criteria. Run `python -m veus.testing run
+scenarios/sensors --output reports/sensors-NEW` for the separate seven-case suite.
+Sensor errors, age, validity and fault events are additive telemetry/report fields.
+Configured sensor scenarios also preserve a like-for-like ideal baseline and raw
+baseline telemetry. See [virtual-sensors.md](virtual-sensors.md) for sign conventions,
+valid-only error statistics, overlap/fallback policy and comparison limitations.

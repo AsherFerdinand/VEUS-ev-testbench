@@ -71,11 +71,12 @@ and the first repeated frame, in addition to checking both HTML routes.
 - Brakes use ideal force commands with configurable pure actuation delay; no
   brake fade or detailed actuator dynamics. Regenerative/friction blending is modelled.
 - Simplified ADAS, scenario files and requirement reports are now available;
-  sensor noise/fault injection and measured-vehicle validation remain future work.
+  virtual sensors and deterministic faults are now available; measured-vehicle
+  validation remains future work.
   The interactive dashboard provides basic plots, configuration and exports.
 - No production safety, real-time timing, HIL or measured vehicle fidelity claim.
 
-Next: sensor noise/fault injection, calibrated model evidence,
+Next: calibrated model evidence,
 dashboard extensions and integration exports. Keep the existing models and public
 example working while adding these capabilities incrementally.
 
@@ -171,7 +172,8 @@ Each physics tick observes exact plant speed/gap and a prescribed lead vehicle.
 Detection delay stores observation history; actuator delay stores acceleration
 commands, both rounded to 0.01 s. Before a detection history fills, the initial
 observation is held. Before an actuator history fills, propulsion/braking is zero
-(coasting). There is no noise, dropout, fault injection or sensor range model yet.
+(coasting). Optional virtual sensors now precede that history; noise, dropout and scheduled
+faults are described in virtual-sensors.md. No sensor range model is included.
 The detection timestamp precedes actuator delay; telemetry reports applied
 controller state separately. Settings apply on reset, not live during a run.
 

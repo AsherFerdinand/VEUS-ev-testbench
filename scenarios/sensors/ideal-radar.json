@@ -1,0 +1,34 @@
+{
+  "id": "ideal-radar",
+  "description": "Ideal measurements reproduce the original dry AEB scenario",
+  "config": {
+    "mode": "aeb",
+    "initial_speed_kmh": 80,
+    "lead_speed_kmh": 80,
+    "initial_gap_m": 35,
+    "duration_s": 12,
+    "sensors": {
+      "enabled": true,
+      "seed": 42,
+      "mode": "ideal"
+    }
+  },
+  "criteria": [
+    {
+      "id": "AVOID-01",
+      "metric": "collision_count",
+      "operator": "==",
+      "threshold": 0,
+      "description": "No detected vehicle overlap",
+      "rationale": "Scenario objective only; not a regulatory acceptance criterion. Overlap is sampled each 0.01 s tick."
+    },
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    }
+  ]
+}

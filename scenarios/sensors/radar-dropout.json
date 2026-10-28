@@ -1,0 +1,51 @@
+{
+  "id": "radar-dropout",
+  "description": "Unavailable radar during lead braking invokes explicit comfort-braking fallback",
+  "config": {
+    "mode": "aeb",
+    "initial_speed_kmh": 80,
+    "lead_speed_kmh": 80,
+    "initial_gap_m": 35,
+    "duration_s": 12,
+    "sensors": {
+      "enabled": true,
+      "seed": 42,
+      "faults": [
+        {
+          "id": "radar-dropout",
+          "sensor": "radar",
+          "fault": "dropout",
+          "start_time_s": 3,
+          "duration_s": 4,
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  "criteria": [
+    {
+      "id": "AVOID-01",
+      "metric": "collision_count",
+      "operator": "==",
+      "threshold": 0,
+      "description": "No detected vehicle overlap",
+      "rationale": "Scenario objective only; not a regulatory acceptance criterion. Overlap is sampled each 0.01 s tick."
+    },
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "FAULT-EXEC",
+      "description": "Scheduled fault activates during the executed horizon",
+      "metric": "fault_activation_count",
+      "operator": "==",
+      "threshold": 1,
+      "rationale": "One configured event must actually be injected; this is execution evidence, not sensor fault detection."
+    }
+  ]
+}

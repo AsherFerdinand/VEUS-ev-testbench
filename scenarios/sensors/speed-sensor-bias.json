@@ -1,0 +1,62 @@
+{
+  "id": "speed-sensor-bias",
+  "description": "ACC with a distant faster lead: +2 m/s speed bias affects target regulation",
+  "config": {
+    "mode": "acc",
+    "initial_speed_kmh": 0,
+    "lead_speed_kmh": 120,
+    "initial_gap_m": 200,
+    "duration_s": 30,
+    "sensors": {
+      "enabled": true,
+      "seed": 42,
+      "faults": [
+        {
+          "id": "speed-bias",
+          "sensor": "speed",
+          "fault": "bias",
+          "start_time_s": 0,
+          "duration_s": 30,
+          "parameters": {
+            "bias_ms": 2
+          }
+        }
+      ]
+    },
+    "target_speed_kmh": 80
+  },
+  "criteria": [
+    {
+      "id": "AVOID-01",
+      "metric": "collision_count",
+      "operator": "==",
+      "threshold": 0,
+      "description": "No detected vehicle overlap",
+      "rationale": "Scenario objective only; not a regulatory acceptance criterion. Overlap is sampled each 0.01 s tick."
+    },
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "SPEED-TRACK",
+      "description": "True ego speed tracks target within 0.5 km/h with a non-limiting lead",
+      "metric": "acc_target_speed_error_kmh",
+      "operator": "<=",
+      "threshold": 0.5,
+      "rationale": "Development objective at 30 s with lead faster than target. Applied bias may violate it; no real-vehicle standard is claimed."
+    },
+    {
+      "id": "FAULT-EXEC",
+      "description": "Scheduled fault activates during the executed horizon",
+      "metric": "fault_activation_count",
+      "operator": "==",
+      "threshold": 1,
+      "rationale": "One configured event must actually be injected; this is execution evidence, not sensor fault detection."
+    }
+  ]
+}

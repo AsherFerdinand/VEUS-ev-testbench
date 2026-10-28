@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "dataset": "VED vehicle 10 trip 1561",
+  "rows": 111,
+  "simulationStateSeparated": true,
+  "exports": {
+    "summary.json": true,
+    "events.csv": true,
+    "metadata.json": true,
+    "analysis.json": true,
+    "report.html": true
+  },
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      820,
+      1180
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "screenshots": "docs/phase10-evidence",
+  "errors": [],
+  "execution_commit": "01b78c22089b0ca29fe59568c9e0eb1b16da8219",
+  "environment": "Headless Chromium / Linux cloud; not a Windows hardware benchmark",
+  "screenshot_acceleration_threshold_ms2": 0.2
+}

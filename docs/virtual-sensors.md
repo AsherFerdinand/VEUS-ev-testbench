@@ -246,3 +246,6 @@ Freeze retains acquisition time; a sensor that lies about timestamps is not mode
 Sampling/fault clocks are quantized to 0.01 s. Existing ideal-force brake dynamics,
 constant-OCV energy model, explicit Euler position error and TTC-threshold AEB
 limitations remain. Passing software tests does not establish physical validation.
+
+[Executed Phase 7 evidence and sample report](phase7-evidence/README.md) records
+the source commit, final checks and all seven outcomes.

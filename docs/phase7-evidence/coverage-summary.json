@@ -1,0 +1,20 @@
+{
+  "tests_passed": 109,
+  "scope": "Python statement/branch coverage; not JavaScript or physical validation",
+  "totals": {
+    "covered_lines": 1334,
+    "num_statements": 1365,
+    "percent_covered": 96.047197640118,
+    "percent_covered_display": "96",
+    "missing_lines": 31,
+    "excluded_lines": 2,
+    "percent_statements_covered": 97.72893772893772,
+    "percent_statements_covered_display": "98",
+    "num_branches": 330,
+    "num_partial_branches": 34,
+    "covered_branches": 294,
+    "missing_branches": 36,
+    "percent_branches_covered": 89.0909090909091,
+    "percent_branches_covered_display": "89"
+  }
+}

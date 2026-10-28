@@ -195,3 +195,6 @@ executed fault events and like-for-like ideal sensor comparisons.
 [Architecture, timing/overlap/fallback rules and worked example](docs/virtual-sensors.md).
 No new runtime dependency, hardware or ML library is required. This remains
 software verification of illustrative models, not real-world sensor validation.
+
+[Phase 7 execution evidence and sample report](docs/phase7-evidence/README.md)
+records 109 passing tests, 96% combined Python coverage and all failed outcomes.

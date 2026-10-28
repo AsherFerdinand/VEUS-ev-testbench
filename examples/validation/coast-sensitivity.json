@@ -1,0 +1,25 @@
+{
+  "parameters": [
+    {
+      "name": "rolling_resistance",
+      "low": 0.008,
+      "high": 0.02
+    },
+    {
+      "name": "drag_area_m2",
+      "low": 0.4,
+      "high": 0.8
+    },
+    {
+      "name": "mass_kg",
+      "low": 1600,
+      "high": 2000
+    },
+    {
+      "name": "road_gradient_offset_rad",
+      "low": -0.02,
+      "high": 0.02
+    }
+  ],
+  "signal": "vehicle_speed_ms"
+}

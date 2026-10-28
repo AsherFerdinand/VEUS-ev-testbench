@@ -114,10 +114,10 @@ def inline_image(path: Path, alt: str) -> str:
     return f'<img alt="{escape(alt, quote=True)}" src="data:image/png;base64,{data}">'
 
 
-def page(title: str, body: str) -> str:
+def page(title: str, body: str, scope: str | None = None) -> str:
     return f"""<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escape(title)}</title><style>body{{font:16px system-ui;max-width:1200px;margin:32px auto;padding:0 20px;color:#172b3f}}table{{border-collapse:collapse;width:100%;margin:20px 0;display:block;overflow:auto}}td,th{{text-align:left;border:1px solid #ccd7df;padding:9px}}img{{width:100%;height:auto}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5f8;padding:16px}}.PASS{{color:#126a41}}.FAIL{{color:#b42318}}.INCONCLUSIVE{{color:#875400}}section{{border-top:2px solid #ccd7df;margin-top:32px}}small{{color:#40556b}}</style>
-<h1>{escape(title)}</h1><p><strong>Analytical verification and defined model scenarios. No real-world vehicle or production ADAS safety validation.</strong></p>{body}</html>"""
+<h1>{escape(title)}</h1><p><strong>{escape(scope or "Analytical verification and defined model scenarios. No real-world vehicle or production ADAS safety validation.")}</strong></p>{body}</html>"""
 
 
 def table(headers: list[str], rows: list[list]) -> str:

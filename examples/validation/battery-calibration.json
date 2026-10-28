@@ -1,0 +1,15 @@
+{
+  "parameters": [
+    {
+      "name": "battery_voltage_v",
+      "low": 350,
+      "high": 450
+    },
+    {
+      "name": "battery_resistance_ohm",
+      "low": 0.001,
+      "high": 0.5
+    }
+  ],
+  "objective_signal": "battery_voltage_v"
+}

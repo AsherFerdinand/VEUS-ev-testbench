@@ -154,7 +154,12 @@ class SimulationSession:
                 break
         return self.telemetry()
 
-    def step(self) -> dict:
+    def step(
+        self,
+        *,
+        motor_torque_nm: float | None = None,
+        brake_force_n: float | None = None,
+    ) -> dict:
         """Advance exactly one physics tick; offline runners record every event."""
         if self.status != "running":
             return self.telemetry()
@@ -168,8 +173,25 @@ class SimulationSession:
             0 if controls.brake > 0 else controls.throttle * self.config.max_torque_nm
         )
         brake_n = controls.brake * self.config.mass_kg * 9.81
+        external = motor_torque_nm is not None or brake_force_n is not None
+        if external:
+            if (
+                motor_torque_nm is None
+                or brake_force_n is None
+                or self.config.mode != "manual"
+            ):
+                raise ValueError(
+                    "External physical inputs require manual mode and both torque/brake force"
+                )
+            if not all(
+                math.isfinite(v) and v >= 0 for v in (motor_torque_nm, brake_force_n)
+            ):
+                raise ValueError(
+                    "Physical drive/brake inputs must be finite and nonnegative"
+                )
+            torque, brake_n = motor_torque_nm, brake_force_n
         self.sim.transmission.current_gear = 1 if self.state.velocity_ms > 27.7 else 0
-        if self.controller:
+        if self.controller and not external:
             torque, brake_n = self._controller_inputs()
         self._energy_step(torque, brake_n)
         self.ticks += 1

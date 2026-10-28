@@ -1,0 +1,50 @@
+{
+  "id": "synthetic-battery-holdout",
+  "objective": "Synthetic pipeline verification, not measured vehicle validation",
+  "source": {
+    "dataset": "Analytical software fixtures",
+    "source_url": "Analytical generator in scripts/generate_validation_fixtures.py",
+    "licence": "Project synthetic test fixture",
+    "kind": "synthetic",
+    "role": "validation",
+    "run_id": "synthetic-battery-holdout",
+    "expected_sha256": "d62fb86af80ea7bfc92f36c1849cab25d7f66bc4bc096c4916746d13b90bc0fb",
+    "provenance_evidence": "Independent closed-form formula; no noise, no measured-data claim",
+    "inputs_verified": true,
+    "vehicle_id": "synthetic-battery-model",
+    "vehicle_specifications": {
+      "type": "Synthetic analytical fixture, not a real vehicle"
+    }
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "time_s",
+        "unit": "s"
+      },
+      "battery_current_a": {
+        "column": "battery_current_a",
+        "unit": "A"
+      },
+      "battery_voltage_v": {
+        "column": "battery_voltage_v",
+        "unit": "V"
+      }
+    },
+    "max_gap_s": 2
+  },
+  "kind": "battery_current",
+  "parameters": {},
+  "road_grade_policy": "measured",
+  "assumptions": [
+    "Fixed OCV/resistance; no thermal model",
+    "Current sign must be independently verified before physical validation"
+  ],
+  "comparisons": [
+    {
+      "signal": "battery_voltage_v",
+      "threshold": 0.001,
+      "rationale": "Known exact synthetic linear V/I fixture; software fitting check only"
+    }
+  ]
+}

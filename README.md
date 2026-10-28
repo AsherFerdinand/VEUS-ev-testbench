@@ -198,3 +198,38 @@ software verification of illustrative models, not real-world sensor validation.
 
 [Phase 7 execution evidence and sample report](docs/phase7-evidence/README.md)
 records 109 passing tests, 96% combined Python coverage and all failed outcomes.
+
+
+## Measurement comparison and calibration (Phase 8)
+
+Studio now includes **Model Validation** for CSV imports, explicit experiment
+configuration, original/calibrated comparisons, residuals, sensitivity sweeps and
+portable HTML reports. Install optional reporting dependencies first:
+
+```bat
+python -m pip install -r requirements-report.txt
+python -m uvicorn veus.studio.main:app --port 8770
+```
+
+The same experiments run offline; use a new output directory for each run:
+
+```bat
+python -m veus.validation calibrate examples/validation/synthetic-battery-train.json examples/validation/synthetic-battery-train.csv --settings examples/validation/battery-calibration.json --output reports/battery-fit
+python -m veus.validation evaluate examples/validation/synthetic-battery-holdout.json examples/validation/synthetic-battery-holdout.csv --calibration reports/battery-fit/calibration.json --output reports/battery-holdout
+```
+
+Calibration uses designated training runs, bounded parameters and a local
+identifiability guard. Independent evaluation rejects duplicate hashes/run IDs;
+only learned parameters transfer. Synthetic examples test the pipeline.
+
+**Real-world vehicle validation remains pending.** Small genuine University of
+Michigan VED subsets are included with provenance and licence. Their exploratory
+held-out voltage comparison improves after fitting, but still fails its numerical
+target. Missing operating-condition evidence prevents a physical validation claim.
+No measured propulsion/braking/grade dataset yet qualifies the full dynamics.
+Existing physics, controllers, scenario criteria and sensor functionality remain.
+
+- [Dataset discovery and suitability](docs/dataset-discovery.md)
+- [Architecture and implementation plan](docs/phase8-plan.md)
+- [Models, units, calibration, uncertainty and reproduction](docs/vehicle-validation.md)
+- [Phase 8 execution evidence](docs/phase8-evidence/README.md)

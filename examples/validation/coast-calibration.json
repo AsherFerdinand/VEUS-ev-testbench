@@ -1,0 +1,17 @@
+{
+  "parameters": [
+    {
+      "name": "rolling_resistance",
+      "low": 0.008,
+      "high": 0.02
+    },
+    {
+      "name": "drag_area_m2",
+      "low": 0.4,
+      "high": 0.8
+    }
+  ],
+  "objective_signal": "vehicle_speed_ms",
+  "grid_points": 7,
+  "refinements": 3
+}

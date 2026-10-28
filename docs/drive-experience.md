@@ -141,3 +141,12 @@ it does not modify Python state or supply physical validation evidence.
 See [executed evidence and screenshots](phase9-evidence/README.md) for actual
 results. Short headless cloud measurements are not Windows integrated-GPU
 benchmarks, long-session memory proofs or a guaranteed 60 FPS claim.
+
+## Phase 10 compatibility note
+
+The scenery renderer now lives in shared `scene.js`; Drive still owns its original
+simulation telemetry interpolation and controls. Analyse now defaults to Recorded
+EV replay, with the existing workflow under Model experiments & calibration.
+Replay has its own clock/state and never sends simulation commands. The generic
+recorded vehicle illustration does not load a Drive physics preset. See the
+[recorded replay guide](real-world-replay.md).

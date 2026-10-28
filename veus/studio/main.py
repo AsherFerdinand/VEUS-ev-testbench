@@ -17,6 +17,10 @@ from veus.validation.api import router as validation_router
 
 app.include_router(validation_router)
 
+from veus.replay.api import router as replay_router
+
+app.include_router(replay_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

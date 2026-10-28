@@ -224,3 +224,13 @@ presets and keyboard/pointer input over the existing WebSocket controls.
 Analyse and Validate preserve engineering capabilities. No core physics or
 controller equations change. See [frontend architecture and input policy](drive-experience.md)
 and [browser execution evidence](phase9-evidence/README.md).
+
+## Phase 10 recorded EV analysis
+
+Replay reuses the canonical importer and extracted Canvas renderer, with a
+separate recorded-time clock and no simulation commands. Measured columns remain
+separate from derived speed integrals, acceleration and signed V×I. Coverage,
+unknown polarity, missing measurements and source/config hashes remain explicit.
+See [recorded-data architecture and calculations](real-world-replay.md) and
+[executed evidence](phase10-evidence/README.md). No physical validation conclusion
+changes because observations can be replayed.

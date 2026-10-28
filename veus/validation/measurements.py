@@ -25,6 +25,7 @@ Signal = Literal[
     "position_m",
     "battery_power_w",
     "energy_wh",
+    "ambient_temperature_c",
 ]
 
 
@@ -82,6 +83,7 @@ UNITS = {
     "position_m": {"m": 1},
     "battery_power_w": {"W": 1, "kW": 1000},
     "energy_wh": {"Wh": 1, "kWh": 1000},
+    "ambient_temperature_c": {"°C": 1, "C": 1},
 }
 CANONICAL = {k: next(iter(v)) for k, v in UNITS.items()}
 

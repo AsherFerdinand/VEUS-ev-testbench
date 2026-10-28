@@ -6,6 +6,28 @@ a constant-OCV battery energy model, regenerative brake blending, analytical
 regression tests, and an interactive FastAPI dashboard. Parameters
 are illustrative and uncalibrated. This is not a production ADAS or safety tool.
 
+## Recorded EV replay · Phase 10
+
+Open **Analyse → Recorded EV replay** to inspect genuine VED Vehicle 10 records.
+Play, pause, scrub, change playback rate, click graphs or jump to a detected event.
+Sample readouts and graph cursors stay synchronized with a generic EV illustration.
+The scenery follows distance derived from recorded speed, with gaps left unknown.
+
+![Genuine VED recording replay in Analyse](docs/phase10-evidence/replay-laptop.png)
+
+The default 111-row trip 1561 window contains speed, pack voltage, signed current,
+SOC and outside air temperature over 72.1 s. Its speed integral is approximately
+493 m. Acceleration and signed V×I are derived; current polarity remains unknown,
+so energy-use and regeneration claims are unavailable. This is descriptive
+measurement analysis, not a simulated prediction or physical validation.
+
+Export summary/events/settings/full-resolution JSON and a standalone HTML analysis.
+The prior calibration workflow remains under **Model experiments & calibration**;
+its INCONCLUSIVE physical-validation findings remain unchanged.
+
+[Dataset provenance, calculations, controls and exact commands](docs/real-world-replay.md)
+· [Executed evidence and screenshots](docs/phase10-evidence/README.md)
+
 ## VEUS Drive · Phase 9
 
 Choose an illustrative EV, press **Run**, and hold **W / ↑** to accelerate or

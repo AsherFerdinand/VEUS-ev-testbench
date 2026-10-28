@@ -12,7 +12,7 @@ Trip 1558 is designated calibration; distinct trip 1561 is held out. Their sourc
 row identities, archive/member hashes and selection rules are in provenance.json.
 No large raw archive is committed. Read docs/dataset-discovery.md before reuse.
 
-Current is kept with its original sign in these files. Runtime import mapping
+Current is kept with its original sign in these files. The Phase 8 validation import mapping
 inverts it under an explicitly **unconfirmed** sign hypothesis. These experiments
 cannot establish physical vehicle validity: propulsion/braking/grade, battery
 thermal/synchronization and uncertainty evidence are missing. Dataset source
@@ -28,3 +28,10 @@ python scripts/extract_ved_subset.py path/to/VED_DynamicData_Part1.7z --output N
 That separate acquisition helper requires libarchive-c and native libarchive;
 they are **not application dependencies** and need not be installed on a Windows
 laptop to run the checked-in examples. It checks the archive and subset hashes.
+
+Phase 10 replay reuses these exact files with separate `examples/replay` settings.
+Those imports retain raw current sign (+1 mapping) and unknown polarity, rather
+than assuming the Phase 8 inversion hypothesis. Replay roles are descriptive
+exploration only; original calibration/holdout experiment roles and findings are
+unchanged. Replay additionally maps the measured outside air temperature; it is
+not battery temperature. See [the replay guide](../../docs/real-world-replay.md).

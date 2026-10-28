@@ -107,6 +107,7 @@ const fs = require("node:fs");
   await page.waitForTimeout(150);
   assert.equal(latest.status, "paused");
   assert.equal(await page.locator("#throttle").inputValue(), "0");
+  await page.click('[data-analyse="experiments"]');
   assert(await page.locator("#modelValidation").isVisible());
   await page.click("#loadValidationExample");
   await page.waitForFunction(

@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "welcome": true,
+  "returningPreference": true,
+  "directDrive": true,
+  "storageFallback": true,
+  "manualMapping": true,
+  "invalidTimestampsRejected": true,
+  "ved": {
+    "recorded_replay": "AVAILABLE",
+    "speed_acceleration": "AVAILABLE",
+    "voltage_inspection": "AVAILABLE",
+    "current_inspection": "AVAILABLE",
+    "signed_power": "AVAILABLE",
+    "energy_consumption": "CONDITIONAL",
+    "regenerative_energy": "UNAVAILABLE",
+    "motor_efficiency": "UNAVAILABLE",
+    "longitudinal_validation": "UNAVAILABLE"
+  },
+  "resolutions": [
+    [
+      1366,
+      768
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "screenshots": "docs/phase10-1-evidence",
+  "errors": [],
+  "execution_commit": "852fd9b94f107d098937d58a776f9ffe9a04e341",
+  "environment": "Headless Chromium / Linux cloud; no Windows hardware benchmark"
+}

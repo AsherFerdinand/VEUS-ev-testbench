@@ -6,6 +6,32 @@ a constant-OCV battery energy model, regenerative brake blending, analytical
 regression tests, and an interactive FastAPI dashboard. Parameters
 are illustrative and uncalibrated. This is not a production ADAS or safety tool.
 
+## VEUS Drive · Phase 9
+
+Choose an illustrative EV, press **Run**, and hold **W / ↑** to accelerate or
+**S / ↓** to brake. **Space** pauses/resumes; **R** resets. Sliders and hold buttons
+support mouse/touch. Brake demand takes priority. Inputs release on focus loss or
+workspace changes. The control bar sits directly below the road.
+
+![VEUS Drive on a laptop](docs/phase9-evidence/drive-laptop.png)
+
+**Drive** contains the 2D scene and essential telemetry. **Analyse** retains
+measurement comparison and calibration. **Validate** retains advanced settings,
+sensors/faults, complete charts and exports, with scenario/report CLI instructions.
+**Settings** offers paint selection and model limitations.
+
+![Four illustrative EV body styles](docs/phase9-evidence/vehicle-selection.png)
+
+The four presets change backend mass, motor limits and battery capacity along
+with their original SVG silhouettes. They are not manufacturer specifications.
+Scenery and wheel rotation follow received Python displacement; bounded visual
+interpolation smooths updates without changing physics. This remains a simplified
+longitudinal simulation, with no steering, lateral dynamics or suspension model.
+Real-world vehicle validation remains pending.
+
+[Controls, preset specifications and frontend architecture](docs/drive-experience.md)
+· [Browser evidence, screenshots and performance limits](docs/phase9-evidence/README.md)
+
 ## Run locally
 
 Python 3.12 is validated. From the repository root on Windows:

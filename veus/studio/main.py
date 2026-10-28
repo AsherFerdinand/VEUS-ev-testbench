@@ -105,3 +105,10 @@ async def interactive_simulation(websocket: WebSocket):
                 await websocket.send_json({"type": "error", "message": str(exc)})
     except WebSocketDisconnect:
         pass
+
+
+@app.get("/api/vehicles")
+def vehicles():
+    from veus.studio.presets import vehicle_presets
+
+    return vehicle_presets()

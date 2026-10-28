@@ -72,9 +72,11 @@ function render(data) {
   $('lane').style.transform = `translateX(-${data.position_m % 40}px)`;
   if (!samples.length || data.time_s > samples[samples.length-1].time_s) samples.push({...data, soc_percent:data.soc*100, measured_speed_kmh:data.speed_sensor_valid?data.measured_speed_ms*3.6:null, valid_measured_gap_m:data.radar_sensor_valid?data.measured_gap_m:null});
   buttons(data.status); drawCharts();
+  document.dispatchEvent(new CustomEvent('veus:telemetry',{detail:{...data}}));
 }
 function draw(canvasId, key, color, extra = []) {
-  const canvas = $(canvasId), width = canvas.clientWidth, height = canvas.clientHeight;
+  const canvas = $(canvasId); if (!canvas || !canvas.getClientRects().length || document.hidden) return;
+  const width = canvas.clientWidth, height = canvas.clientHeight;
   const scale = window.devicePixelRatio || 1;
   canvas.width = width*scale; canvas.height = height*scale;
   const ctx = canvas.getContext('2d'); ctx.scale(scale,scale);
@@ -114,11 +116,11 @@ function draw(canvasId, key, color, extra = []) {
   if (!values.length) ctx.fillText('No defined samples for this experiment',left,top+30);
 
 }
-function drawCharts() {draw('speedChart','velocity_kmh','#5ce0ce',[{key:'target_speed_kmh',color:'#a1afc3',dashed:true},{key:'lead_speed_kmh',color:'#ffc273',dashed:true}]);draw('accelChart','acceleration_ms2','#6ea9ff',[{key:'requested_acceleration_ms2',color:'#ffc273',dashed:true}]);draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');draw('gapChart','gap_m','#5ce0ce',[{key:'desired_gap_m',color:'#ffc273',dashed:true}]);draw('ttcChart','ttc_s','#6ea9ff');draw('sensorSpeedChart','velocity_kmh','#5ce0ce',[{key:'measured_speed_kmh',color:'#ffc273',dashed:true}]);draw('sensorGapChart','gap_m','#5ce0ce',[{key:'valid_measured_gap_m',color:'#ffc273',dashed:true}]);}
+function drawCharts() {draw('driveSpeedChart','velocity_kmh','#b4e5bb');draw('drivePowerChart','battery_power_kw','#d9b28c');draw('speedChart','velocity_kmh','#5ce0ce',[{key:'target_speed_kmh',color:'#a1afc3',dashed:true},{key:'lead_speed_kmh',color:'#ffc273',dashed:true}]);draw('accelChart','acceleration_ms2','#6ea9ff',[{key:'requested_acceleration_ms2',color:'#ffc273',dashed:true}]);draw('powerChart','motor_power_kw','#ffc273');draw('torqueChart','motor_torque_nm','#b6a1ff');draw('socChart','soc_percent','#5ce0ce');draw('batteryChart','battery_power_kw','#ffc273');draw('gapChart','gap_m','#5ce0ce',[{key:'desired_gap_m',color:'#ffc273',dashed:true}]);draw('ttcChart','ttc_s','#6ea9ff');draw('sensorSpeedChart','velocity_kmh','#5ce0ce',[{key:'measured_speed_kmh',color:'#ffc273',dashed:true}]);draw('sensorGapChart','gap_m','#5ce0ce',[{key:'valid_measured_gap_m',color:'#ffc273',dashed:true}]);}
 function download(name, text, mime) {const url=URL.createObjectURL(new Blob([text],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-$('configuration').addEventListener('submit', event => {event.preventDefault();pendingReset=true;send({action:'reset',config:config()});});
+$('configuration').addEventListener('submit', event => {event.preventDefault();window.VEUS?.release();pendingReset=true;send({action:'reset',config:config()});});
 $('mode').addEventListener('change',()=> {if(['braking','coast','acc','aeb'].includes($('mode').value)) $('initial_speed_kmh').value='80';if($('mode').value==='aeb'){$('lead_speed_kmh').value='80';$('initial_gap_m').value='35';}if($('mode').value==='acc'){$('lead_speed_kmh').value='60';$('initial_gap_m').value='50';}$('message').textContent='Apply & reset to use the new experiment.';});
-for(const id of ['throttle','brake']) $(id).addEventListener('input',()=> {$(id+'_value').value=$(id).value+'%';send({action:'controls',controls:controls()});});
+for(const id of ['throttle','brake']) $(id).addEventListener('input',()=> {$(id+'_value').value=$(id).value+'%';if(window.VEUS)window.VEUS.slider(id);else send({action:'controls',controls:controls()});});
 $('resetSensors').onclick=()=>{
   $('sensorsEnabled').checked=false;$('sensorMode').value='configured';
   for(const [id,value] of Object.entries({sensorSeed:42,speedNoise:0,speedBias:0,radarNoise:0,radarBias:0,closingNoise:0,closingBias:0,speedHz:100,radarHz:100,speedLatency:0,radarLatency:0,speedStale:.3,radarStale:.3,sensorFault:'none',faultSensor:'radar',faultStart:3,faultDuration:4})) $(id).value=value;
@@ -167,9 +169,9 @@ for (const canvas of document.querySelectorAll('.charts canvas')) {
 window.addEventListener('resize',drawCharts);
 function connect() {
   socket=new WebSocket(`${location.protocol==='https:'?'wss':'ws'}://${location.host}/ws/simulation`);
-  socket.onopen=()=>{connected=true;$('connection').textContent='Connected · local simulation';pendingReset=true;send({action:'reset',config:config()});};
-  socket.onmessage=event=>{const data=JSON.parse(event.data);if(data.type==='error'){pendingReset=false;$('message').textContent=data.message;return;}render(data);};
-  socket.onclose=()=>{connected=false;$('connection').textContent='Disconnected';$('message').textContent='Connection lost. Reload to start a new session; export remains available.';buttons('disconnected');};
+  socket.onopen=()=>{connected=true;document.body.classList.add('connected');$('connection').textContent='Connected · local simulation';pendingReset=true;send({action:'reset',config:config()});};
+  socket.onmessage=event=>{const data=JSON.parse(event.data);if(data.type==='error'){pendingReset=false;$('message').textContent=data.message;document.dispatchEvent(new CustomEvent('veus:error',{detail:data.message}));return;}render(data);};
+  socket.onclose=()=>{connected=false;document.body.classList.remove('connected');document.dispatchEvent(new Event('veus:disconnect'));$('connection').textContent='Disconnected';$('message').textContent='Connection lost. Reload to start a new session; export remains available.';buttons('disconnected');};
   socket.onerror=()=>{$('message').textContent='Cannot reach the simulation server.';};
 }
 buttons('ready');drawCharts();connect();

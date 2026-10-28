@@ -1,0 +1,703 @@
+:root {
+  --bg: #101515;
+  --panel: #192020;
+  --line: #303a37;
+  --muted: #a6b3ad;
+  --cyan: #b4e5bb;
+  --blue: #9abfd4;
+}
+body {
+  color: #ecf1e9;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+main {
+  max-width: 1600px;
+  padding: 0 34px 24px;
+}
+header {
+  height: 80px;
+  margin: 0;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+button {
+  background: #252f2b;
+  border-color: #3d4942;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+button:hover {
+  background: #35433b;
+}
+button.primary {
+  background: var(--cyan);
+  color: #18251d;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #c2ebaa;
+  outline-offset: 3px;
+}
+[hidden] {
+  display: none !important;
+}
+.brand {
+  color: #eaf3e5;
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+.brand span {
+  color: var(--cyan);
+}
+.brand small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 2.6px;
+  color: var(--muted);
+  font-weight: 500;
+}
+nav {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  padding-left: 35px;
+}
+nav button {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 12px 18px;
+}
+nav button[aria-current] {
+  color: var(--cyan);
+  background: #27372d;
+}
+.connection-state {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.connection-state #connection {
+  font-size: 11px;
+}
+.connection-state .badge {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.live-dot,
+#connectionDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #8bb69c;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+#connectionDot {
+  background: #dca77d;
+}
+body.connected #connectionDot {
+  background: #a5d5a5;
+}
+.workspace-heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 23px 0 15px;
+}
+.eyebrow {
+  font-size: 10px;
+  color: #9cb3a1;
+  letter-spacing: 2px;
+}
+h1 {
+  font-size: 30px;
+  letter-spacing: -1px;
+  font-weight: 500;
+  margin: 6px 0;
+}
+h2 {
+  font-weight: 500;
+}
+.drive-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.drive-toolbar strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+.drive-toolbar .muted {
+  font-size: 11px;
+  margin-left: 14px;
+}
+.drive-toolbar button {
+  padding: 7px 13px;
+  font-size: 11px;
+  background: transparent;
+}
+.driving-surface {
+  background: #b6c5b6;
+  border: 1px solid #536859;
+  border-radius: 13px;
+  overflow: hidden;
+  position: relative;
+}
+.scene-head {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  right: 22px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  color: #304a3c;
+  z-index: 1;
+}
+.scene-head small {
+  font-size: 9px;
+  color: #506b5c;
+}
+.scene-head .live-dot {
+  background: #42684e;
+}
+#sceneMode {
+  padding: 5px 9px;
+  background: #ffffff65;
+  border-radius: 4px;
+  margin-top: -5px;
+}
+#driveScene {
+  width: 100%;
+  height: 270px;
+  display: block;
+}
+.scene-caption {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #dde7da;
+  font-size: 10px;
+  letter-spacing: 0.2px;
+}
+.drive-readouts {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  padding: 20px 0 17px;
+  border-bottom: 1px solid var(--line);
+  gap: 20px;
+}
+.drive-readouts > div {
+  border-right: 1px solid var(--line);
+  padding-left: 22px;
+}
+.drive-readouts > div:first-child {
+  padding-left: 0;
+}
+.drive-readouts > div:last-child {
+  border: 0;
+}
+.drive-readouts span {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.drive-readouts strong {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+.drive-readouts .speed-readout strong {
+  font-size: 42px;
+}
+.drive-readouts small {
+  font-size: 10px;
+  margin-left: 7px;
+}
+.drive-readouts small b {
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--cyan);
+  font-weight: 400;
+}
+.soc-track {
+  height: 3px;
+  width: 95px;
+  background: #344238;
+  margin-top: 8px;
+}
+.soc-track i {
+  display: block;
+  height: 100%;
+  background: var(--cyan);
+  width: 0;
+}
+.drive-controls {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  background: var(--bg);
+  z-index: 3;
+  border-bottom: 1px solid var(--line);
+}
+.drive-actions {
+  display: flex;
+  gap: 7px;
+  white-space: nowrap;
+}
+.drive-actions button {
+  font-size: 12px;
+  padding: 12px 18px;
+}
+.mode-control {
+  width: 180px;
+  min-width: 130px;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.mode-control select {
+  margin: 4px 0 0;
+  background: #1c2621;
+  padding: 7px;
+  font-size: 12px;
+}
+.pedal-slot {
+  flex: 1;
+  max-width: 460px;
+}
+.pedals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 25px;
+}
+.pedals .control-head {
+  margin: 0 0 4px;
+  font-size: 10px;
+}
+.pedals .control-head:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+.pedals input {
+  grid-row: 2;
+  min-width: 0;
+  cursor: pointer;
+}
+.pedals output {
+  font-size: 11px;
+}
+.pedals label {
+  font-size: 11px;
+}
+.touch-pedals {
+  display: flex;
+  gap: 6px;
+}
+.touch-pedals button {
+  font-size: 11px;
+  padding: 11px;
+  touch-action: none;
+  user-select: none;
+}
+.touch-pedals button.active {
+  background: #b4e5bb;
+  color: #132619;
+}
+#touchBrake.active {
+  background: #e4aa85;
+}
+#driveNotice {
+  min-height: 20px;
+  color: #d6c49e;
+  font-size: 11px;
+  padding-top: 6px;
+}
+.drive-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #84958a;
+  font-size: 10px;
+  padding: 2px 0 18px;
+}
+kbd {
+  font:
+    10px ui-monospace,
+    monospace;
+  background: #27332b;
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin: 0 3px;
+}
+.drive-plots {
+  gap: 18px;
+}
+.drive-plots .panel {
+  padding: 15px;
+  background: #171e1b;
+}
+.drive-plots h2 {
+  font-size: 12px;
+}
+.drive-plots h2 small {
+  font-size: 10px;
+  margin-left: 8px;
+}
+.drive-plots canvas {
+  height: 145px;
+}
+.drive-plots .chart-note {
+  display: none;
+}
+.panel,
+.metric {
+  background: #19211e;
+  border-color: #303d34;
+}
+.layout {
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+.workspace {
+  min-width: 0;
+}
+.workspace pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #b9d6bb;
+}
+a {
+  color: var(--cyan);
+}
+.settings-panel {
+  max-width: 700px;
+  line-height: 1.8;
+}
+.settings-panel input[type="color"] {
+  display: block;
+  margin: 10px 0;
+  width: 65px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid var(--line);
+}
+#vehicleDialog {
+  max-width: 1100px;
+  height: fit-content;
+  max-height: 90dvh;
+  padding: 30px;
+  background: #16201b;
+}
+#vehicleDialog::backdrop {
+  background: #080f0ce8;
+  backdrop-filter: blur(5px);
+}
+.garage-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.garage-heading p {
+  font-size: 13px;
+}
+#vehicleCards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 28px 0 18px;
+}
+.vehicle-card {
+  padding: 18px 14px;
+  background: #202d25;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3b4c3e;
+  border-radius: 12px;
+  min-width: 0;
+}
+.vehicle-card.selected {
+  border-color: var(--cyan);
+  box-shadow: inset 0 0 0 1px var(--cyan);
+}
+.vehicle-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+}
+.vehicle-card .car-name {
+  font-size: 23px;
+  margin: 10px 0 2px;
+}
+.vehicle-card .category {
+  font-size: 11px;
+  color: #a6b9aa;
+}
+.vehicle-card .specs {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #b4c6b6;
+  margin: 15px 0;
+}
+.vehicle-card .choose-label {
+  font-size: 11px;
+  color: var(--cyan);
+  margin-top: auto;
+}
+.garage-heading button {
+  padding: 6px 10px;
+}
+footer {
+  font-size: 10px;
+}
+#analyseWorkspace > .panel {
+  max-width: 1100px;
+}
+.badge {
+  background: #1a241e;
+}
+@media (min-width: 1700px) {
+  #driveScene {
+    height: 370px;
+  }
+  .drive-readouts {
+    padding: 25px 0;
+  }
+  .drive-controls {
+    padding: 20px 0;
+  }
+}
+@media (max-width: 1100px) {
+  main {
+    padding: 0 22px 20px;
+  }
+  nav {
+    padding-left: 0;
+    gap: 0;
+  }
+  .drive-controls {
+    gap: 12px;
+  }
+  .touch-pedals {
+    display: none;
+  }
+  .drive-toolbar .muted {
+    display: block;
+    margin: 5px 0 0;
+  }
+  .connection-state #connection {
+    max-width: 110px;
+  }
+  .layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  header {
+    height: 70px;
+    gap: 8px;
+  }
+  nav button {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+  .connection-state #connection {
+    display: none;
+  }
+  .brand {
+    font-size: 20px;
+  }
+  .brand small {
+    font-size: 6px;
+  }
+  .connection-state {
+    gap: 0;
+  }
+  .workspace-heading {
+    padding: 18px 0 12px;
+  }
+  h1 {
+    font-size: 25px;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  #vehicleCards {
+    grid-template-columns: 1fr 1fr;
+  }
+  .drive-readouts {
+    gap: 5px;
+  }
+  .drive-readouts > div {
+    padding-left: 10px;
+  }
+  .drive-readouts strong {
+    font-size: 25px;
+  }
+  .drive-readouts .speed-readout strong {
+    font-size: 32px;
+  }
+  .drive-readouts small {
+    display: block;
+    margin: 4px 0;
+  }
+  .drive-readouts small b {
+    display: none;
+  }
+  .drive-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .drive-actions {
+    flex: 1;
+  }
+  .mode-control {
+    width: 160px;
+  }
+  .pedal-slot {
+    flex: 1;
+    min-width: 150px;
+  }
+  .touch-pedals {
+    display: flex;
+    flex: 1;
+  }
+  .touch-pedals button {
+    flex: 1;
+  }
+  .drive-bottom > span:first-child {
+    display: none;
+  }
+  .drive-plots {
+    grid-template-columns: 1fr 1fr;
+  }
+  .drive-plots canvas {
+    height: 130px;
+  }
+  #driveScene {
+    height: 230px;
+  }
+  .scene-caption {
+    font-size: 8px;
+  }
+  .scene-head small {
+    display: none;
+  }
+  .scene-head {
+    font-size: 8px;
+  }
+  .soc-track {
+    width: 60px;
+  }
+}
+@media (max-width: 450px) {
+  main {
+    padding: 0 12px 18px;
+  }
+  nav button {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  .connection-state .badge {
+    display: none;
+  }
+  .brand {
+    font-size: 17px;
+  }
+  header {
+    gap: 7px;
+  }
+  .brand small {
+    letter-spacing: 1px;
+  }
+  .drive-plots {
+    grid-template-columns: 1fr;
+  }
+  .drive-readouts span {
+    letter-spacing: 0.5px;
+    font-size: 8px;
+  }
+  .drive-readouts strong {
+    font-size: 22px;
+  }
+  .drive-readouts .speed-readout strong {
+    font-size: 30px;
+  }
+  .drive-readouts {
+    padding: 14px 0;
+  }
+  .drive-readouts > div {
+    padding-left: 7px;
+  }
+  .drive-toolbar strong {
+    font-size: 12px;
+  }
+  .drive-toolbar .muted {
+    font-size: 9px;
+  }
+  .drive-toolbar button {
+    font-size: 10px;
+  }
+  #driveScene {
+    height: 200px;
+  }
+  .scene-caption span:last-child {
+    max-width: 120px;
+    text-align: right;
+  }
+  .drive-controls {
+    padding: 10px 0;
+  }
+  .drive-actions button {
+    padding: 10px 12px;
+  }
+  .mode-control {
+    width: 155px;
+  }
+  #vehicleDialog {
+    padding: 18px;
+  }
+  #vehicleCards {
+    gap: 9px;
+    margin-top: 15px;
+  }
+  .vehicle-card {
+    padding: 10px;
+  }
+  .vehicle-card img {
+    height: 70px;
+  }
+  .vehicle-card .car-name {
+    font-size: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+}

@@ -216,3 +216,11 @@ from analytical verification. See [the model validation guide](vehicle-validatio
 [dataset assessment](dataset-discovery.md), and [executed evidence](phase8-evidence/README.md).
 No full measured-vehicle dynamics validation has yet qualified. The VED voltage
 comparison remains exploratory because operating conditions are incomplete.
+
+## Phase 9 interactive workspaces
+
+Drive adds a bounded telemetry-interpolated Canvas view, illustrative vehicle
+presets and keyboard/pointer input over the existing WebSocket controls.
+Analyse and Validate preserve engineering capabilities. No core physics or
+controller equations change. See [frontend architecture and input policy](drive-experience.md)
+and [browser execution evidence](phase9-evidence/README.md).

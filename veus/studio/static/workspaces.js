@@ -78,7 +78,8 @@
   byId("closeGarage").onclick = () => dialog.close();
   window.activeWorkspace = "drive";
   window.setWorkspace = (name) => {
-    if (!["drive", "analyse", "validate", "settings"].includes(name)) return;
+    if (!["welcome", "drive", "analyse", "validate", "settings"].includes(name))
+      return;
     document.dispatchEvent(new CustomEvent("veus:workspace", { detail: name }));
     window.activeWorkspace = name;
     for (const s of document.querySelectorAll(".workspace"))

@@ -234,3 +234,14 @@ unknown polarity, missing measurements and source/config hashes remain explicit.
 See [recorded-data architecture and calculations](real-world-replay.md) and
 [executed evidence](phase10-evidence/README.md). No physical validation conclusion
 changes because observations can be replayed.
+
+## Phase 10.1 guided workflows and readiness
+
+The nonmodal Welcome workspace and local startup preference provide entry points
+without replacing Drive/Replay/Validate. A central typed capability registry
+supplies both readiness policy and frontend explanations. CSV structure and replay
+sanity checks are shared with existing importers. Confirmed mappings, observed
+quality, required assumptions and unsupported calculations remain distinct.
+Readiness never runs physics or declares a physical-validation PASS. See
+[user onboarding](user-onboarding.md), [readiness rules](data-readiness.md) and
+[executed evidence](phase10-1-evidence/README.md).

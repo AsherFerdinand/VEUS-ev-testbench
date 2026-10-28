@@ -124,6 +124,29 @@ def interpolate(times, values, time_s, max_gap_s, method="linear"):
     return values[left] + weight * (values[right] - values[left])
 
 
+def csv_structure(raw: bytes):
+    """Shared UTF-8 CSV structure; callers inspect or validate mapped SI values."""
+    if len(raw) > 10_000_000:
+        raise ValueError("CSV limit is 10 MB; select a documented short run/window")
+    reader = csv.reader(io.StringIO(raw.decode("utf-8-sig")))
+    try:
+        header = next(reader)
+    except StopIteration:
+        raise ValueError("Empty CSV")
+    if len(header) != len(set(header)):
+        raise ValueError("Duplicate CSV column names")
+
+    def rows():
+        for count, row in enumerate(reader):
+            if count >= 100_000:
+                raise ValueError("CSV exceeds 100000 rows")
+            if len(row) != len(header):
+                raise ValueError("Malformed CSV row length")
+            yield row
+
+    return header, rows()
+
+
 def load_csv(raw: bytes, source: DataSource, config: ImportConfig) -> Measurements:
     if len(raw) > 10_000_000:
         raise ValueError("CSV limit is 10 MB; select a documented short run/window")
@@ -132,13 +155,7 @@ def load_csv(raw: bytes, source: DataSource, config: ImportConfig) -> Measuremen
         raise ValueError("Source CSV SHA-256 does not match experiment")
     if "time_s" not in config.columns:
         raise ValueError("Map a time_s column explicitly")
-    reader = csv.reader(io.StringIO(raw.decode("utf-8-sig")))
-    try:
-        header = next(reader)
-    except StopIteration:
-        raise ValueError("Empty CSV")
-    if len(header) != len(set(header)):
-        raise ValueError("Duplicate CSV column names")
+    header, reader = csv_structure(raw)
     indices = {}
     for signal, mapping in config.columns.items():
         if mapping.column not in header:
@@ -150,10 +167,6 @@ def load_csv(raw: bytes, source: DataSource, config: ImportConfig) -> Measuremen
         indices[signal] = header.index(mapping.column)
     values = {key: [] for key in config.columns}
     for row in reader:
-        if len(values["time_s"]) >= 100_000:
-            raise ValueError("CSV exceeds 100000 rows")
-        if len(row) != len(header):
-            raise ValueError("Malformed CSV row length")
         for signal, mapping in config.columns.items():
             text = row[indices[signal]].strip()
             if text.lower() in {"", "na", "nan", "null"}:

@@ -88,10 +88,8 @@ def positive_integral(a, b, dt):
     return a * dt * fraction / 2 if a > 0 else b * dt * (1 - fraction) / 2
 
 
-def analyse(raw: bytes, config: ReplayConfig):
-    if len(raw) > 2_000_000:
-        raise ValueError("Replay supports CSV windows up to 2 MB and 5000 rows")
-    data = load_csv(raw, config.source, config.preprocessing)
+def validate_window(data, limits: SanityLimits):
+    """Shared bounded window and broad sanity checks; no repair or resampling."""
     if len(data.times) > 5000:
         raise ValueError(
             "Replay supports at most 5000 full-resolution rows; select a documented window"
@@ -101,7 +99,6 @@ def analyse(raw: bytes, config: ReplayConfig):
         raise ValueError(
             "Replay window exceeds one day; select a documented smaller window"
         )
-    limits = config.sanity_limits
     for key, bound in [
         ("vehicle_speed_ms", limits.speed_ms),
         ("battery_voltage_v", limits.voltage_v),
@@ -124,6 +121,14 @@ def analyse(raw: bytes, config: ReplayConfig):
         raise ValueError(
             "Recorded power exceeds broad 10 MW sanity limit; inspect units"
         )
+
+
+def analyse(raw: bytes, config: ReplayConfig):
+    if len(raw) > 2_000_000:
+        raise ValueError("Replay supports CSV windows up to 2 MB and 5000 rows")
+    data = load_csv(raw, config.source, config.preprocessing)
+    validate_window(data, config.sanity_limits)
+    times, measured = data.times, data.signals
     speed = measured["vehicle_speed_ms"]
     voltage, current = (
         measured.get("battery_voltage_v"),

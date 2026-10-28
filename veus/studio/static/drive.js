@@ -237,7 +237,7 @@
     if (connected) reset();
     else queuedReset = preset;
     el("vehicleDialog").close();
-    el("driveRun").focus();
+    if (window.activeWorkspace === "drive") el("driveRun").focus();
   }
   fetch("/api/vehicles")
     .then((r) => {
@@ -263,7 +263,7 @@
           });
       }
       applyPreset(presets[0]);
-      el("vehicleDialog").showModal();
+      if (window.activeWorkspace === "drive") el("vehicleDialog").showModal();
     })
     .catch((e) => {
       el("driveNotice").textContent = e.message;

@@ -6,6 +6,77 @@ a constant-OCV battery energy model, regenerative brake blending, analytical
 regression tests, and an interactive FastAPI dashboard. Parameters
 are illustrative and uncalibrated. This is not a production ADAS or safety tool.
 
+## Quick start
+
+From the repository folder in **Anaconda Prompt**:
+
+```bat
+python -m pip install -r requirements-report.txt
+python -m uvicorn veus.studio.main:app --port 8770
+```
+
+Open **http://localhost:8770**. Welcome explains the three workflows; direct
+navigation stays available, and a local browser preference skips repeat onboarding.
+No account or vehicle-data upload is needed to drive.
+
+![VEUS welcome and workflow choices](docs/phase10-1-evidence/welcome-laptop.png)
+
+## Choose Your Workflow
+
+| Workflow | Purpose and example | Required / optional inputs | Outputs and guide |
+|---|---|---|---|
+| **Drive** | Drive a simulated EV; try acceleration, coasting and braking. | **No data required.** Illustrative presets are supplied. Optionally customize supported vehicle, battery, road and controller settings. | Simulated telemetry, charts and CSV/run metadata. [Drive guide](docs/drive-experience.md) |
+| **Analyse** | Replay a recording; inspect an event and its battery measurements. | **Replay needs timestamp + speed in CSV.** Optional voltage/current/SOC and other supported signals enable specific analyses. Columns, units and source origin must be confirmed. | Synchronized observations, derived quantities, threshold events and descriptive reports. [Readiness](docs/data-readiness.md) · [Replay](docs/real-world-replay.md) |
+| **Validate** | Verify equations or run existing ADAS/sensor experiments. | **Built-in scenarios need no external data.** Custom tests need model parameters, initial conditions and supported scenario JSON. Physical validation additionally needs independent measured inputs/outputs, units/times and documented conditions. | Defined scenario/reference checks and engineering reports. [Verification](docs/validation.md) · [Model evaluation](docs/vehicle-validation.md) |
+
+[Welcome, preferences, examples and step-by-step workflows](docs/user-onboarding.md).
+Model experiments/calibration remain accessible in Analyse; Validate contains the
+simulation laboratory, sensors and scenario/report instructions.
+
+## What Data Does VEUS Need?
+
+Recorded replay starts with numeric timestamps and speed. This **synthetic** CSV
+illustrates the format; it is not measured vehicle evidence:
+
+```csv
+time_s,speed_kmh
+0,0
+1,3.6
+2,7.2
+3,10.8
+```
+
+Use **Analyse → Data Readiness** to inspect a CSV, correct proposed mappings,
+confirm units and measured/synthetic origin, then see AVAILABLE / CONDITIONAL /
+UNAVAILABLE capabilities. Recognized columns do not establish accuracy,
+synchronization, polarity or physical validity. For example, VED supports replay
+and signed V×I; energy remains conditional and physical-model validation inputs
+remain unavailable. Phase 8's INCONCLUSIVE conclusion is preserved.
+
+Supported imports are **UTF-8 CSV measurements plus JSON configuration**, not
+arbitrary JSON telemetry. Time is numeric s/ms, with strictly increasing unique
+values; units/sign mappings are explicit. Interactive recordings are bounded at
+2 MB / 5000 rows / one day. Electrical-only time/V/I data can be inspected without
+speed, but cannot replay a journey. No pedal-to-torque/brake-force conversion is
+assumed. [Supported signals, quality checks and exact rules](docs/data-readiness.md).
+
+- **A — Basic replay:** [synthetic CSV](examples/onboarding/basic-replay.csv) and [ReplayConfig](examples/onboarding/basic-replay.json).
+- **B — EV electrical analysis:** [synthetic CSV](examples/onboarding/electrical-analysis.csv) and [ReplayConfig](examples/onboarding/electrical-analysis.json).
+- **C — Existing engineering example:** [synthetic battery reference CSV](examples/validation/synthetic-battery-train.csv), [Phase 8 Experiment](examples/validation/synthetic-battery-train.json) and [fitting settings](examples/validation/battery-calibration.json). This is the existing model experiment format, not a universal replay schema.
+
+Attachment downloads are also available inside Data Readiness. Genuine licensed
+VED examples remain bundled with their [source/licence record](datasets/ved/README.md).
+
+<details><summary>See the readiness interface and execution evidence</summary>
+
+![VED data readiness assessment](docs/phase10-1-evidence/readiness-laptop.png)
+
+[Tests, example assessments and mobile screenshots](docs/phase10-1-evidence/README.md).
+
+</details>
+
+<details><summary>Drive and recorded replay implementation examples</summary>
+
 ## Recorded EV replay · Phase 10
 
 Open **Analyse → Recorded EV replay** to inspect genuine VED Vehicle 10 records.
@@ -54,7 +125,9 @@ Real-world vehicle validation remains pending.
 [Controls, preset specifications and frontend architecture](docs/drive-experience.md)
 · [Browser evidence, screenshots and performance limits](docs/phase9-evidence/README.md)
 
-## Run locally
+</details>
+
+## Development setup
 
 Python 3.12 is validated. From the repository root on Windows:
 

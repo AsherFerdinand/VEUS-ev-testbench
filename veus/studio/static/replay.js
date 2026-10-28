@@ -60,6 +60,9 @@
   };
   function setTab(name) {
     tab = name;
+    document.dispatchEvent(
+      new CustomEvent("veus:analyse-tab", { detail: name }),
+    );
     panel.hidden = name !== "replay";
     original.hidden = name !== "experiments";
     for (const b of tabs.querySelectorAll("button")) {
@@ -798,6 +801,25 @@
     },
     seek,
     selectTab: setTab,
+    async loadRecording(payload) {
+      const token = ++loadToken;
+      pause();
+      const response = await fetch("/api/replay/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok)
+        throw Error(
+          typeof data.detail === "string"
+            ? data.detail
+            : JSON.stringify(data.detail),
+        );
+      if (token !== loadToken) return;
+      install(data, payload);
+      setTab("replay");
+    },
     pause,
   };
   fetch("/api/replay/datasets")

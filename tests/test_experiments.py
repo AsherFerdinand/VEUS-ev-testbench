@@ -147,6 +147,9 @@ def test_measurement_report_and_api_do_not_claim_validation(tmp_path):
     exp, data, raw = pair("synthetic-battery-holdout")
     result = analyse(exp, raw)
     assert result["summary"]["label"] == "Synthetic pipeline demonstration"
+    assert result["summary"]["provenance"]["validation_scope"].startswith(
+        "Synthetic pipeline demonstration"
+    )
     assert "Synthetic pipeline demonstration" in result["html"]
     measured, _, measured_raw = pair("ved-10-1561")
     real = analyse(measured, measured_raw)

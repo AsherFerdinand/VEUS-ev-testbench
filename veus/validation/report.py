@@ -114,7 +114,8 @@ def analyse(
         if calibrated
         else None,
         sensitivity=study,
-        provenance=provenance(Path(__file__).resolve().parents[2]),
+        provenance=provenance(Path(__file__).resolve().parents[2])
+        | {"validation_scope": label + "; no broad vehicle or safety validation"},
     )
     body = (
         "<h2>"

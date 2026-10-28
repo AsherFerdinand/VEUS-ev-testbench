@@ -205,3 +205,14 @@ and result contracts, analytical reference trajectories, explicit requirement
 criteria, and report artifact/metric definitions are documented in validation.md.
 The separate SOH project boundary is documented in soh-integration.md. This
 increment does not change controller algorithms or claim measured validation.
+
+## Phase 8 measurement experiments
+
+The measurement adapter reuses the longitudinal plant with explicit physical
+inputs; live controllers and virtual sensor timing remain unchanged. CSV source
+bytes and experiment hashes distinguish measurements from synthetic references.
+Training-only bounded calibration and guarded independent evaluation are separate
+from analytical verification. See [the model validation guide](vehicle-validation.md),
+[dataset assessment](dataset-discovery.md), and [executed evidence](phase8-evidence/README.md).
+No full measured-vehicle dynamics validation has yet qualified. The VED voltage
+comparison remains exploratory because operating conditions are incomplete.

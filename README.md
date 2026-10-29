@@ -33,6 +33,29 @@ No account or vehicle-data upload is needed to drive.
 Model experiments/calibration remain accessible in Analyse; Validate contains the
 simulation laboratory, sensors and scenario/report instructions.
 
+## Investigate genuine EV recordings
+
+Analyse now includes **Investigate · Compare · Reports** alongside Replay and Data
+Readiness. Select a VED recording, load it into Replay, confirm its mappings and
+check readiness. Select events to see supporting samples and shared signal cursors;
+compare two catalogue or imported recordings and export an engineering case study.
+
+Two new genuine recordings contain 534 samples over 460.4 s and 367 samples over
+370.3 s. Their gaps are preserved: distance covers known segments only, and energy
+remains unavailable because current polarity is unresolved. No efficiency or
+physical-validation claim is made.
+
+[Investigation guide](docs/real-world-investigation.md) ·
+[Executed case, report and browser evidence](docs/phase11-evidence/README.md)
+
+![Recorded-event investigation](docs/phase11-evidence/investigation-laptop.png)
+
+Generate a reproducible report without the dashboard:
+
+```bash
+python -m veus.investigation --first ved-10-1561-full --second ved-10-1567-full --output NEW_CASE_DIRECTORY
+```
+
 ## What Data Does VEUS Need?
 
 Recorded replay starts with numeric timestamps and speed. This **synthetic** CSV

@@ -12,6 +12,7 @@ article{min-width:0}.fields>*{min-width:0}input[type=file]{max-width:100%;min-wi
 <link rel="stylesheet" href="/static/drive.css">
 <link rel="stylesheet" href="/static/replay.css">
 <link rel="stylesheet" href="/static/guidance.css">
+<link rel="stylesheet" href="/static/investigation.css">
 </head>
 <body><main>
 <header><div><div class="eyebrow">VEUS / ENGINEERING WORKBENCH</div><h1>Longitudinal Testbench</h1><div class="muted">Configure a vehicle. Apply a command. Inspect the response.</div></div><div><span class="badge" id="status">READY</span> <span id="connection">Connecting…</span></div></header>
@@ -106,4 +107,4 @@ article{min-width:0}.fields>*{min-width:0}input[type=file]{max-width:100%;min-wi
 <small>CSV bytes must match the experiment SHA-256. No missing drive/brake inputs are inferred from speed. Editable JSON settings are validated by the server; final validation data cannot be fitted. Reports distinguish numeric criteria from evidence sufficiency.</small>
 </details></section>
 <footer>VEUS Studio Telemetry · Mechanical simulation with 0.01 s physics steps and nominal 1× playback. Network/load may slow playback; simulation time is authoritative. Forward motion only; ideal brake blending; constant-OCV battery with resistive sag and energy limits; no thermal model; simplified cruise, ACC and AEB, without production safety validation. Defaults are illustrative, not calibrated vehicle data. Forces and power describe the final integration interval; speed and position are end-of-interval values. Runs stop at their configured duration.</footer>
-</article></div></main><dialog id="chartDialog" aria-label="Expanded telemetry chart"></dialog><script src="/static/workspaces.js"></script><script src="/static/dashboard.js"></script><script src="/static/validation.js"></script><script src="/static/scene.js"></script><script src="/static/drive.js"></script><script src="/static/replay-controller.js"></script><script src="/static/replay.js"></script><script src="/static/guidance.js"></script></body></html>
+</article></div></main><dialog id="chartDialog" aria-label="Expanded telemetry chart"></dialog><script src="/static/workspaces.js"></script><script src="/static/dashboard.js"></script><script src="/static/validation.js"></script><script src="/static/scene.js"></script><script src="/static/drive.js"></script><script src="/static/replay-controller.js"></script><script src="/static/recording-plots.js"></script><script src="/static/replay.js"></script><script src="/static/guidance.js"></script><script src="/static/investigation.js"></script></body></html>

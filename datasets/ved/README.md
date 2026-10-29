@@ -35,3 +35,29 @@ than assuming the Phase 8 inversion hypothesis. Replay roles are descriptive
 exploration only; original calibration/holdout experiment roles and findings are
 unchanged. Replay additionally maps the measured outside air temperature; it is
 not battery temperature. See [the replay guide](../../docs/real-world-replay.md).
+
+## Phase 11 full member groups
+
+`ved-10-1561-full.csv` (534 rows, 460.4 s) and `ved-10-1567-full.csv`
+(367 rows, 370.3 s) retain every vehicle/trip row in the inspected first weekly
+member. They are not concatenations and do not prove that an entire physical
+journey was captured. Selection uses the first two chronological multi-minute
+vehicle-10 groups, without event/residual filtering. The original short fixtures
+remain unchanged; the full 1561 group overlaps the earlier short window.
+
+[full-recordings-provenance.json](full-recordings-provenance.json) records pinned
+source, exact source line ranges, timestamps, hashes, licence and modifications.
+The six-column numeric strings retain source units and raw current sign. The
+23/34 timestamp gaps remain present; unknown travel is not filled. Use separate
+`examples/replay/*-full.json` configurations with unknown polarity. No energy,
+regen, SOH or physical-validation conclusion follows.
+
+Optional reproduction (libarchive-c + native libarchive, not app dependencies):
+
+```text
+python scripts/extract_ved_recordings.py path/to/VED_DynamicData_Part1.7z --output NEW_DIRECTORY
+```
+
+Only small CSV projections are committed. See the
+[investigation guide](../../docs/real-world-investigation.md) and
+[executed case](../../docs/phase11-evidence/README.md).

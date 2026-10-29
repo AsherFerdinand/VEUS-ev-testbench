@@ -317,7 +317,9 @@
       const name = el("readinessDataset").value;
       const response = await fetch(
         name.startsWith("ved-")
-          ? "/api/replay/datasets/" + name
+          ? (name.endsWith("-full")
+              ? "/api/investigation/recordings/"
+              : "/api/replay/datasets/") + name
           : "/api/readiness/templates/" + name + "/config",
       );
       if (!response.ok) throw Error("Cannot load example");
@@ -519,10 +521,13 @@
     if (!assessment?.replay_configuration) return;
     el("readinessProceed").disabled = true;
     try {
-      await window.VEUSReplay.loadRecording({
-        csv_base64: rawBase64,
-        configuration: assessment.replay_configuration,
-      });
+      await window.VEUSReplay.loadRecording(
+        {
+          csv_base64: rawBase64,
+          configuration: assessment.replay_configuration,
+        },
+        assessment.configuration,
+      );
       window.scrollTo(0, 0);
     } catch (e) {
       status("Replay unavailable: " + e.message);
@@ -577,6 +582,17 @@
   if (!storage)
     el("welcomeStorageNote").textContent =
       "Storage unavailable; Welcome is dismissible for this visit.";
+  fetch("/api/investigation/catalogue")
+    .then((r) => r.json())
+    .then((items) => {
+      for (const item of items.filter((i) => !i.legacy)) {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.label;
+        el("readinessDataset").append(option);
+      }
+    })
+    .catch(() => {});
   window.VEUSGuidance = {
     open: () => window.setWorkspace("welcome"),
     readiness: () => {

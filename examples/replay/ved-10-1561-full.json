@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "source": {
+    "dataset": "University of Michigan VED",
+    "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+    "licence": "Apache-2.0 (upstream VED)",
+    "kind": "measured",
+    "role": "exploration",
+    "run_id": "VED-Veh10-Trip1561",
+    "expected_sha256": "cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9",
+    "provenance_evidence": "Complete vehicle/trip group from pinned weekly CSV; exact contiguous source rows and hashes in full-recordings-provenance.json. Source current sign retained, polarity unverified.",
+    "inputs_verified": false,
+    "vehicle_id": "VED-Veh10",
+    "vehicle_specifications": {
+      "manufacturer": "Nissan",
+      "model": "Leaf",
+      "year": 2013,
+      "advertised_capacity_kwh": 24,
+      "generalized_weight_lb": 3500,
+      "weight_note": "Binned fleet weight; payload not measured",
+      "battery_temperature": "Not available",
+      "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+    }
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "Timestamp(ms)",
+        "unit": "ms",
+        "sign": 1
+      },
+      "vehicle_speed_ms": {
+        "column": "Vehicle Speed[km/h]",
+        "unit": "km/h",
+        "sign": 1
+      },
+      "battery_current_a": {
+        "column": "HV Battery Current[A]",
+        "unit": "A",
+        "sign": 1
+      },
+      "battery_voltage_v": {
+        "column": "HV Battery Voltage[V]",
+        "unit": "V",
+        "sign": 1
+      },
+      "battery_soc": {
+        "column": "HV Battery SOC[%]",
+        "unit": "%",
+        "sign": 1
+      },
+      "ambient_temperature_c": {
+        "column": "OAT[DegC]",
+        "unit": "\u00b0C",
+        "sign": 1
+      }
+    },
+    "max_gap_s": 2
+  },
+  "current_sign": "unknown",
+  "sign_evidence": null,
+  "limitations": [
+    "Complete trip group in this weekly member; source timestamp gaps remain and unknown travel is not filled.",
+    "Raw VED current polarity is unverified. Signed V\u00d7I is not labelled discharge or regeneration.",
+    "No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.",
+    "Battery temperature, instrument uncertainty and channel synchronization are unknown.",
+    "Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.",
+    "Generic EV silhouette and fictional landscape do not identify the vehicle or real location."
+  ],
+  "provenance": {
+    "subset": {
+      "vehicle_id": 10,
+      "trip": "1561",
+      "source_line_range": [
+        70952,
+        71485
+      ],
+      "rows": 534,
+      "original_time_start_ms": 0.0,
+      "original_time_end_ms": 460400.0,
+      "day_numbers": [
+        "2.89390195371"
+      ],
+      "subset_sha256": "cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9",
+      "bytes": 25037,
+      "gaps_gt2_s": 23,
+      "modification": "Six columns projected; retained numeric strings, original timestamps and source current sign unchanged. GPS/unrelated signals omitted."
+    },
+    "upstream": {
+      "upstream_commit": "6baa4963782d515a67d32a5490bd5d11f5d9bf0d",
+      "archive_sha256": "44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61",
+      "archive_bytes": 82723769,
+      "member": "VED_171101_week.csv",
+      "licence": "Apache-2.0; see UPSTREAM-LICENSE.txt",
+      "selection": "First two chronological multi-minute vehicle-10 trips in the first weekly member; all rows retained, including gaps; no residual/event-based selection."
+    }
+  }
+}

@@ -38,7 +38,9 @@
     subview = "charts",
     loadToken = 0;
   let replayImages = {},
-    plotCache = {};
+    plotCache = {},
+    readinessContext = null,
+    selectedInterval = null;
   const scene = new window.VEUSScene(
     el("replayScene"),
     () => replayImages,
@@ -69,7 +71,7 @@
       if (b.dataset.analyse === name) b.setAttribute("aria-current", "page");
       else b.removeAttribute("aria-current");
     }
-    if (name !== "replay") pause();
+    if (!["replay", "investigate"].includes(name)) pause();
     else start();
     window.dispatchEvent(new Event("resize"));
   }
@@ -116,7 +118,7 @@
     if (
       raf === null &&
       window.activeWorkspace === "analyse" &&
-      tab === "replay" &&
+      ["replay", "investigate"].includes(tab) &&
       !document.hidden
     )
       raf = requestAnimationFrame(frame);
@@ -127,7 +129,7 @@
     if (
       clock?.playing &&
       window.activeWorkspace === "analyse" &&
-      tab === "replay" &&
+      ["replay", "investigate"].includes(tab) &&
       !document.hidden
     )
       start();
@@ -175,7 +177,9 @@
       return num(value / 1000, 3) + " kW";
     return num(value, 4) + " " + (result.units[key] || "");
   }
-  function install(data, payload) {
+  function install(data, payload, evidence = null) {
+    readinessContext = evidence;
+    selectedInterval = null;
     pause();
     result = data;
     request = payload;
@@ -291,8 +295,22 @@
           : "vehicle_speed_ms";
     renderEvents();
     renderSummary();
+    document.dispatchEvent(
+      new CustomEvent("veus:recording", {
+        detail: { source_sha256: data.metadata.raw_sha256 },
+      }),
+    );
     update(performance.now(), true);
     start();
+  }
+  function selectEvent(index) {
+    const event = result?.events[index];
+    if (!event) return;
+    selectedInterval = [event.start_s, event.end_s];
+    seek(event.start_s);
+    document.dispatchEvent(
+      new CustomEvent("veus:replay-event", { detail: { event_index: index } }),
+    );
   }
   function renderEvents() {
     const host = el("replayEvents");
@@ -309,7 +327,7 @@
       b.title = e.rule + " / " + e.qualification;
       b.dataset.eventStart = e.start_s;
       b.onclick = () => {
-        seek(e.start_s);
+        selectEvent(result.events.indexOf(e));
         el("replayStatus").textContent = e.rule + " · " + e.qualification;
       };
       host.append(b);
@@ -344,6 +362,19 @@
     el("replayComparison").textContent =
       result.comparison.reason + " " + result.quality.physical_validation;
   }
+  async function postRecording(data) {
+    const response = await fetch("/api/replay/analyse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        configuration: data.configuration,
+        csv_base64: data.csv_base64,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw Error(result.detail || "Recording rejected");
+    return result;
+  }
   async function loadDataset() {
     const token = ++loadToken;
     pause();
@@ -351,12 +382,16 @@
       "Loading and validating source measurements…";
     try {
       const response = await fetch(
-        "/api/replay/datasets/" + el("replayDataset").value,
+        (el("replayDataset").value.endsWith("-full")
+          ? "/api/investigation/recordings/"
+          : "/api/replay/datasets/") + el("replayDataset").value,
       );
       const data = await response.json();
       if (!response.ok) throw Error(data.detail || "Cannot load recording");
       if (token !== loadToken) return;
-      install(data.analysis, {
+      const resolved = data.analysis || (await postRecording(data));
+      if (token !== loadToken) return;
+      install(resolved, {
         configuration: data.configuration,
         csv_base64: data.csv_base64,
       });
@@ -511,122 +546,9 @@
       el("replayExportHtml").disabled = false;
     }
   };
+  const sharedPlot = new window.VEUSRecordingPlot();
   function drawGraph(id, key, state) {
-    const canvas = el(id);
-    if (!canvas.getClientRects().length || !result) return;
-    const w = canvas.clientWidth,
-      h = canvas.clientHeight;
-    if (!w || !h) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1),
-      signature = [key, w, h, dpr, result.analysis_sha256].join(":");
-    let cached = plotCache[id];
-    if (!cached || cached.signature !== signature) {
-      const image = document.createElement("canvas");
-      image.width = w * dpr;
-      image.height = h * dpr;
-      const c = image.getContext("2d");
-      c.scale(dpr, dpr);
-      const left = 62,
-        right = w - 12,
-        top = 15,
-        bottom = h - 28,
-        scale =
-          key === "vehicle_speed_ms"
-            ? 3.6
-            : key === "battery_soc"
-              ? 100
-              : ["electrical_power_w", "battery_power_w"].includes(key)
-                ? 0.001
-                : 1,
-        values = getSignal(key) || [],
-        finite = values.filter(Number.isFinite).map((v) => v * scale);
-      let low =
-          key === "battery_soc" && finite.length
-            ? Math.min(...finite)
-            : Math.min(0, ...finite),
-        high = Math.max(low + 1, ...finite);
-      const pad = (high - low) * 0.1;
-      low -= key === "battery_soc" ? pad : 0;
-      high += pad;
-      c.fillStyle = "#19211e";
-      c.fillRect(0, 0, w, h);
-      c.font = "11px system-ui";
-      for (const gap of result.metadata.gaps) {
-        c.fillStyle = "#584b3c";
-        c.fillRect(
-          left + (gap.start_s / clock.duration) * (right - left),
-          top,
-          ((gap.end_s - gap.start_s) / clock.duration) * (right - left),
-          bottom - top,
-        );
-      }
-      for (let i = 0; i <= 4; i++) {
-        const y = top + ((bottom - top) * i) / 4;
-        c.strokeStyle = "#334239";
-        c.beginPath();
-        c.moveTo(left, y);
-        c.lineTo(right, y);
-        c.stroke();
-        c.fillStyle = "#adbcaf";
-        c.fillText(
-          (high - ((high - low) * i) / 4).toFixed(
-            key === "battery_soc" ? 2 : 1,
-          ),
-          3,
-          y + 4,
-        );
-      }
-      c.fillText("0 s", left, h - 6);
-      c.fillText(clock.duration.toFixed(1) + " s", right - 43, h - 6);
-      c.strokeStyle = key === "electrical_power_w" ? "#d9b28c" : "#b4e5bb";
-      c.lineWidth = 2;
-      c.beginPath();
-      let started = false;
-      result.time_s.forEach((t, i) => {
-        const v = values[i];
-        if (v === null || v === undefined) {
-          started = false;
-          return;
-        }
-        if (
-          i &&
-          t - result.time_s[i - 1] >
-            result.configuration.preprocessing.max_gap_s
-        )
-          started = false;
-        const x = left + (t / clock.duration) * (right - left),
-          y = bottom - ((v * scale - low) / (high - low)) * (bottom - top);
-        if (started) c.lineTo(x, y);
-        else c.moveTo(x, y);
-        started = true;
-      });
-      c.stroke();
-      if (!finite.length) {
-        c.fillStyle = "#adbcaf";
-        c.fillText("Unavailable: no valid samples", left, top + 30);
-      }
-      cached = plotCache[id] = { signature, image, left, right };
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.dataset.plotLeft = left;
-      canvas.dataset.plotRight = right;
-    }
-    const c = canvas.getContext("2d");
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    c.drawImage(cached.image, 0, 0);
-    c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const x =
-      cached.left +
-      (state.time_s / clock.duration) * (cached.right - cached.left);
-    c.strokeStyle = "#edf0d7";
-    c.lineWidth = 1;
-    c.setLineDash([4, 3]);
-    c.beginPath();
-    c.moveTo(x, 8);
-    c.lineTo(x, h - 25);
-    c.stroke();
-    c.setLineDash([]);
-    canvas.dataset.cursorTime = state.time_s.toFixed(6);
+    sharedPlot.draw(el(id), result, state, key, selectedInterval);
   }
   for (const [canvasId, selector, hoverId] of [
     ["replayGraphA", "replaySignalA", "replayHoverA"],
@@ -675,7 +597,7 @@
     const state = clock.tick(now),
       active =
         window.activeWorkspace === "analyse" &&
-        tab === "replay" &&
+        ["replay", "investigate"].includes(tab) &&
         !document.hidden;
     if (active) {
       scene.render(state.position_m, null, "sedan");
@@ -684,6 +606,9 @@
     }
     if (!force && now - lastUI < 80) return;
     lastUI = now;
+    document.dispatchEvent(
+      new CustomEvent("veus:replay-clock", { detail: state }),
+    );
     text(
       el("replayState"),
       state.gap
@@ -801,9 +726,21 @@
     },
     seek,
     selectTab: setTab,
-    async loadRecording(payload) {
+    get input() {
+      return request
+        ? {
+            ...request,
+            readiness_configuration: readinessContext,
+            mappings_confirmed: true,
+          }
+        : null;
+    },
+    selectEvent,
+    async loadRecording(payload, evidence = null) {
       const token = ++loadToken;
       pause();
+      // A pending import must not expose a previous recording as the new result.
+      result = null;
       const response = await fetch("/api/replay/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -817,12 +754,12 @@
             : JSON.stringify(data.detail),
         );
       if (token !== loadToken) return;
-      install(data, payload);
+      install(data, payload, evidence);
       setTab("replay");
     },
     pause,
   };
-  fetch("/api/replay/datasets")
+  fetch("/api/investigation/catalogue")
     .then((r) => r.json())
     .then((items) => {
       for (const item of items) {

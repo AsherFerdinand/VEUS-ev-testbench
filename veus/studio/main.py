@@ -25,6 +25,10 @@ from veus.readiness.api import router as readiness_router
 
 app.include_router(readiness_router)
 
+from veus.investigation.api import router as investigation_router
+
+app.include_router(investigation_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

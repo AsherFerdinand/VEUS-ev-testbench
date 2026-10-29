@@ -1,0 +1,46 @@
+{
+  "upstream_commit": "6baa4963782d515a67d32a5490bd5d11f5d9bf0d",
+  "archive_sha256": "44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61",
+  "archive_bytes": 82723769,
+  "member": "VED_171101_week.csv",
+  "licence": "Apache-2.0; see UPSTREAM-LICENSE.txt",
+  "selection": "First two chronological multi-minute vehicle-10 trips in the first weekly member; all rows retained, including gaps; no residual/event-based selection.",
+  "recordings": {
+    "ved-10-1561-full": {
+      "vehicle_id": 10,
+      "trip": "1561",
+      "source_line_range": [
+        70952,
+        71485
+      ],
+      "rows": 534,
+      "original_time_start_ms": 0.0,
+      "original_time_end_ms": 460400.0,
+      "day_numbers": [
+        "2.89390195371"
+      ],
+      "subset_sha256": "cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9",
+      "bytes": 25037,
+      "gaps_gt2_s": 23,
+      "modification": "Six columns projected; retained numeric strings, original timestamps and source current sign unchanged. GPS/unrelated signals omitted."
+    },
+    "ved-10-1567-full": {
+      "vehicle_id": 10,
+      "trip": "1567",
+      "source_line_range": [
+        211402,
+        211768
+      ],
+      "rows": 367,
+      "original_time_start_ms": 0.0,
+      "original_time_end_ms": 370300.0,
+      "day_numbers": [
+        "4.54020265741"
+      ],
+      "subset_sha256": "e1a2c68d6640117ef2fc02964966ac0e3154f613093d7bb2f70fd7573946244a",
+      "bytes": 16980,
+      "gaps_gt2_s": 34,
+      "modification": "Six columns projected; retained numeric strings, original timestamps and source current sign unchanged. GPS/unrelated signals omitted."
+    }
+  }
+}

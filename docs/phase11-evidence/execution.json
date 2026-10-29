@@ -1,0 +1,38 @@
+{
+  "source_commit": "108912c17c5e1efc8ac6b62bb0c82f001167c4a3",
+  "tracked_and_untracked_source_clean_before_generation": true,
+  "branch": "feature/real-world-ev-investigation",
+  "base_commit": "37c87e6994dec5722373d6512e0072e8708af747",
+  "main_not_modified": true,
+  "case_command": "python -m veus.investigation --first ved-10-1561-full --second ved-10-1567-full --output NEW_CASE_DIRECTORY",
+  "case_sha256": "3740be7a31e9f617fa9e6ae8bd07b0309dd4b25c6304efb6f1048ee275c65a5e",
+  "repeat_canonical_case_equal": true,
+  "pytest": "187 passed, 1 upstream Starlette/httpx deprecation warning",
+  "playback_clock": "9 passed",
+  "coverage": {
+    "covered_lines": 2750,
+    "num_statements": 2918,
+    "percent_covered": 92.02782236490101,
+    "percent_covered_display": "92",
+    "missing_lines": 168,
+    "excluded_lines": 2,
+    "percent_statements_covered": 94.24263193968471,
+    "percent_statements_covered_display": "94",
+    "num_branches": 820,
+    "num_partial_branches": 116,
+    "covered_branches": 690,
+    "missing_branches": 130,
+    "percent_branches_covered": 84.14634146341463,
+    "percent_branches_covered_display": "84"
+  },
+  "archive_reextraction": "Both files reproduced byte-for-byte from pinned archive using scripts/extract_ved_recordings.py",
+  "artifact_sha256": {
+    "report.html": "4a62fc965dac693ff0b6fd4e9ad4cc197ab700805d360485d15cd1ba1b726e6a",
+    "case-study.json": "73aa3b0cb44a19267492aa51f09d34a0e31ca65addac66539357b86a6bbf10c8",
+    "original-2.csv": "e1a2c68d6640117ef2fc02964966ac0e3154f613093d7bb2f70fd7573946244a",
+    "original-1.csv": "cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9",
+    "configuration-1.json": "65b7ff9a03194cf08bb3e98dc93a795308984dc364a2ddc694e4c5c66f81bc47",
+    "configuration-2.json": "60c9d08fc630cf7e011b7c92464e6a90fd2e7dcd758ab1e1f9f6a3b1178eb38c",
+    "measurements-derived.csv": "41ce32e3b12ea31afad955de2767e5012cab6e1e1339c5195a0ee4d3754b44d5"
+  }
+}

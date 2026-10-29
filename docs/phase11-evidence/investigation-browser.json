@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "fullRecordingSamples": 534,
+  "secondRecordingSamples": 367,
+  "sharedCursor": true,
+  "eventEvidence": true,
+  "exports": [
+    "html",
+    "json",
+    "csv"
+  ],
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      820,
+      1180
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "screenshots": "/tmp/veus-investigation-screens",
+  "errors": []
+}

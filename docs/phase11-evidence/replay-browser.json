@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "dataset": "VED vehicle 10 trip 1561",
+  "rows": 111,
+  "simulationStateSeparated": true,
+  "exports": {
+    "summary.json": true,
+    "events.csv": true,
+    "metadata.json": true,
+    "analysis.json": true,
+    "report.html": true
+  },
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      820,
+      1180
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "screenshots": "/tmp/veus-replay-screens",
+  "errors": []
+}

@@ -1,0 +1,78 @@
+{
+  "source_commit": "2caf8f4970ea736bd5f052ba43911d54311e0606",
+  "viewport": [
+    1280,
+    720
+  ],
+  "frames": 100,
+  "target_fps": 10,
+  "drive_capture_ms": 10001,
+  "drive_readouts": [
+    {
+      "speed": "0.0",
+      "soc": "80.0",
+      "power": "0.0"
+    },
+    {
+      "speed": "7.2",
+      "soc": "80.0",
+      "power": "27.8"
+    },
+    {
+      "speed": "31.3",
+      "soc": "80.0",
+      "power": "121.8"
+    },
+    {
+      "speed": "53.7",
+      "soc": "79.9",
+      "power": "167.0"
+    },
+    {
+      "speed": "70.0",
+      "soc": "79.8",
+      "power": "166.8"
+    },
+    {
+      "speed": "82.8",
+      "soc": "79.7",
+      "power": "166.8"
+    },
+    {
+      "speed": "57.9",
+      "soc": "79.7",
+      "power": "-82.0"
+    },
+    {
+      "speed": "25.5",
+      "soc": "79.8",
+      "power": "-63.3"
+    },
+    {
+      "speed": "0.0",
+      "soc": "79.8",
+      "power": "0.0"
+    },
+    {
+      "speed": "0.0",
+      "soc": "80.0",
+      "power": "0.0"
+    }
+  ],
+  "selected_event": {
+    "event_index": 8,
+    "type": "strong_acceleration",
+    "start_s": 143,
+    "end_s": 144.1,
+    "source_start_s": 143,
+    "source_end_s": 144.1,
+    "signals": [
+      "vehicle_speed_ms",
+      "acceleration_ms2"
+    ],
+    "rule": "derived acceleration >= 2.0 m/s²",
+    "qualification": "Threshold episode on recorded samples; timing/derivatives depend on sampling and noise, not a diagnosed cause.",
+    "classification": "inferred"
+  },
+  "page_errors": []
+}

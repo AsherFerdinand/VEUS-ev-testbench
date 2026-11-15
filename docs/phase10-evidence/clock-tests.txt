@@ -1,0 +1,17 @@
+✔ wall clock tracks recorded seconds and pauses without drift (1.143966ms)
+✔ speed changes account for elapsed time at the old rate (0.240643ms)
+✔ seeking clamps, preserves pause, and restart resets recording (0.186491ms)
+✔ irregular lookup returns actual preceding sample and original source time (0.916593ms)
+✔ partial speed integral follows the linear speed curve, not linear position (0.367705ms)
+✔ gaps do not invent measurements or distance, endpoints remain available (0.161704ms)
+✔ stationary interval has no visual displacement (0.133391ms)
+✔ invalid clocks, rates, seeks and timestamps are rejected (0.406994ms)
+✔ multiple replay instances are independent and load resets state (0.199701ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.592653

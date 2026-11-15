@@ -1,0 +1,929 @@
+{
+  "schema_version": 1,
+  "scope": "Software/data readiness under stated assumptions; not physical model validation or authenticated measurement quality.",
+  "metadata": {
+    "source": {
+      "dataset": "University of Michigan VED",
+      "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+      "licence": "Apache-2.0 (upstream VED)",
+      "kind": "measured",
+      "run_id": "VED-Veh10-Trip1561",
+      "role": "exploration",
+      "expected_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+      "provenance_evidence": "Original VED bytes/row selection retained from Phase 8; replay uses raw source current sign, whose discharge polarity remains unverified.",
+      "inputs_verified": false,
+      "vehicle_id": "VED-Veh10",
+      "vehicle_specifications": {
+        "manufacturer": "Nissan",
+        "model": "Leaf",
+        "year": 2013,
+        "advertised_capacity_kwh": 24,
+        "generalized_weight_lb": 3500,
+        "weight_note": "Binned fleet weight; payload not measured",
+        "battery_temperature": "Not available",
+        "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+      }
+    },
+    "raw_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+    "row_count": 111,
+    "time_origin_s": 0,
+    "sampling_min_s": 0.09999999999999432,
+    "sampling_median_s": 0.8999999999999986,
+    "sampling_max_s": 1.1000000000000014,
+    "irregular_sampling": true,
+    "gaps": [],
+    "missing_counts": {
+      "vehicle_speed_ms": 0,
+      "battery_voltage_v": 0,
+      "battery_current_a": 0,
+      "battery_soc": 0,
+      "ambient_temperature_c": 0
+    },
+    "preprocessing": {
+      "columns": {
+        "time_s": {
+          "column": "Timestamp(ms)",
+          "unit": "ms",
+          "sign": 1
+        },
+        "vehicle_speed_ms": {
+          "column": "Vehicle Speed[km/h]",
+          "unit": "km/h",
+          "sign": 1
+        },
+        "battery_voltage_v": {
+          "column": "HV Battery Voltage[V]",
+          "unit": "V",
+          "sign": 1
+        },
+        "battery_current_a": {
+          "column": "HV Battery Current[A]",
+          "unit": "A",
+          "sign": 1
+        },
+        "battery_soc": {
+          "column": "HV Battery SOC[%]",
+          "unit": "%",
+          "sign": 1
+        },
+        "ambient_temperature_c": {
+          "column": "OAT[DegC]",
+          "unit": "°C",
+          "sign": 1
+        }
+      },
+      "zero_time": true,
+      "max_gap_s": 2,
+      "comparison_interpolation": "linear",
+      "input_interpolation": "previous"
+    },
+    "canonical_units": {
+      "vehicle_speed_ms": "m/s",
+      "battery_voltage_v": "V",
+      "battery_current_a": "A",
+      "battery_soc": "fraction",
+      "ambient_temperature_c": "°C"
+    }
+  },
+  "recording_duration_s": 72.10000000000001,
+  "duplicate_timestamps": 0,
+  "timestamp_status": "Strictly increasing; duplicates are rejected, not repaired.",
+  "signal_quality": {
+    "time_s": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "s"
+    },
+    "vehicle_speed_ms": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "m/s"
+    },
+    "battery_voltage_v": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "V"
+    },
+    "battery_current_a": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "A"
+    },
+    "battery_soc": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "fraction"
+    },
+    "ambient_temperature_c": {
+      "valid_samples": 111,
+      "missing_samples": 0,
+      "unit": "°C"
+    }
+  },
+  "assumptions": {
+    "synchronization_confirmed": false,
+    "measurement_quality_documented": false,
+    "operating_conditions_documented": false,
+    "torque_sign_confirmed": false,
+    "evidence_notes": ""
+  },
+  "current_sign": "unknown",
+  "capabilities": [
+    {
+      "id": "recorded_replay",
+      "name": "Recorded journey replay",
+      "description": "A generic EV illustration follows recorded speed; no predictive physics is run.",
+      "status": "AVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Ready for recorded-speed replay. Distance is derived; this does not validate a vehicle model.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [],
+      "additional_data": [],
+      "requirements": {
+        "id": "recorded_replay",
+        "name": "Recorded journey replay",
+        "description": "A generic EV illustration follows recorded speed; no predictive physics is run.",
+        "required_signals": [
+          "time_s",
+          "vehicle_speed_ms"
+        ],
+        "optional_signals": [
+          "battery_voltage_v",
+          "battery_current_a",
+          "battery_soc"
+        ],
+        "quality_conditions": [
+          "valid_speed_intervals"
+        ],
+        "assumptions": [],
+        "workspace": "analyse",
+        "availability_explanation": "Ready for recorded-speed replay. Distance is derived; this does not validate a vehicle model.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "speed_acceleration",
+      "name": "Speed and acceleration analysis",
+      "description": "Inspect speed and local finite-difference acceleration, which may amplify noise.",
+      "status": "AVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Ready for descriptive speed and estimated acceleration analysis, not accelerometer validation.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [],
+      "additional_data": [],
+      "requirements": {
+        "id": "speed_acceleration",
+        "name": "Speed and acceleration analysis",
+        "description": "Inspect speed and local finite-difference acceleration, which may amplify noise.",
+        "required_signals": [
+          "time_s",
+          "vehicle_speed_ms"
+        ],
+        "optional_signals": [
+          "longitudinal_acceleration_ms2"
+        ],
+        "quality_conditions": [
+          "acceleration_stencil"
+        ],
+        "assumptions": [],
+        "workspace": "analyse",
+        "availability_explanation": "Ready for descriptive speed and estimated acceleration analysis, not accelerometer validation.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "voltage_inspection",
+      "name": "Battery voltage inspection",
+      "description": "Inspect available voltage samples with their timestamps.",
+      "status": "AVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Ready to inspect recorded voltage; accuracy is not authenticated.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [],
+      "additional_data": [],
+      "requirements": {
+        "id": "voltage_inspection",
+        "name": "Battery voltage inspection",
+        "description": "Inspect available voltage samples with their timestamps.",
+        "required_signals": [
+          "time_s",
+          "battery_voltage_v"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "finite_required_samples"
+        ],
+        "assumptions": [],
+        "workspace": "analyse",
+        "availability_explanation": "Ready to inspect recorded voltage; accuracy is not authenticated.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "current_inspection",
+      "name": "Signed battery current inspection",
+      "description": "Inspect current without assuming discharge or charge polarity.",
+      "status": "AVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Ready to inspect signed current; its physical polarity may remain unknown.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [],
+      "additional_data": [],
+      "requirements": {
+        "id": "current_inspection",
+        "name": "Signed battery current inspection",
+        "description": "Inspect current without assuming discharge or charge polarity.",
+        "required_signals": [
+          "time_s",
+          "battery_current_a"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "finite_required_samples"
+        ],
+        "assumptions": [],
+        "workspace": "analyse",
+        "availability_explanation": "Ready to inspect signed current; its physical polarity may remain unknown.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "signed_power",
+      "name": "Signed electrical power",
+      "description": "Compute samplewise voltage × signed current, without a discharge/regen interpretation.",
+      "status": "AVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Ready for the signed V×I calculation. Column co-location does not establish synchronization or accuracy.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [],
+      "additional_data": [],
+      "requirements": {
+        "id": "signed_power",
+        "name": "Signed electrical power",
+        "description": "Compute samplewise voltage × signed current, without a discharge/regen interpretation.",
+        "required_signals": [
+          "time_s",
+          "battery_voltage_v",
+          "battery_current_a"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "joint_electrical_samples"
+        ],
+        "assumptions": [],
+        "workspace": "analyse",
+        "availability_explanation": "Ready for the signed V×I calculation. Column co-location does not establish synchronization or accuracy.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "energy_consumption",
+      "name": "Electrical energy used / received",
+      "description": "Integrate complete V/I recordings only with resolved polarity and stated evidence.",
+      "status": "CONDITIONAL",
+      "workspace": "analyse",
+      "explanation": "Verify current polarity and document its source; no discharge or charging direction is inferred. Document channel synchronization and time alignment. Document measurement accuracy, calibration and signal-quality evidence.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [
+        "current_polarity",
+        "synchronization_confirmed",
+        "measurement_quality_documented"
+      ],
+      "additional_data": [
+        "Verify current polarity and document its source; no discharge or charging direction is inferred.",
+        "Document channel synchronization and time alignment.",
+        "Document measurement accuracy, calibration and signal-quality evidence."
+      ],
+      "requirements": {
+        "id": "energy_consumption",
+        "name": "Electrical energy used / received",
+        "description": "Integrate complete V/I recordings only with resolved polarity and stated evidence.",
+        "required_signals": [
+          "time_s",
+          "battery_voltage_v",
+          "battery_current_a"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "complete_electrical_window"
+        ],
+        "assumptions": [
+          "current_polarity",
+          "synchronization_confirmed",
+          "measurement_quality_documented"
+        ],
+        "workspace": "analyse",
+        "availability_explanation": "Complete electrical inputs and asserted evidence are supplied. Energy remains a derived estimate, not proof of measurement validity.",
+        "implemented": true
+      }
+    },
+    {
+      "id": "regenerative_energy",
+      "name": "Regeneration-specific energy",
+      "description": "Charging energy alone does not identify its source.",
+      "status": "UNAVAILABLE",
+      "workspace": "analyse",
+      "explanation": "VEUS does not implement a regeneration-specific energy total; V/I and deceleration cannot establish the origin of all charging. Verify current polarity and document its source; no discharge or charging direction is inferred. Establish the charging source; negative pack power alone does not prove regeneration.",
+      "missing_signals": [],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [
+        "current_polarity",
+        "charging_origin_established"
+      ],
+      "additional_data": [
+        "Verify current polarity and document its source; no discharge or charging direction is inferred.",
+        "Establish the charging source; negative pack power alone does not prove regeneration."
+      ],
+      "requirements": {
+        "id": "regenerative_energy",
+        "name": "Regeneration-specific energy",
+        "description": "Charging energy alone does not identify its source.",
+        "required_signals": [
+          "time_s",
+          "vehicle_speed_ms",
+          "battery_voltage_v",
+          "battery_current_a"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "complete_electrical_window"
+        ],
+        "assumptions": [
+          "current_polarity",
+          "charging_origin_established"
+        ],
+        "workspace": "analyse",
+        "availability_explanation": "VEUS does not implement a regeneration-specific energy total; V/I and deceleration cannot establish the origin of all charging.",
+        "implemented": false
+      }
+    },
+    {
+      "id": "motor_efficiency",
+      "name": "Motor efficiency",
+      "description": "Isolated motor efficiency needs electrical motor-boundary power and mechanical output evidence.",
+      "status": "UNAVAILABLE",
+      "workspace": "analyse",
+      "explanation": "Not implemented as a measured-data analysis. Shaft torque/speed and pack V/I do not isolate motor efficiency from inverter, auxiliaries and drivetrain losses. Missing mapped signals: motor torque, motor rotational speed. Establish propulsion torque sign/convention; pedal position is not motor torque. Document channel synchronization and time alignment. Motor-boundary electrical power and loss-boundary evidence are needed; pack power is insufficient.",
+      "missing_signals": [
+        "motor_torque_nm",
+        "motor_speed_rad_s"
+      ],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [
+        "torque_sign_confirmed",
+        "synchronization_confirmed",
+        "motor_boundary_power"
+      ],
+      "additional_data": [
+        "Provide motor_torque_nm with explicit units and timestamps.",
+        "Provide motor_speed_rad_s with explicit units and timestamps.",
+        "Establish propulsion torque sign/convention; pedal position is not motor torque.",
+        "Document channel synchronization and time alignment.",
+        "Motor-boundary electrical power and loss-boundary evidence are needed; pack power is insufficient."
+      ],
+      "requirements": {
+        "id": "motor_efficiency",
+        "name": "Motor efficiency",
+        "description": "Isolated motor efficiency needs electrical motor-boundary power and mechanical output evidence.",
+        "required_signals": [
+          "time_s",
+          "motor_torque_nm",
+          "motor_speed_rad_s",
+          "battery_voltage_v",
+          "battery_current_a"
+        ],
+        "optional_signals": [],
+        "quality_conditions": [
+          "finite_required_samples"
+        ],
+        "assumptions": [
+          "torque_sign_confirmed",
+          "synchronization_confirmed",
+          "motor_boundary_power"
+        ],
+        "workspace": "analyse",
+        "availability_explanation": "Not implemented as a measured-data analysis. Shaft torque/speed and pack V/I do not isolate motor efficiency from inverter, auxiliaries and drivetrain losses.",
+        "implemented": false
+      }
+    },
+    {
+      "id": "longitudinal_validation",
+      "name": "Longitudinal physical-model validation inputs",
+      "description": "Check whether a complete explicit Phase 8 experiment can be taken forward; no comparison is executed here.",
+      "status": "UNAVAILABLE",
+      "workspace": "validate",
+      "explanation": "Missing mapped signals: motor torque, brake force, road gradient. Establish propulsion torque sign/convention; pedal position is not motor torque. Document channel synchronization and time alignment. Document measurement accuracy, calibration and signal-quality evidence. Document vehicle configuration, road loads, payload and relevant operating conditions. Supply a matching explicit Phase 8 dynamics Experiment JSON with defined parameters, initial conditions, measured grade, validation-role references and verified input-condition metadata.",
+      "missing_signals": [
+        "motor_torque_nm",
+        "brake_force_n",
+        "road_gradient_rad"
+      ],
+      "invalid_signals": [],
+      "partial_signals": [],
+      "unresolved_assumptions": [
+        "torque_sign_confirmed",
+        "synchronization_confirmed",
+        "measurement_quality_documented",
+        "operating_conditions_documented",
+        "phase8_experiment"
+      ],
+      "additional_data": [
+        "Provide motor_torque_nm with explicit units and timestamps.",
+        "Provide brake_force_n with explicit units and timestamps.",
+        "Provide road_gradient_rad with explicit units and timestamps.",
+        "Establish propulsion torque sign/convention; pedal position is not motor torque.",
+        "Document channel synchronization and time alignment.",
+        "Document measurement accuracy, calibration and signal-quality evidence.",
+        "Document vehicle configuration, road loads, payload and relevant operating conditions.",
+        "Supply a matching explicit Phase 8 dynamics Experiment JSON with defined parameters, initial conditions, measured grade, validation-role references and verified input-condition metadata."
+      ],
+      "requirements": {
+        "id": "longitudinal_validation",
+        "name": "Longitudinal physical-model validation inputs",
+        "description": "Check whether a complete explicit Phase 8 experiment can be taken forward; no comparison is executed here.",
+        "required_signals": [
+          "time_s",
+          "vehicle_speed_ms",
+          "motor_torque_nm",
+          "brake_force_n",
+          "road_gradient_rad"
+        ],
+        "optional_signals": [
+          "battery_soc"
+        ],
+        "quality_conditions": [
+          "complete_required_window",
+          "nonnegative_drive_torque"
+        ],
+        "assumptions": [
+          "measured_origin",
+          "torque_sign_confirmed",
+          "synchronization_confirmed",
+          "measurement_quality_documented",
+          "operating_conditions_documented",
+          "phase8_experiment"
+        ],
+        "workspace": "validate",
+        "availability_explanation": "Inputs and an explicit experiment are supplied for evaluation. AVAILABLE is not a PASS or a physical-validation conclusion.",
+        "implemented": true
+      }
+    }
+  ],
+  "configuration": {
+    "source": {
+      "dataset": "University of Michigan VED",
+      "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+      "licence": "Apache-2.0 (upstream VED)",
+      "kind": "measured",
+      "run_id": "VED-Veh10-Trip1561",
+      "role": "exploration",
+      "expected_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+      "provenance_evidence": "Original VED bytes/row selection retained from Phase 8; replay uses raw source current sign, whose discharge polarity remains unverified.",
+      "inputs_verified": false,
+      "vehicle_id": "VED-Veh10",
+      "vehicle_specifications": {
+        "manufacturer": "Nissan",
+        "model": "Leaf",
+        "year": 2013,
+        "advertised_capacity_kwh": 24,
+        "generalized_weight_lb": 3500,
+        "weight_note": "Binned fleet weight; payload not measured",
+        "battery_temperature": "Not available",
+        "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+      }
+    },
+    "preprocessing": {
+      "columns": {
+        "time_s": {
+          "column": "Timestamp(ms)",
+          "unit": "ms",
+          "sign": 1
+        },
+        "vehicle_speed_ms": {
+          "column": "Vehicle Speed[km/h]",
+          "unit": "km/h",
+          "sign": 1
+        },
+        "battery_voltage_v": {
+          "column": "HV Battery Voltage[V]",
+          "unit": "V",
+          "sign": 1
+        },
+        "battery_current_a": {
+          "column": "HV Battery Current[A]",
+          "unit": "A",
+          "sign": 1
+        },
+        "battery_soc": {
+          "column": "HV Battery SOC[%]",
+          "unit": "%",
+          "sign": 1
+        },
+        "ambient_temperature_c": {
+          "column": "OAT[DegC]",
+          "unit": "°C",
+          "sign": 1
+        }
+      },
+      "zero_time": true,
+      "max_gap_s": 2,
+      "comparison_interpolation": "linear",
+      "input_interpolation": "previous"
+    },
+    "current_sign": "unknown",
+    "sign_evidence": null,
+    "assertions": {
+      "synchronization_confirmed": false,
+      "measurement_quality_documented": false,
+      "operating_conditions_documented": false,
+      "torque_sign_confirmed": false,
+      "evidence_notes": ""
+    },
+    "sanity_limits": {
+      "speed_ms": 120,
+      "voltage_v": 2000,
+      "current_a": 5000,
+      "measured_acceleration_ms2": 100
+    },
+    "limitations": [
+      "Small contiguous window from a trip, not the complete recorded journey.",
+      "Raw VED current polarity is unverified. Signed V×I is not labelled discharge or regeneration.",
+      "No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.",
+      "Battery temperature, instrument uncertainty and channel synchronization are unknown.",
+      "Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.",
+      "Generic EV silhouette and fictional landscape do not identify the vehicle or real location."
+    ],
+    "experiment": null,
+    "provenance": {
+      "subset": {
+        "member": "VED_171101_week.csv",
+        "vehicle_id": 10,
+        "trip": "1561",
+        "selected_source_line_numbers": [
+          70952,
+          70953,
+          70954,
+          70955,
+          70956,
+          70957,
+          70958,
+          70959,
+          70960,
+          70961,
+          70962,
+          70963,
+          70964,
+          70965,
+          70966,
+          70967,
+          70968,
+          70969,
+          70970,
+          70971,
+          70972,
+          70973,
+          70974,
+          70975,
+          70976,
+          70977,
+          70978,
+          70979,
+          70980,
+          70981,
+          70982,
+          70983,
+          70984,
+          70985,
+          70986,
+          70987,
+          70988,
+          70989,
+          70990,
+          70991,
+          70992,
+          70993,
+          70994,
+          70995,
+          70996,
+          70997,
+          70998,
+          70999,
+          71000,
+          71001,
+          71002,
+          71003,
+          71004,
+          71005,
+          71006,
+          71007,
+          71008,
+          71009,
+          71010,
+          71011,
+          71012,
+          71013,
+          71014,
+          71015,
+          71016,
+          71017,
+          71018,
+          71019,
+          71020,
+          71021,
+          71022,
+          71023,
+          71024,
+          71025,
+          71026,
+          71027,
+          71028,
+          71029,
+          71030,
+          71031,
+          71032,
+          71033,
+          71034,
+          71035,
+          71036,
+          71037,
+          71038,
+          71039,
+          71040,
+          71041,
+          71042,
+          71043,
+          71044,
+          71045,
+          71046,
+          71047,
+          71048,
+          71049,
+          71050,
+          71051,
+          71052,
+          71053,
+          71054,
+          71055,
+          71056,
+          71057,
+          71058,
+          71059,
+          71060,
+          71061,
+          71062
+        ],
+        "selection_rule": "Longest contiguous segment in inspected trip subset, max interval <=2 s, max horizon 120 s; no residual-based selection",
+        "original_time_start_ms": 0,
+        "original_time_end_ms": 72100,
+        "rows": 111,
+        "subset_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+        "omitted_columns": "GPS and unrelated fuel/engine signals omitted; retained values unchanged"
+      },
+      "upstream": {
+        "upstream_commit": "6baa4963782d515a67d32a5490bd5d11f5d9bf0d",
+        "archive_sha256": "44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61",
+        "archive_bytes": 82723769,
+        "static_sha256": "e0f2b4d7a360074c17fd00068d8d8bf898f0e650f0cdda43c7e10883f6bf9340",
+        "limitation": "Current sign inversion inferred but not confirmed from publisher documentation; no battery temperature/propulsion/braking. Not full vehicle validation."
+      }
+    }
+  },
+  "replay_configuration": {
+    "schema_version": 1,
+    "source": {
+      "dataset": "University of Michigan VED",
+      "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+      "licence": "Apache-2.0 (upstream VED)",
+      "kind": "measured",
+      "run_id": "VED-Veh10-Trip1561",
+      "role": "exploration",
+      "expected_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+      "provenance_evidence": "Original VED bytes/row selection retained from Phase 8; replay uses raw source current sign, whose discharge polarity remains unverified.",
+      "inputs_verified": false,
+      "vehicle_id": "VED-Veh10",
+      "vehicle_specifications": {
+        "manufacturer": "Nissan",
+        "model": "Leaf",
+        "year": 2013,
+        "advertised_capacity_kwh": 24,
+        "generalized_weight_lb": 3500,
+        "weight_note": "Binned fleet weight; payload not measured",
+        "battery_temperature": "Not available",
+        "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+      }
+    },
+    "preprocessing": {
+      "columns": {
+        "time_s": {
+          "column": "Timestamp(ms)",
+          "unit": "ms",
+          "sign": 1
+        },
+        "vehicle_speed_ms": {
+          "column": "Vehicle Speed[km/h]",
+          "unit": "km/h",
+          "sign": 1
+        },
+        "battery_voltage_v": {
+          "column": "HV Battery Voltage[V]",
+          "unit": "V",
+          "sign": 1
+        },
+        "battery_current_a": {
+          "column": "HV Battery Current[A]",
+          "unit": "A",
+          "sign": 1
+        },
+        "battery_soc": {
+          "column": "HV Battery SOC[%]",
+          "unit": "%",
+          "sign": 1
+        },
+        "ambient_temperature_c": {
+          "column": "OAT[DegC]",
+          "unit": "°C",
+          "sign": 1
+        }
+      },
+      "zero_time": true,
+      "max_gap_s": 2,
+      "comparison_interpolation": "linear",
+      "input_interpolation": "previous"
+    },
+    "current_sign": "unknown",
+    "sign_evidence": null,
+    "thresholds": {
+      "acceleration_ms2": 2,
+      "deceleration_ms2": 2.5,
+      "power_magnitude_w": 50000,
+      "standstill_ms": 0.1,
+      "minimum_duration_s": 0.5,
+      "regen_power_w": 1000,
+      "regen_deceleration_ms2": 0.1
+    },
+    "sanity_limits": {
+      "speed_ms": 120,
+      "voltage_v": 2000,
+      "current_a": 5000,
+      "measured_acceleration_ms2": 100
+    },
+    "limitations": [
+      "Small contiguous window from a trip, not the complete recorded journey.",
+      "Raw VED current polarity is unverified. Signed V×I is not labelled discharge or regeneration.",
+      "No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.",
+      "Battery temperature, instrument uncertainty and channel synchronization are unknown.",
+      "Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.",
+      "Generic EV silhouette and fictional landscape do not identify the vehicle or real location.",
+      "Electrical energy used / received: Verify current polarity and document its source; no discharge or charging direction is inferred. Document channel synchronization and time alignment. Document measurement accuracy, calibration and signal-quality evidence."
+    ],
+    "provenance": {
+      "subset": {
+        "member": "VED_171101_week.csv",
+        "vehicle_id": 10,
+        "trip": "1561",
+        "selected_source_line_numbers": [
+          70952,
+          70953,
+          70954,
+          70955,
+          70956,
+          70957,
+          70958,
+          70959,
+          70960,
+          70961,
+          70962,
+          70963,
+          70964,
+          70965,
+          70966,
+          70967,
+          70968,
+          70969,
+          70970,
+          70971,
+          70972,
+          70973,
+          70974,
+          70975,
+          70976,
+          70977,
+          70978,
+          70979,
+          70980,
+          70981,
+          70982,
+          70983,
+          70984,
+          70985,
+          70986,
+          70987,
+          70988,
+          70989,
+          70990,
+          70991,
+          70992,
+          70993,
+          70994,
+          70995,
+          70996,
+          70997,
+          70998,
+          70999,
+          71000,
+          71001,
+          71002,
+          71003,
+          71004,
+          71005,
+          71006,
+          71007,
+          71008,
+          71009,
+          71010,
+          71011,
+          71012,
+          71013,
+          71014,
+          71015,
+          71016,
+          71017,
+          71018,
+          71019,
+          71020,
+          71021,
+          71022,
+          71023,
+          71024,
+          71025,
+          71026,
+          71027,
+          71028,
+          71029,
+          71030,
+          71031,
+          71032,
+          71033,
+          71034,
+          71035,
+          71036,
+          71037,
+          71038,
+          71039,
+          71040,
+          71041,
+          71042,
+          71043,
+          71044,
+          71045,
+          71046,
+          71047,
+          71048,
+          71049,
+          71050,
+          71051,
+          71052,
+          71053,
+          71054,
+          71055,
+          71056,
+          71057,
+          71058,
+          71059,
+          71060,
+          71061,
+          71062
+        ],
+        "selection_rule": "Longest contiguous segment in inspected trip subset, max interval <=2 s, max horizon 120 s; no residual-based selection",
+        "original_time_start_ms": 0,
+        "original_time_end_ms": 72100,
+        "rows": 111,
+        "subset_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+        "omitted_columns": "GPS and unrelated fuel/engine signals omitted; retained values unchanged"
+      },
+      "upstream": {
+        "upstream_commit": "6baa4963782d515a67d32a5490bd5d11f5d9bf0d",
+        "archive_sha256": "44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61",
+        "archive_bytes": 82723769,
+        "static_sha256": "e0f2b4d7a360074c17fd00068d8d8bf898f0e650f0cdda43c7e10883f6bf9340",
+        "limitation": "Current sign inversion inferred but not confirmed from publisher documentation; no battery temperature/propulsion/braking. Not full vehicle validation."
+      }
+    }
+  },
+  "physical_validation": "Phase 8 INCONCLUSIVE findings remain unchanged. AVAILABLE is not a validation PASS.",
+  "assessment_sha256": "06002cbcd972a0fa90549226852d88d5e71f1e86cebfbb29d3fe561271a06ff0"
+}

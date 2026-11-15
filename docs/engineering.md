@@ -5,7 +5,8 @@
 All internal calculations use SI units; RPM and dashboard km/h are explicit
 conversions. Forward speed is nonnegative. Positive motor torque drives forward;
 positive brake force opposes motion. Grade angle is in radians, positive uphill.
-Forward simulation rejects negative drive torque; regenerative energy is deferred.
+The mechanical step rejects negative drive torque; the session models regenerative
+energy separately by blending the delivered braking force.
 
 - Normal force: `N = m g cos(grade)`; `g = 9.81 m/s²`.
 - Aerodynamic resistance: `F_aero = 0.5 rho Cd A v²`, default rho 1.225 kg/m³.
@@ -67,13 +68,15 @@ and the first repeated frame, in addition to checking both HTML routes.
   forward simulator for achieved motion. Legacy total losses omit transmission.
 - Motor overspeed now cuts torque; it is a simple policy without hysteresis.
 - Legacy component parameter validation is incomplete beyond vehicle/motor.
-- Friction brakes are ideal commands; no actuator lag, fade or regenerative split.
-- Simplified ADAS is now available; sensor faults, scenario-file engine and
-  requirement evaluation remain future work.
+- Brakes use ideal force commands with configurable pure actuation delay; no
+  brake fade or detailed actuator dynamics. Regenerative/friction blending is modelled.
+- Simplified ADAS, scenario files and requirement reports are now available;
+  virtual sensors and deterministic faults are now available; measured-vehicle
+  validation remains future work.
   The interactive dashboard provides basic plots, configuration and exports.
 - No production safety, real-time timing, HIL or measured vehicle fidelity claim.
 
-Next: scenario configuration, sensors, requirements evaluation,
+Next: calibrated model evidence,
 dashboard extensions and integration exports. Keep the existing models and public
 example working while adding these capabilities incrementally.
 
@@ -169,7 +172,8 @@ Each physics tick observes exact plant speed/gap and a prescribed lead vehicle.
 Detection delay stores observation history; actuator delay stores acceleration
 commands, both rounded to 0.01 s. Before a detection history fills, the initial
 observation is held. Before an actuator history fills, propulsion/braking is zero
-(coasting). There is no noise, dropout, fault injection or sensor range model yet.
+(coasting). Optional virtual sensors now precede that history; noise, dropout and scheduled
+faults are described in virtual-sensors.md. No sensor range model is included.
 The detection timestamp precedes actuator delay; telemetry reports applied
 controller state separately. Settings apply on reset, not live during a run.
 
@@ -190,3 +194,54 @@ and stops with minimum gap about 5.12 m. Friction 0.1 produces a collision in th
 same scenario. These are outputs of this illustrative model, not measured data.
 Tests also verify TTC domains, command limits, latch/reset, delayed responses,
 analytical lead stopping, collision restart rejection and continued energy balance.
+
+
+## Offline verification and reporting
+
+The incremental audit is in development-audit.md. The offline batch runner now
+records every physics tick using the additive SimulationSession.step() API;
+advance() retains the existing ten-tick dashboard behaviour. Versioned scenario
+and result contracts, analytical reference trajectories, explicit requirement
+criteria, and report artifact/metric definitions are documented in validation.md.
+The separate SOH project boundary is documented in soh-integration.md. This
+increment does not change controller algorithms or claim measured validation.
+
+## Phase 8 measurement experiments
+
+The measurement adapter reuses the longitudinal plant with explicit physical
+inputs; live controllers and virtual sensor timing remain unchanged. CSV source
+bytes and experiment hashes distinguish measurements from synthetic references.
+Training-only bounded calibration and guarded independent evaluation are separate
+from analytical verification. See [the model validation guide](vehicle-validation.md),
+[dataset assessment](dataset-discovery.md), and [executed evidence](phase8-evidence/README.md).
+No full measured-vehicle dynamics validation has yet qualified. The VED voltage
+comparison remains exploratory because operating conditions are incomplete.
+
+## Phase 9 interactive workspaces
+
+Drive adds a bounded telemetry-interpolated Canvas view, illustrative vehicle
+presets and keyboard/pointer input over the existing WebSocket controls.
+Analyse and Validate preserve engineering capabilities. No core physics or
+controller equations change. See [frontend architecture and input policy](drive-experience.md)
+and [browser execution evidence](phase9-evidence/README.md).
+
+## Phase 10 recorded EV analysis
+
+Replay reuses the canonical importer and extracted Canvas renderer, with a
+separate recorded-time clock and no simulation commands. Measured columns remain
+separate from derived speed integrals, acceleration and signed V×I. Coverage,
+unknown polarity, missing measurements and source/config hashes remain explicit.
+See [recorded-data architecture and calculations](real-world-replay.md) and
+[executed evidence](phase10-evidence/README.md). No physical validation conclusion
+changes because observations can be replayed.
+
+## Phase 10.1 guided workflows and readiness
+
+The nonmodal Welcome workspace and local startup preference provide entry points
+without replacing Drive/Replay/Validate. A central typed capability registry
+supplies both readiness policy and frontend explanations. CSV structure and replay
+sanity checks are shared with existing importers. Confirmed mappings, observed
+quality, required assumptions and unsupported calculations remain distinct.
+Readiness never runs physics or declares a physical-validation PASS. See
+[user onboarding](user-onboarding.md), [readiness rules](data-readiness.md) and
+[executed evidence](phase10-1-evidence/README.md).

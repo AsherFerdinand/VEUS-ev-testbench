@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "performance": {
+    "viewPosition": 5.874697317593071,
+    "viewGap": null,
+    "frameCount": 300,
+    "averageFrameMs": 16.832666666666668,
+    "selected": "sedan"
+  },
+  "screenshots": "Existing Drive regression (screenshots not duplicated)",
+  "errors": [],
+  "execution_commit": "01b78c22089b0ca29fe59568c9e0eb1b16da8219",
+  "environment": "Headless Chromium / Linux cloud; not a Windows hardware benchmark"
+}

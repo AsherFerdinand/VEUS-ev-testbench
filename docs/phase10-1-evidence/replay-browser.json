@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "dataset": "VED vehicle 10 trip 1561",
+  "rows": 111,
+  "simulationStateSeparated": true,
+  "exports": {
+    "summary.json": true,
+    "events.csv": true,
+    "metadata.json": true,
+    "analysis.json": true,
+    "report.html": true
+  },
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      820,
+      1180
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "screenshots": "Existing regression; screenshots not duplicated",
+  "errors": [],
+  "execution_commit": "852fd9b94f107d098937d58a776f9ffe9a04e341",
+  "environment": "Headless Chromium / Linux cloud; no Windows hardware benchmark"
+}

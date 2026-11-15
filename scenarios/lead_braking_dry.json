@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "lead_braking_dry",
+  "description": "80 km/h lead braking on dry road",
+  "config": {
+    "mode": "aeb",
+    "initial_speed_kmh": 80,
+    "lead_speed_kmh": 80,
+    "initial_gap_m": 35,
+    "duration_s": 12
+  },
+  "criteria": [
+    {
+      "id": "AVOID-01",
+      "metric": "collision_count",
+      "operator": "==",
+      "threshold": 0,
+      "description": "No detected vehicle overlap",
+      "rationale": "Scenario objective only; not a regulatory acceptance criterion. Overlap is sampled each 0.01 s tick."
+    },
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "GAP-01",
+      "metric": "minimum_separation_m",
+      "operator": ">=",
+      "threshold": 2,
+      "description": "Retain 2 m clearance",
+      "rationale": "Illustrative bumper clearance objective; 2 m exceeds tick-scale position error, not a certified safety margin."
+    },
+    {
+      "id": "RESPONSE-01",
+      "metric": "controller_response_s",
+      "operator": "<=",
+      "threshold": 2.0,
+      "description": "Emergency braking applied within 2 s of lead-braking event",
+      "rationale": "For gap=35 m, initially equal speeds and lead deceleration=6 m/s\u00b2, TTC=2 s is crossed at tau=(-12+sqrt(564))/6=1.958 s. A 2.0 s model-development budget allows 0.042 s for tick discretization; added delays can violate it. This is not an ECU or regulatory latency limit."
+    }
+  ]
+}

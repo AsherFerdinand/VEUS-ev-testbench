@@ -1,0 +1,208 @@
+{
+  "base_commit": "2caf8f4970ea736bd5f052ba43911d54311e0606",
+  "branch": "docs/readme-portfolio-redesign",
+  "scope": "Documentation and actual application captures only; application, dependencies, tests and earlier evidence unchanged.",
+  "default_branch": "main",
+  "main_commit_before": "dd331dca6f67a1821343bd57d55d0fbdd0532fa4",
+  "quick_start_branch": "feature/real-world-ev-investigation",
+  "fresh_install": {
+    "python": "3.12.14",
+    "requirements": "requirements-report.txt",
+    "result": "PASS",
+    "pip_check": "PASS",
+    "uvicorn": "PASS",
+    "root_and_four_recording_catalogue": "PASS",
+    "html_case_study_generation": "PASS",
+    "powershell": "Syntax and paths checked; Windows execution unavailable"
+  },
+  "software_checks": {
+    "python_tests": 187,
+    "clock_tests": 9,
+    "warning": "Existing Starlette/httpx deprecation warning"
+  },
+  "render_checks": [
+    {
+      "theme": "light",
+      "local_images": 5,
+      "external_badges": [
+        {
+          "src": "https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/NumPy-scientific_computing-013243?logo=numpy&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/Matplotlib-reports-2563EB",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/Pytest-verification-0A9EDC?logo=pytest&logoColor=white",
+          "loaded": false
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#quick-start",
+          "exists": true
+        },
+        {
+          "href": "#verification-and-limits",
+          "exists": true
+        },
+        {
+          "href": "#explore-veus",
+          "exists": true
+        },
+        {
+          "href": "#explore-veus",
+          "exists": true
+        },
+        {
+          "href": "#engineering-workflows",
+          "exists": true
+        },
+        {
+          "href": "#from-vehicle-data-to-engineering-insight",
+          "exists": true
+        },
+        {
+          "href": "#quick-start",
+          "exists": true
+        },
+        {
+          "href": "#documentation",
+          "exists": true
+        }
+      ],
+      "mermaid": "PASS",
+      "collapsible_navigation": "PASS",
+      "mobile_overflow": false,
+      "page_errors": []
+    },
+    {
+      "theme": "dark",
+      "local_images": 5,
+      "external_badges": [
+        {
+          "src": "https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/NumPy-scientific_computing-013243?logo=numpy&logoColor=white",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/Matplotlib-reports-2563EB",
+          "loaded": false
+        },
+        {
+          "src": "https://img.shields.io/badge/Pytest-verification-0A9EDC?logo=pytest&logoColor=white",
+          "loaded": false
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#quick-start",
+          "exists": true
+        },
+        {
+          "href": "#verification-and-limits",
+          "exists": true
+        },
+        {
+          "href": "#explore-veus",
+          "exists": true
+        },
+        {
+          "href": "#explore-veus",
+          "exists": true
+        },
+        {
+          "href": "#engineering-workflows",
+          "exists": true
+        },
+        {
+          "href": "#from-vehicle-data-to-engineering-insight",
+          "exists": true
+        },
+        {
+          "href": "#quick-start",
+          "exists": true
+        },
+        {
+          "href": "#documentation",
+          "exists": true
+        }
+      ],
+      "mermaid": "PASS",
+      "collapsible_navigation": "PASS",
+      "mobile_overflow": false,
+      "page_errors": []
+    }
+  ],
+  "render_scope": "Local GFM via Marked and GitHub Markdown CSS 5.8.1; actual Mermaid 11.12.1 SVG rendering; no claim of inspection on GitHub itself.",
+  "external_network_limitations": [
+    "GitHub Markdown API returns proxy HTTP 403",
+    "img.shields.io returns proxy HTTP 403; standard badge URLs retained without claiming retrieval success"
+  ],
+  "media": [
+    {
+      "file": "compare-overview.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 900,
+      "bytes": 124231,
+      "sha256": "e01e560a1d5a29e638f1a294fd97542586eb3bf6a747b5e2cfdb345589228d30"
+    },
+    {
+      "file": "drive-overview.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 720,
+      "bytes": 88833,
+      "sha256": "6b4efab80607f58ee1a61fc58f70d3d1c59fc9b562e19090e9aa05eddaf3a6ce"
+    },
+    {
+      "file": "investigate-overview.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 900,
+      "bytes": 125995,
+      "sha256": "c5d9f0cbd928b48ed3e1755fcfd5470198b4a99ac8b76797af50f0e113904ef2"
+    },
+    {
+      "file": "validate-overview.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 900,
+      "bytes": 104996,
+      "sha256": "031f9333cbd4312682241926f980dd247e2ed751bf656b5f0266e7548a25cadc"
+    },
+    {
+      "file": "veus-hero.gif",
+      "format": "GIF",
+      "width": 1280,
+      "height": 720,
+      "bytes": 761021,
+      "sha256": "dc7c68a3012fc5cf8d12b5353630e593824b571d30f332a0ac18b68869118044",
+      "frames": 100,
+      "loop": 0,
+      "duration_ms": 10000
+    }
+  ],
+  "physical_validation": "INCONCLUSIVE; unchanged Phase 8 assessment",
+  "relative_links": {
+    "count": 90,
+    "result": "PASS"
+  }
+}

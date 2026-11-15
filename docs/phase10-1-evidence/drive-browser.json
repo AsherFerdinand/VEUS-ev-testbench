@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "performance": {
+    "viewPosition": 5.840340825272508,
+    "viewGap": null,
+    "frameCount": 300,
+    "averageFrameMs": 16.998666666666665,
+    "selected": "sedan"
+  },
+  "screenshots": "Existing regression; screenshots not duplicated",
+  "errors": [],
+  "execution_commit": "852fd9b94f107d098937d58a776f9ffe9a04e341",
+  "environment": "Headless Chromium / Linux cloud; no Windows hardware benchmark"
+}

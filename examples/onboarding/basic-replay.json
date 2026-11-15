@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "source": {
+    "dataset": "VEUS synthetic onboarding template",
+    "source_url": "synthetic://veus/onboarding/basic-replay",
+    "licence": "Repository-authored illustrative fixture",
+    "kind": "synthetic",
+    "role": "exploration",
+    "run_id": "basic-replay",
+    "expected_sha256": "6f22439046db56eb03422bf32a8b884269b072c856149783fa4f28b91e314574",
+    "provenance_evidence": "Explicitly synthetic arithmetic example created for software demonstrations; not vehicle measurements."
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "time_s",
+        "unit": "s",
+        "sign": 1
+      },
+      "vehicle_speed_ms": {
+        "column": "speed_kmh",
+        "unit": "km/h",
+        "sign": 1
+      }
+    },
+    "zero_time": true,
+    "max_gap_s": 2
+  },
+  "current_sign": "unknown",
+  "limitations": [
+    "Synthetic values for learning the input format, not experimental vehicle evidence.",
+    "Current sign and measurement evidence must not be inferred from these illustrative numbers."
+  ]
+}

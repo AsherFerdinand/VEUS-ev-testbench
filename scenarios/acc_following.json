@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "acc_following",
+  "description": "ACC decelerates from 80 km/h behind a constant-speed 60 km/h lead",
+  "config": {
+    "mode": "acc",
+    "initial_speed_kmh": 80,
+    "lead_speed_kmh": 60,
+    "initial_gap_m": 50,
+    "duration_s": 30
+  },
+  "criteria": [
+    {
+      "id": "AVOID-01",
+      "metric": "collision_count",
+      "operator": "==",
+      "threshold": 0,
+      "description": "No detected vehicle overlap",
+      "rationale": "Scenario objective only; not a regulatory acceptance criterion. Overlap is sampled each 0.01 s tick."
+    },
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "ACC-01",
+      "metric": "final_gap_error_m",
+      "operator": "<=",
+      "threshold": 0.25,
+      "description": "Final gap tracks desired headway",
+      "rationale": "25 cm settled error is an explicit model-development target after 30 s, not a real-world ACC standard."
+    }
+  ]
+}

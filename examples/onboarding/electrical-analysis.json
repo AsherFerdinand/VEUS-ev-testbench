@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "source": {
+    "dataset": "VEUS synthetic onboarding template",
+    "source_url": "synthetic://veus/onboarding/electrical-analysis",
+    "licence": "Repository-authored illustrative fixture",
+    "kind": "synthetic",
+    "role": "exploration",
+    "run_id": "electrical-analysis",
+    "expected_sha256": "36bb775652f72deb11f7644bcdf647108d666d20744a263243722929796d10fb",
+    "provenance_evidence": "Explicitly synthetic arithmetic example created for software demonstrations; not vehicle measurements."
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "time_s",
+        "unit": "s",
+        "sign": 1
+      },
+      "vehicle_speed_ms": {
+        "column": "speed_kmh",
+        "unit": "km/h",
+        "sign": 1
+      },
+      "battery_voltage_v": {
+        "column": "battery_voltage_v",
+        "unit": "V",
+        "sign": 1
+      },
+      "battery_current_a": {
+        "column": "battery_current_a",
+        "unit": "A",
+        "sign": 1
+      },
+      "battery_soc": {
+        "column": "soc_pct",
+        "unit": "%",
+        "sign": 1
+      }
+    },
+    "zero_time": true,
+    "max_gap_s": 2
+  },
+  "current_sign": "unknown",
+  "limitations": [
+    "Synthetic values for learning the input format, not experimental vehicle evidence.",
+    "Current sign and measurement evidence must not be inferred from these illustrative numbers."
+  ]
+}

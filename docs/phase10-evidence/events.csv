@@ -1,0 +1,2 @@
+type,start_s,end_s,source_start_s,source_end_s,classification,signals,rule,qualification
+standstill,71.5,72.10000000000001,71.5,72.10000000000001,observed sample threshold,vehicle_speed_ms,measured speed <= 0.1 m/s,"Threshold episode on recorded samples; timing/derivatives depend on sampling and noise, not a diagnosed cause."

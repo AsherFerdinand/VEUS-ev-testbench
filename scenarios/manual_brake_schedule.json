@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "manual_brake_schedule",
+  "description": "Timed emergency pedal braking after 1 s of coasting from 80 km/h",
+  "config": {
+    "mode": "manual",
+    "initial_speed_kmh": 80,
+    "duration_s": 8
+  },
+  "criteria": [
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "BRAKE-01",
+      "metric": "braking_distance_m",
+      "operator": "<=",
+      "threshold": 30,
+      "description": "Stop within 30 m after pedal command",
+      "rationale": "On level road mu=0.9, v0=80 km/h gives v\u00b2/(2 mu g) about 28 m without drag; 30 m allows Euler/event quantization, not reaction distance."
+    }
+  ],
+  "controls": [
+    {
+      "time_s": 1,
+      "controls": {
+        "throttle": 0,
+        "brake": 1
+      }
+    }
+  ]
+}

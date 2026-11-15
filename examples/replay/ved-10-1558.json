@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "source": {
+    "dataset": "University of Michigan VED",
+    "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+    "licence": "Apache-2.0 (upstream VED)",
+    "kind": "measured",
+    "role": "exploration",
+    "run_id": "VED-Veh10-Trip1558",
+    "expected_sha256": "a9ce7f872a8fc7f67e5a2bf82f196321860c132cb9eb5449405b71f8a1c456d1",
+    "provenance_evidence": "Original VED bytes/row selection retained from Phase 8; replay uses raw source current sign, whose discharge polarity remains unverified.",
+    "inputs_verified": false,
+    "vehicle_id": "VED-Veh10",
+    "vehicle_specifications": {
+      "manufacturer": "Nissan",
+      "model": "Leaf",
+      "year": 2013,
+      "advertised_capacity_kwh": 24,
+      "generalized_weight_lb": 3500,
+      "weight_note": "Binned fleet weight; payload not measured",
+      "battery_temperature": "Not available",
+      "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+    }
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "Timestamp(ms)",
+        "unit": "ms",
+        "sign": 1
+      },
+      "vehicle_speed_ms": {
+        "column": "Vehicle Speed[km/h]",
+        "unit": "km/h",
+        "sign": 1
+      },
+      "battery_current_a": {
+        "column": "HV Battery Current[A]",
+        "unit": "A",
+        "sign": 1
+      },
+      "battery_voltage_v": {
+        "column": "HV Battery Voltage[V]",
+        "unit": "V",
+        "sign": 1
+      },
+      "battery_soc": {
+        "column": "HV Battery SOC[%]",
+        "unit": "%",
+        "sign": 1
+      },
+      "ambient_temperature_c": {
+        "column": "OAT[DegC]",
+        "unit": "\u00b0C",
+        "sign": 1
+      }
+    },
+    "max_gap_s": 2
+  },
+  "current_sign": "unknown",
+  "sign_evidence": null,
+  "limitations": [
+    "Small contiguous window from a trip, not the complete recorded journey.",
+    "Raw VED current polarity is unverified. Signed V\u00d7I is not labelled discharge or regeneration.",
+    "No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.",
+    "Battery temperature, instrument uncertainty and channel synchronization are unknown.",
+    "Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.",
+    "Generic EV silhouette and fictional landscape do not identify the vehicle or real location."
+  ],
+  "provenance": {
+    "subset": {
+      "member": "VED_171101_week.csv",
+      "vehicle_id": 10,
+      "trip": "1558",
+      "selected_source_line_numbers": [
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        494,
+        495,
+        496,
+        497,
+        498,
+        499,
+        500,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        510,
+        511,
+        512,
+        513,
+        514,
+        515,
+        516,
+        517,
+        518,
+        519,
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526,
+        527,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535,
+        536,
+        537,
+        538,
+        539,
+        540,
+        541,
+        542,
+        543,
+        544,
+        545,
+        546
+      ],
+      "selection_rule": "Longest contiguous segment in inspected trip subset, max interval <=2 s, max horizon 120 s; no residual-based selection",
+      "original_time_start_ms": 55800.0,
+      "original_time_end_ms": 106200.0,
+      "rows": 74,
+      "subset_sha256": "a9ce7f872a8fc7f67e5a2bf82f196321860c132cb9eb5449405b71f8a1c456d1",
+      "omitted_columns": "GPS and unrelated fuel/engine signals omitted; retained values unchanged"
+    },
+    "upstream": {
+      "upstream_commit": "6baa4963782d515a67d32a5490bd5d11f5d9bf0d",
+      "archive_sha256": "44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61",
+      "archive_bytes": 82723769,
+      "static_sha256": "e0f2b4d7a360074c17fd00068d8d8bf898f0e650f0cdda43c7e10883f6bf9340",
+      "limitation": "Current sign inversion inferred but not confirmed from publisher documentation; no battery temperature/propulsion/braking. Not full vehicle validation."
+    }
+  }
+}

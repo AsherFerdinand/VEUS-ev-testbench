@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "cruise_tracking",
+  "description": "Cruise reaches its 80 km/h setpoint from standstill",
+  "config": {
+    "mode": "cruise",
+    "duration_s": 30
+  },
+  "criteria": [
+    {
+      "id": "ENERGY-01",
+      "metric": "max_energy_balance_error_j",
+      "operator": "<=",
+      "threshold": 0.001,
+      "description": "Numerical energy accounting closes",
+      "rationale": "1 mJ floating-point allowance is far below the run energy scale; this checks software accounting, not physical calibration."
+    },
+    {
+      "id": "CC-01",
+      "metric": "final_speed_error_kmh",
+      "operator": "<=",
+      "threshold": 0.1,
+      "description": "Track speed within 0.1 km/h at horizon",
+      "rationale": "Settled numerical control target for this illustrative vehicle and horizon; not guaranteed under saturation."
+    }
+  ]
+}

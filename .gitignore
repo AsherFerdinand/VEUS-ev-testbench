@@ -3,3 +3,10 @@ __pycache__/
 .vscode/
 venv/
 .DS_Store
+
+# Generated verification outputs and local tool caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+reports/

@@ -1,0 +1,58 @@
+{
+  "id": "synthetic-coast-holdout",
+  "objective": "Synthetic pipeline verification, not measured vehicle validation",
+  "source": {
+    "dataset": "Analytical software fixtures",
+    "source_url": "Analytical generator in scripts/generate_validation_fixtures.py",
+    "licence": "Project synthetic test fixture",
+    "kind": "synthetic",
+    "role": "validation",
+    "run_id": "synthetic-coast-holdout",
+    "expected_sha256": "5e9633b11911a37a8fc2a5e0b4b1cd38d02f9dd5d49679cc35a2d9780dbc23b1",
+    "provenance_evidence": "Independent closed-form formula; no noise, no measured-data claim",
+    "inputs_verified": true,
+    "vehicle_id": "synthetic-coast-model",
+    "vehicle_specifications": {
+      "type": "Synthetic analytical fixture, not a real vehicle"
+    }
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "time_s",
+        "unit": "s"
+      },
+      "vehicle_speed_ms": {
+        "column": "vehicle_speed_ms",
+        "unit": "m/s"
+      },
+      "motor_torque_nm": {
+        "column": "motor_torque_nm",
+        "unit": "Nm"
+      },
+      "brake_force_n": {
+        "column": "brake_force_n",
+        "unit": "N"
+      },
+      "road_gradient_rad": {
+        "column": "road_gradient_rad",
+        "unit": "rad"
+      }
+    },
+    "max_gap_s": 2
+  },
+  "kind": "dynamics",
+  "parameters": {},
+  "road_grade_policy": "measured",
+  "assumptions": [
+    "Flat road with explicit zero-grade input",
+    "Torque is independently supplied; no measured-speed forcing"
+  ],
+  "comparisons": [
+    {
+      "signal": "vehicle_speed_ms",
+      "threshold": 0.02,
+      "rationale": "Synthetic software tolerance; independent analytic coastdown, not a vehicle accuracy target"
+    }
+  ]
+}

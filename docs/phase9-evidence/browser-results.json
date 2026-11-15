@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "performance": {
+    "viewPosition": 5.648821660608693,
+    "viewGap": null,
+    "frameCount": 300,
+    "averageFrameMs": 16.77766666666667,
+    "selected": "sedan"
+  },
+  "screenshots": "docs/phase9-evidence",
+  "errors": [],
+  "execution_commit": "608946429a78feb58c0109bffb0cfcabee8c8cb2",
+  "browser": "Headless system Chromium via Playwright, Linux cloud",
+  "performance_scope": "Short observation ring of 300 rendered intervals, not a Windows hardware benchmark or long-session memory test",
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      820,
+      1180
+    ],
+    [
+      390,
+      844
+    ]
+  ]
+}

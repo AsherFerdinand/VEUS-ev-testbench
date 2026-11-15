@@ -1,0 +1,72 @@
+{
+  "id": "ved-10-1561",
+  "objective": "Exploratory VED electrical comparison; conditions/sign convention incomplete",
+  "source": {
+    "dataset": "University of Michigan VED",
+    "source_url": "https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data",
+    "licence": "Apache-2.0 (upstream VED)",
+    "kind": "measured",
+    "role": "validation",
+    "run_id": "VED-Veh10-Trip1561",
+    "expected_sha256": "0ef2176b40c67e4a344d989c831c7e085f1fead9925b9f780e7184b8348eb639",
+    "provenance_evidence": "Vehicle 10 and trip identity from VED; original source member/rows and hashes in datasets/ved/provenance.json; current sign inversion is an explicit unverified hypothesis",
+    "inputs_verified": false,
+    "vehicle_id": "VED-Veh10",
+    "vehicle_specifications": {
+      "manufacturer": "Nissan",
+      "model": "Leaf",
+      "year": 2013,
+      "advertised_capacity_kwh": 24,
+      "generalized_weight_lb": 3500,
+      "weight_note": "Binned fleet weight; payload not measured",
+      "battery_temperature": "Not available",
+      "current_sign": "Discharge-positive inversion is an unconfirmed hypothesis"
+    }
+  },
+  "preprocessing": {
+    "columns": {
+      "time_s": {
+        "column": "Timestamp(ms)",
+        "unit": "ms",
+        "sign": 1
+      },
+      "vehicle_speed_ms": {
+        "column": "Vehicle Speed[km/h]",
+        "unit": "km/h",
+        "sign": 1
+      },
+      "battery_current_a": {
+        "column": "HV Battery Current[A]",
+        "unit": "A",
+        "sign": -1
+      },
+      "battery_voltage_v": {
+        "column": "HV Battery Voltage[V]",
+        "unit": "V",
+        "sign": 1
+      },
+      "battery_soc": {
+        "column": "HV Battery SOC[%]",
+        "unit": "%",
+        "sign": 1
+      }
+    },
+    "max_gap_s": 2
+  },
+  "kind": "battery_current",
+  "parameters": {
+    "battery_capacity_kwh": 24
+  },
+  "road_grade_policy": "measured",
+  "assumptions": [
+    "Fixed OCV/resistance; no thermal model",
+    "Current sign must be independently verified before physical validation"
+  ],
+  "comparisons": [
+    {
+      "signal": "battery_voltage_v",
+      "threshold": 2,
+      "rationale": "Illustrative 2 V local model-development target, not instrument uncertainty or a manufacturer standard; unverified input conditions prevent physical acceptance"
+    }
+  ]
+}

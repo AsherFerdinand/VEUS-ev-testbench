@@ -1,0 +1,107 @@
+[
+  {
+    "file": "anatomy-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 167585,
+    "sha256": "9eb9f40ef2936bcded9959272b7c68bc1bf758bab1d7cf453e0f85fcf1fa5a12"
+  },
+  {
+    "file": "anatomy-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 165431,
+    "sha256": "d3b89bfa7e5fa852bf2775131bd9739e798b680160609117bd96a484e4824806"
+  },
+  {
+    "file": "anatomy-mobile.png",
+    "width": 390,
+    "height": 844,
+    "bytes": 83486,
+    "sha256": "2847437af9ea9a5882dbc078367dc49769d75c56ae6d4266a24c91fac67dd5f5"
+  },
+  {
+    "file": "challenges-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 119114,
+    "sha256": "48bd5db557dd02b98f0ce3ee983fc9916091d215dba51690d4e928df112fd55a"
+  },
+  {
+    "file": "challenges-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 118502,
+    "sha256": "4f24f4ab394e9dc39ae9c610a544e8bcccd120222b2cad5a1b6893dda337f50f"
+  },
+  {
+    "file": "design-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 168740,
+    "sha256": "460634288e3ff7f1a70b5070e60a5705a190d6ff4c452349485e087189885ab0"
+  },
+  {
+    "file": "design-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 168093,
+    "sha256": "10ad83023875de792828e51929df60911e6522e393c785e8d8c4b344d7cff3a9"
+  },
+  {
+    "file": "energy-paths-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 105348,
+    "sha256": "7795a6c4c8e40684b4c24ff16d4633da9cb62eca5de2e2553770fcbfdb50d7eb"
+  },
+  {
+    "file": "energy-paths-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 105041,
+    "sha256": "3610db6319423c01a9c03d61a2ab9e88bf2b878ca54ca73cc9266d8f3e600697"
+  },
+  {
+    "file": "measurements-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 123244,
+    "sha256": "d504a6e416fe11654a3418f43bb08d1cec71251bb15b7bac1d0893158e64ce7e"
+  },
+  {
+    "file": "measurements-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 122597,
+    "sha256": "bb2d269de4b323fc4fe4c8b5c2d55354a0a81851da1275002cb9999b9b5a3a5e"
+  },
+  {
+    "file": "optimization-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 107766,
+    "sha256": "9f83080bf452e6d9514b59c03644d999d74d2029dcfc33f32d66ca1748403583"
+  },
+  {
+    "file": "optimization-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 107234,
+    "sha256": "e0fce7744d323a700a39be5d76374fdcf103536a4c8ee9169e08a721ee2bd043"
+  },
+  {
+    "file": "simulation-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 117326,
+    "sha256": "264a2e47dc27b2ea600d13c6c1d361db63bf151fd842b1c289fd142c49c55742"
+  },
+  {
+    "file": "simulation-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 117342,
+    "sha256": "6cd4a5fccec6c529887aedef92d3dc622685081229024fa3387d8eab6bd5b22b"
+  }
+]

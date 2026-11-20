@@ -1,224 +1,108 @@
-<h1 align="center">VEUS</h1>
-<p align="center"><strong>Virtual Electric Vehicle Engineering &amp; Simulation</strong></p>
-<p align="center">An interactive EV engineering testbench combining vehicle dynamics,<br>ADAS simulation, real-world telemetry and engineering investigation.</p>
+# VEUS — Electric Vehicle Engineering Workbench
 
-<p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&amp;logoColor=white" alt="Python 3.12"></a>
-  <a href="veus/studio/main.py"><img src="https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&amp;logoColor=white" alt="FastAPI backend"></a>
-  <a href="requirements-report.txt"><img src="https://img.shields.io/badge/NumPy-scientific_computing-013243?logo=numpy&amp;logoColor=white" alt="NumPy scientific computing"></a>
-  <a href="requirements-report.txt"><img src="https://img.shields.io/badge/Matplotlib-reports-2563EB" alt="Matplotlib reports"></a>
-  <a href="#verification-and-limits"><img src="https://img.shields.io/badge/Pytest-verification-0A9EDC?logo=pytest&amp;logoColor=white" alt="Pytest verification"></a>
-</p>
+**Understand · Design · Simulate · Optimize**
 
-[![Actual VEUS driving demonstration: accelerate, brake and inspect live measurements](docs/assets/readme/veus-hero.gif)](#explore-veus)
+An EV engineering workbench for understanding vehicle systems, making explicit
+design assumptions and investigating reproducible experiments and measured evidence.
 
-VEUS is a Python application for exploring how an electric vehicle moves, how its
-battery responds, and what recorded vehicle data can actually tell us. Drive an
-illustrative EV, investigate genuine measurements, or run reproducible engineering
-tests—three workflows with explicit evidence and limitations.
+**VEUS 2.0 Foundation** is a redevelopment milestone, not a stable release. The new
+shell is functional; the replacement Simulation Lab, Optimization and question-driven
+Measurements interfaces are prototypes. Existing numerical models and engineering
+tools remain accessible during migration. No real-vehicle prediction accuracy is claimed.
 
-<p align="center">
-  <a href="#explore-veus">Explore</a> ·
-  <a href="#engineering-workflows">Workflows</a> ·
-  <a href="#from-vehicle-data-to-engineering-insight">Case study</a> ·
-  <a href="#quick-start">Run locally</a> ·
-  <a href="#documentation">Documentation</a>
-</p>
+![EV Anatomy: original interactive isometric component schematic](docs/veus2/evidence/anatomy-light.png)
 
-## Explore VEUS
+## Six engineering workspaces
 
-| Workspace                 | The question it helps answer                                                | What you get                                                                    |
-| ------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| **Drive · Simulate**      | How do driving commands and model settings affect an EV?                    | Interactive driving, battery measurements and driver-assistance behaviour.      |
-| **Analyse · Investigate** | What happened in a recorded journey, and what supports that interpretation? | Telemetry replay, event evidence, journey comparisons and case studies.         |
-| **Validate · Verify**     | Does the implementation satisfy its equations and declared test criteria?   | Analytical checks, scenario metrics, fault experiments and engineering reports. |
-
-### Drive — Simulate
-
-Accelerate, coast and brake in a 2D driving scene. Explore longitudinal dynamics,
-aerodynamic drag, rolling resistance, road gradients, battery SOC and regenerative
-brake blending. Try Cruise Control, Adaptive Cruise Control (ACC) and Automatic
-Emergency Braking (AEB); inspect virtual sensors and injected faults in Validate.
-
-[![Drive: live speed, SOC, battery power and interactive controls](docs/assets/readme/drive-overview.png)](docs/assets/readme/drive-overview.png)
-
-No external data or vehicle hardware is required. Presets are illustrative,
-uncalibrated configurations; this is longitudinal simulation, without steering,
-lateral dynamics or suspension. [Driving controls and model details →](docs/drive-experience.md)
-
-### Analyse — Investigate
-
-Replay genuine EV recordings with synchronized measurements and a shared cursor.
-Inspect acceleration, deceleration, standstill and data-quality events; compare two
-recordings and export HTML, JSON and CSV engineering case studies. Available
-signals and confirmed mappings determine which calculations are supported.
-
-[![Investigate: selected acceleration event, supporting samples and synchronized plots](docs/assets/readme/investigate-overview.png)](docs/assets/readme/investigate-overview.png)
-
-<details>
-<summary>See the two-recording comparison</summary>
-
-[![Compare: independent elapsed-time navigation for two VED recordings](docs/assets/readme/compare-overview.png)](docs/assets/readme/compare-overview.png)
-
-Separate journeys have independent time origins. Normalized elapsed time is an
-optional display transformation, not evidence of matching conditions or efficiency.
-
-</details>
-
-[Replay guide](docs/real-world-replay.md) · [Data Readiness](docs/data-readiness.md) · [Investigation guide](docs/real-world-investigation.md)
-
-### Validate — Verify
-
-Inspect model settings, simulated response and sensor faults. Run analytical
-physics checks and configurable ADAS scenarios through the CLI, with quantitative
-criteria and portable reports. Model calibration, residuals and measured-data
-comparison are available under Analyse → Model experiments & calibration.
-
-[![Validate: engineering settings, controller configuration and simulation telemetry](docs/assets/readme/validate-overview.png)](docs/assets/readme/validate-overview.png)
-
-**Analytical and software verification do not establish real-vehicle prediction
-accuracy. Physical model validation remains INCONCLUSIVE.**
-
-[Verification and scenario reports](docs/validation.md) · [Calibration and physical-validation limits](docs/vehicle-validation.md)
-
-## Engineering Workflows
-
-```mermaid
-flowchart TB
-    subgraph S[Simulated experiments]
-        direction LR
-        M[Physics model] --> V[Vehicle response]
-        V --> O[Virtual sensor observations]
-        O --> A[Engineering analysis]
-    end
-    subgraph R[Recorded measurements]
-        direction LR
-        D[Real EV dataset] --> Q[Data Readiness]
-        Q --> P[Replay]
-        P --> I[Investigation]
-        I --> C[Case study]
-    end
-```
-
-These are separate evidence paths. Replaying measured telemetry does not validate
-the physics model; suitable independent inputs, conditions and reference evidence
-are still required for physical validation.
-
-## Genuine EV Data
-
-VEUS bundles small, licensed projections of the University of Michigan
-[Vehicle Energy Dataset (VED)](https://github.com/gsoh/VED), including vehicle 10,
-identified upstream as a **2013 Nissan Leaf**. The replay illustration is generic.
-
-| Phase 11 example | Recorded samples | Recording span |
-| ---------------- | ---------------: | -------------: |
-| Trip 1561        |              534 |        460.4 s |
-| Trip 1567        |              367 |        370.3 s |
-
-Signals include timestamps, speed, battery voltage, signed current, SOC and ambient
-temperature. Both recordings contain measurement gaps. Known-segment distance is
-**not whole-trip distance**, and unverified current polarity prevents charging,
-discharging or regenerative-energy claims from the source sign. Ambient temperature
-is not pack temperature.
-
-[Provenance, licence and extraction](datasets/ved/README.md) · [Investigation methods](docs/real-world-investigation.md) · [Phase 11 evidence](docs/phase11-evidence/README.md)
-
-## From Vehicle Data to Engineering Insight
-
-**Trip 1561 · 143.0–144.1 seconds · original sample indices 169–170**
-
-| Evidence           | What the available samples show                                                                                                                          |
+| Workspace          | Available in this foundation                                                                                                                             |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Measured**       | Speed rises from approximately **4.50 to 6.78 m/s**. Battery current is **0 A** at both supporting samples.                                              |
-| **Derived**        | Acceleration exceeds the **2 m/s²** event threshold. Calculated electrical power is **0 W** at both samples.                                             |
-| **Interpretation** | A speed-derived acceleration episode is detected. The data does **not** establish its physical explanation or an increase in electrical-power magnitude. |
+| **EV Anatomy**     | Ten keyboard-accessible components, engineering inspector, EV/combustion comparison and conceptual propulsion/regen/charging/auxiliary energy paths.     |
+| **EV Challenges**  | Eight source-referenced engineering questions, underlying physics, technology trade-offs and proposed experiments.                                       |
+| **Design Studio**  | Interactive illustrative configuration, typed version 1 schema, envelope checks, JSON import/export. No performance predictions or commercial catalogue. |
+| **Simulation Lab** | Instrumentation and experiment-mode prototype; no new-run execution or made-up traces. Retained engineering tools and offline solvers remain available.  |
+| **Optimization**   | Controlled study definitions and explicit objectives/constraints; no executed optimizer, improvement scores or cost estimates.                           |
+| **Measurements**   | Genuine VED catalogue metadata and question selection; existing import/readiness/investigation/report workflows are linked during migration.             |
 
-This is the purpose of VEUS investigation: make the evidence inspectable, and keep
-an unknown cause unknown. Two zero-valued current samples do not establish zero
-true energy use throughout the interval.
+Manual keyboard driving, landscapes and ADAS interfaces are retired from the new
+primary navigation. They remain isolated in the migration toolset because the
+existing replay/calibration frontend still shares their DOM and state dependencies.
+No physics/controller changes or useful-test deletions are part of this milestone.
 
-[Open the checked-in HTML report](docs/phase11-evidence/case-study/report.html) ·
-[Source hashes, selected events, reproduction and report screenshot](docs/phase11-evidence/README.md)
+## Run the foundation
 
-GitHub shows HTML as source; download the repository and open the report locally
-for its rendered plots. The selected event is shown in the Investigate screenshot above.
-
-## Technology
-
-| Layer                         | Tools used                                                              |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| Backend                       | Python · FastAPI · WebSockets                                           |
-| Scientific analysis & reports | NumPy · Matplotlib                                                      |
-| Interface                     | HTML · CSS · JavaScript · Canvas; no frontend framework                 |
-| Verification                  | Pytest · Node playback-clock tests · Playwright/Chromium browser checks |
-
-## Quick Start
-
-**Use the Phase 11 branch.** The default branch is `main`; the features shown here
-are on `feature/real-world-ev-investigation` and have not been merged into `main`.
-Git and **Python 3.12** are required for the tested setup. In Windows **PowerShell**:
+Use Python **3.12**. In Windows PowerShell:
 
 ```powershell
-git clone https://github.com/AsherFerdinand/VEUS-ev-testbench.git
+git clone --branch feature/veus-2.0-engineering-workbench https://github.com/AsherFerdinand/VEUS-ev-testbench.git
 cd VEUS-ev-testbench
-git switch feature/real-world-ev-investigation
-
 py -3.12 -m venv venv
 .\venv\Scripts\python.exe -m pip install -r requirements-report.txt
 .\venv\Scripts\python.exe -m uvicorn veus.studio.main:app --port 8770
 ```
 
-Open **http://localhost:8770**. Choose **Drive** for an immediate simulation, or
-**Analyse → Investigate** to load a bundled VED recording. No account, GPU, external
-service or raw dataset download is required. Press `Ctrl+C` in the terminal to stop.
+Open **http://localhost:8770** for EV Anatomy. The bottom navigation supports mouse,
+keyboard arrows, Home/End and narrow screens. Theme preference is stored locally.
+No new runtime dependencies, account, GPU or large 3D framework are required.
 
-<details>
-<summary>Anaconda, Linux and development commands</summary>
-
-In **Anaconda Prompt**, with Python 3.12 selected, run these from the project root
-on the Phase 11 branch:
+In **Anaconda Prompt**, from the project root on this branch:
 
 ```bat
 python -m pip install -r requirements-report.txt
 python -m uvicorn veus.studio.main:app --port 8770
 ```
 
-On Linux, replace the environment creation with `python3.12 -m venv venv` and use
-`venv/bin/python` for installation and launch. Activation is optional on both platforms.
-For development, install `requirements-dev.txt`; `requirements-lock.txt` records the
-pinned tested environment. [Setup, model examples and CLI commands](docs/engineering-reference.md).
+On Linux use `python3.12 -m venv venv` and `venv/bin/python`. The new branch is not
+merged into `main`; the archived Phase 11/portfolio implementation is preserved at
+`archive/veus-pre-2.0` and its original feature/docs references.
+
+## Existing engineering capabilities
+
+Use **http://localhost:8770/engineering?workspace=analyse** for CSV import, Data
+Readiness, replay, event evidence, calibration, comparison and reports. Select
+**Simulation Lab → Open existing engineering tools** for the retained simulation
+interface. Old endpoints and source evidence remain intact.
+
+```bash
+python -m veus.testing physics --output reports/physics-new
+python -m veus.testing run scenarios --output reports/scenarios-new
+python -m veus.investigation --first ved-10-1561-full --second ved-10-1567-full --output reports/ved-case-new
+```
+
+Use new output directories. Some scenario examples intentionally fail their declared
+criteria; a recorded failure is not an implementation-test failure or a safety claim.
+
+The genuine VED recordings still contain **534 samples / 460.4 s** and **367 samples /
+370.3 s**. Gaps are preserved, known-segment distance is not whole-trip distance, and
+unknown current polarity prevents energy-direction/regeneration claims. Replay does
+not establish physical model validation; the Phase 8 assessment remains **INCONCLUSIVE**.
+
+## Foundation review and evidence
+
+- [Architecture audit and retain/refactor/retire/remove matrix](docs/veus2/audit.md)
+- [New architecture, route contracts and design limitations](docs/veus2/architecture.md)
+- [Redevelopment roadmap and unresolved engineering dependencies](docs/veus2/roadmap.md)
+- [Engineering content and source-review scope](docs/veus2/sources.md)
+- [All six workspace screenshots, light/dark views, tests and measurements](docs/veus2/evidence/README.md)
+
+<details>
+<summary>Explore the workspace concepts</summary>
+
+![EV Challenges](docs/veus2/evidence/challenges-light.png)
+![Design Studio prototype](docs/veus2/evidence/design-light.png)
+![Simulation Lab instrumentation prototype](docs/veus2/evidence/simulation-dark.png)
+![Optimization study prototype](docs/veus2/evidence/optimization-light.png)
+![Genuine Measurements catalogue](docs/veus2/evidence/measurements-light.png)
 
 </details>
 
-## Verification and Limits
+## Engineering documentation
 
-The [recorded Phase 11 verification snapshot](docs/phase11-evidence/README.md)
-contains **187 passing Python tests**, **9 passing playback-clock tests** and
-**four passing browser regression suites**. These are documented results for that
-phase, not an automatically maintained current test count.
+[Model equations](docs/engineering.md) · [Analytical/scenario verification](docs/validation.md) ·
+[Virtual sensor evidence](docs/phase7-evidence/README.md) · [Physical-validation limits](docs/vehicle-validation.md) ·
+[Measurement readiness](docs/data-readiness.md) · [Investigation and case study](docs/real-world-investigation.md) ·
+[Phase 11 evidence](docs/phase11-evidence/README.md) · [Historical implementation reference](docs/engineering-reference.md)
 
-- **Software tests** check implementation behaviour, imports, data gates and exports.
-- **Analytical verification** compares numerical results with defined equations.
-- **Physical validation** requires adequate independent measured reference evidence;
-  the existing assessment remains **INCONCLUSIVE**.
-
-Some scenario examples intentionally fail their avoidance/tracking criteria;
-reports preserve those failures. Simplified battery and efficiency models,
-uncalibrated vehicle presets and incomplete measured operating conditions limit
-what can be concluded. VEUS is an educational engineering workbench, not a
-production ADAS system or safety certification tool.
-
-[Analytical evidence](docs/verification/README.md) · [Scenario and sensor outcomes](docs/phase7-evidence/README.md) · [Physical-validation assessment](docs/phase8-evidence/README.md)
-
-## Documentation
-
-| Start here                                                                         | Go deeper                                                             |
-| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| [Getting started & workflow guide](docs/user-onboarding.md)                        | [Engineering assumptions & equations](docs/engineering.md)            |
-| [Vehicle simulation & driving controls](docs/drive-experience.md)                  | [ADAS scenarios & analytical verification](docs/validation.md)        |
-| [Virtual sensors & fault injection](docs/virtual-sensors.md)                       | [Model calibration & physical validation](docs/vehicle-validation.md) |
-| [Real-world replay](docs/real-world-replay.md)                                     | [Data Readiness](docs/data-readiness.md)                              |
-| [Real-world investigation](docs/real-world-investigation.md)                       | [Phase 11 evidence & case study](docs/phase11-evidence/README.md)     |
-| [Preserved implementation & reproduction reference](docs/engineering-reference.md) | [Future battery SOH interface](docs/soh-integration.md)               |
-
-[README media, capture method and presentation checks](docs/assets/readme/README.md)
+VEUS uses simplified, uncalibrated models. The foundation does not implement thermal
+prediction, ageing, charging curves, commercial pricing, track dynamics or Pareto
+optimization. It is an educational engineering workbench, not a production ADAS
+system or a safety certification tool.

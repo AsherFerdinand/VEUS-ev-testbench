@@ -137,7 +137,7 @@ def test_operating_point_and_legacy_launch():
 
 def test_dashboard_and_telemetry():
     with TestClient(app) as client:
-        for path in ('/', '/static/index.html'):
+        for path in ('/engineering', '/static/index.html'):
             response = client.get(path)
             assert response.status_code == 200
             assert 'VEUS Studio Telemetry' in response.text

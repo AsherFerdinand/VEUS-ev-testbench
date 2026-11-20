@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 
 from veus.sim.drive_cycle import DriveCycleSimulator
 
-app = FastAPI(title="VEUS Studio")
+app = FastAPI(title="VEUS Electric Vehicle Engineering Workbench")
 
 from veus.validation.api import router as validation_router
 
@@ -29,13 +29,27 @@ from veus.investigation.api import router as investigation_router
 
 app.include_router(investigation_router)
 
+from veus.workbench.api import router as workbench_router
+
+app.include_router(workbench_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 
 @app.get("/")
 async def read_index():
+    return FileResponse(BASE_DIR / "static" / "workbench" / "index.html")
+
+
+@app.get("/engineering")
+@app.get("/engineering/")
+async def migration_tools():
+    """Explicit migration route; original engineering UI contracts are retained."""
     return FileResponse(BASE_DIR / "static" / "index.html")
+
+
+app.mount("/engineering-docs", StaticFiles(directory=BASE_DIR.parents[1] / "docs"), name="engineering-docs")
 
 
 @app.websocket("/ws/telemetry")

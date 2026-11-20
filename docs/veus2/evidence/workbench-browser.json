@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "screenshots": "/tmp/veus2-screens",
+  "workspaces": 6,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "widths": [
+    1366,
+    1024,
+    820,
+    390
+  ],
+  "keyboard_components": true,
+  "keyboard_tabs": true,
+  "design_validation_roundtrip": true,
+  "prototype_results_not_fabricated": true,
+  "legacy_migration": true,
+  "default_shell_websockets": 0,
+  "startup": {
+    "resources": [
+      {
+        "name": "workbench.css",
+        "bytes": 23624
+      },
+      {
+        "name": "app.js",
+        "bytes": 31480
+      },
+      {
+        "name": "schematic.js",
+        "bytes": 7253
+      },
+      {
+        "name": "content",
+        "bytes": 11594
+      },
+      {
+        "name": "design",
+        "bytes": 942
+      },
+      {
+        "name": "catalogue",
+        "bytes": 15130
+      },
+      {
+        "name": "mark.svg",
+        "bytes": 203
+      }
+    ],
+    "heap_bytes": 2524191
+  },
+  "page_errors": []
+}

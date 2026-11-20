@@ -1,0 +1,35 @@
+[
+  {
+    "id": "doe-components",
+    "url": "https://afdc.energy.gov/vehicles/how-do-all-electric-cars-work",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "id": "doe-ev",
+    "url": "https://afdc.energy.gov/vehicles/electric",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "id": "doe-charge",
+    "url": "https://afdc.energy.gov/fuels/electricity-infrastructure",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "id": "models",
+    "status": "Repository source retained",
+    "url": "/engineering-docs/engineering.md"
+  },
+  {
+    "id": "soh",
+    "status": "Repository source retained",
+    "url": "/engineering-docs/soh-integration.md"
+  },
+  {
+    "id": "ved",
+    "status": 200,
+    "url": "https://github.com/gsoh/VED",
+    "resolved_url": "https://github.com/gsoh/VED",
+    "bytes": 203246,
+    "retrieved_on": "2026-11-20"
+  }
+]

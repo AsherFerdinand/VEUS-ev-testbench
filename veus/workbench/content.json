@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "classification": "Explanatory engineering content; not vehicle-specific specifications",
+  "sources": [
+    {
+      "id": "doe-components",
+      "title": "US DOE AFDC \u00b7 How do all-electric cars work?",
+      "url": "https://afdc.energy.gov/vehicles/how-do-all-electric-cars-work",
+      "authority": "US Department of Energy",
+      "classification": "Established engineering explanation; not component specifications",
+      "publication_date": null,
+      "retrieved_on": null,
+      "review_status": "Established reference citation; live retrieval blocked by environment HTTP 403"
+    },
+    {
+      "id": "doe-ev",
+      "title": "US DOE AFDC \u00b7 Electric vehicles",
+      "url": "https://afdc.energy.gov/vehicles/electric",
+      "authority": "US Department of Energy",
+      "classification": "Established technology overview",
+      "publication_date": null,
+      "retrieved_on": null,
+      "review_status": "Established reference citation; live retrieval blocked by environment HTTP 403"
+    },
+    {
+      "id": "doe-charge",
+      "title": "US DOE AFDC \u00b7 Charging infrastructure",
+      "url": "https://afdc.energy.gov/fuels/electricity-infrastructure",
+      "authority": "US Department of Energy",
+      "classification": "Charging terminology and infrastructure overview",
+      "publication_date": null,
+      "retrieved_on": null,
+      "review_status": "Established reference citation; live retrieval blocked by environment HTTP 403"
+    },
+    {
+      "id": "models",
+      "title": "VEUS model equations and limitations",
+      "url": "/engineering-docs/engineering.md",
+      "authority": "VEUS repository",
+      "classification": "Illustrative implemented model assumptions, not measured vehicle data",
+      "publication_date": null,
+      "retrieved_on": null,
+      "review_status": "Repository content inspected"
+    },
+    {
+      "id": "soh",
+      "title": "VEUS future SOH integration contract",
+      "url": "/engineering-docs/soh-integration.md",
+      "authority": "VEUS repository",
+      "classification": "Planned interface and missing evidence; no ageing model",
+      "publication_date": null,
+      "retrieved_on": null,
+      "review_status": "Repository content inspected"
+    },
+    {
+      "id": "ved",
+      "title": "University of Michigan Vehicle Energy Dataset",
+      "url": "https://github.com/gsoh/VED",
+      "authority": "University of Michigan / VED authors",
+      "classification": "Measured dataset with retained provenance and limitations",
+      "publication_date": null,
+      "retrieved_on": "2026-11-20",
+      "review_status": "Live VED page retrieved; original dataset provenance retained"
+    }
+  ],
+  "components": [
+    {
+      "id": "battery",
+      "number": "01",
+      "name": "HV battery pack",
+      "function": "Stores energy for propulsion.",
+      "parameters": "Usable energy, voltage envelope, current limits and thermal state.",
+      "relationships": "Inverter, BMS, charger and DC/DC converter.",
+      "limitation": "Capacity and chemistry alone do not determine power capability or internal resistance.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "motor",
+      "number": "02",
+      "name": "Traction motor",
+      "function": "Converts electrical power into mechanical torque.",
+      "parameters": "Torque/speed envelope, rated power, voltage and efficiency map.",
+      "relationships": "Inverter, reduction gearbox and driven wheels.",
+      "limitation": "Topology does not specify efficiency; the retained model has no measured motor map.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "inverter",
+      "number": "03",
+      "name": "Traction inverter",
+      "function": "Controls motor phase currents from the DC bus.",
+      "parameters": "DC voltage/current limits, switching losses and cooling.",
+      "relationships": "Battery, motor and thermal loop.",
+      "limitation": "SiC is a technology choice, not an automatic efficiency gain.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "bms",
+      "number": "04",
+      "name": "Battery management",
+      "function": "Monitors battery state and enforces operating limits.",
+      "parameters": "Cell voltages, temperatures, balancing and SOC estimation.",
+      "relationships": "Battery cells, charger and torque control.",
+      "limitation": "This foundation has no cell-level BMS, safety control or SOH estimator.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "gearbox",
+      "number": "05",
+      "name": "Reduction gearbox",
+      "function": "Trades motor speed for wheel torque.",
+      "parameters": "Reduction ratio, torque rating and mechanical efficiency.",
+      "relationships": "Motor, differential and wheels.",
+      "limitation": "An equivalent ratio does not describe axle topology or load transfer.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "thermal",
+      "number": "06",
+      "name": "Thermal management",
+      "function": "Moves heat to keep components within operating limits.",
+      "parameters": "Coolant flow, heat transfer, temperature and auxiliary demand.",
+      "relationships": "Battery, motor, inverter and cabin loads.",
+      "limitation": "The existing model has no temperature state or validated thermal model.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "dcdc",
+      "number": "07",
+      "name": "DC/DC converter",
+      "function": "Supplies the low-voltage electrical system from the HV bus.",
+      "parameters": "Voltage range, load demand and conversion losses.",
+      "relationships": "HV battery and auxiliary battery/loads.",
+      "limitation": "Low-voltage load and conversion dynamics are not simulated here.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "charger",
+      "number": "08",
+      "name": "Onboard charger",
+      "function": "Converts AC supply to controlled DC battery charging.",
+      "parameters": "AC input, DC voltage/current and cooling limits.",
+      "relationships": "Charge port, battery and BMS.",
+      "limitation": "DC fast charging uses offboard conversion; it does not pass through the onboard AC converter.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "port",
+      "number": "09",
+      "name": "Charging interface",
+      "function": "Connects the vehicle to an external electrical supply.",
+      "parameters": "Connector, communication, voltage/current and interlocks.",
+      "relationships": "Onboard charger for AC; battery DC path for fast charging.",
+      "limitation": "Connector shape alone does not determine charging speed.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    },
+    {
+      "id": "aux",
+      "number": "10",
+      "name": "Auxiliary system",
+      "function": "Powers low-voltage controls and accessories.",
+      "parameters": "Accessory power, low-voltage battery and DC/DC supply.",
+      "relationships": "Controls, lighting, pumps and HV enable functions.",
+      "limitation": "Auxiliary demand must be modelled before attributing measured pack power to propulsion alone.",
+      "sources": [
+        "doe-components",
+        "models"
+      ]
+    }
+  ],
+  "challenges": [
+    {
+      "id": "range",
+      "title": "Driving range",
+      "problem": "How far can stored energy take a vehicle?",
+      "physics": "Usable battery energy must supply road work, drivetrain losses and auxiliary demand. Drag grows with speed squared; aerodynamic power grows with speed cubed.",
+      "technologies": "Reduce drag area or mass, improve useful efficiency, or add usable capacity. Added capacity also adds mass and cost.",
+      "experiment": "Compare drag area at identical prescribed speed and conditions.",
+      "workspace": "optimization",
+      "sources": [
+        "models",
+        "doe-ev"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "ageing",
+      "title": "Battery degradation",
+      "problem": "How does useful battery capability change with use?",
+      "physics": "Capacity fade and resistance growth are different processes; temperature, SOC history and charge/discharge conditions matter.",
+      "technologies": "Thermal control and managed operating windows address different stressors; a calibrated ageing model and longitudinal data are required.",
+      "experiment": "Review the future SOH interface and evidence required before adding ageing.",
+      "workspace": "design",
+      "sources": [
+        "soh",
+        "doe-ev"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "charging",
+      "title": "Charging time",
+      "problem": "What limits energy transfer into the battery?",
+      "physics": "The active limit is set by the pack acceptance curve, SOC/temperature, vehicle conversion limits and external supply.",
+      "technologies": "AC onboard conversion and DC offboard charging have different bottlenecks. A constant advertised peak is not a charging curve.",
+      "experiment": "Compare declared charging envelopes; time calculation is not available in foundation.",
+      "workspace": "design",
+      "sources": [
+        "doe-charge",
+        "doe-components"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "cost",
+      "title": "Production cost",
+      "problem": "Which design choices change component cost?",
+      "physics": "Materials, manufacturing process, yields, scale and integration contribute; pack capacity alone cannot determine vehicle cost.",
+      "technologies": "Use dated, region-specific component estimates with uncertainty; keep component subtotal, production cost and retail price separate.",
+      "experiment": "Define a cost study and document the missing supplier/estimate evidence.",
+      "workspace": "optimization",
+      "sources": [
+        "doe-ev",
+        "models"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "cold",
+      "title": "Cold-weather performance",
+      "problem": "Why can cold conditions affect usable performance?",
+      "physics": "Temperature changes electrochemical kinetics and resistance; heating loads also consume pack energy.",
+      "technologies": "Battery preconditioning, heat pumps and insulation involve energy and hardware trade-offs. No universal benefit is assumed.",
+      "experiment": "Inspect which thermal inputs are missing from a voltage/current recording.",
+      "workspace": "measurements",
+      "sources": [
+        "doe-ev",
+        "models"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "efficiency",
+      "title": "Motor & inverter efficiency",
+      "problem": "Where is energy lost between pack and wheels?",
+      "physics": "Copper, magnetic, switching and conduction losses vary with load, speed, voltage and temperature.",
+      "technologies": "Motor topology, semiconductor technology, gearing and control must be assessed with matched operating maps.",
+      "experiment": "Prepare a controlled powertrain comparison; no label-based efficiency correction.",
+      "workspace": "design",
+      "sources": [
+        "doe-components",
+        "models"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "thermal",
+      "title": "Battery thermal management",
+      "problem": "How is heat generation balanced against cooling?",
+      "physics": "Electrical losses generate heat; heat capacity, thermal resistance and coolant conditions govern temperature evolution.",
+      "technologies": "Liquid cooling, thermal interfaces and control add mass, power demand and complexity; data are required for a thermal network.",
+      "experiment": "Inspect the thermal-model assumptions and unavailable temperature predictions.",
+      "workspace": "design",
+      "sources": [
+        "doe-components",
+        "models"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    },
+    {
+      "id": "materials",
+      "title": "Materials & battery safety",
+      "problem": "What constraints extend beyond energy capacity?",
+      "physics": "Cell chemistry, material availability and thermal/electrical protection create distinct design constraints.",
+      "technologies": "Material substitution, recycling and protection systems require supply-chain and safety evidence; research concepts are not production specifications.",
+      "experiment": "Review chemistry choices without implying safety certification or quantified supply risk.",
+      "workspace": "design",
+      "sources": [
+        "doe-ev",
+        "doe-components"
+      ],
+      "classification": "Established qualitative principles; proposed experiment, not an executed result"
+    }
+  ],
+  "catalogue_policy": {
+    "status": "Illustrative design envelope only; commercial component catalogue not yet populated",
+    "required_fields": [
+      "manufacturer",
+      "model",
+      "source_url",
+      "publication_date_or_retrieval_date",
+      "units",
+      "operating_conditions",
+      "uncertainty",
+      "classification"
+    ],
+    "allowed_classifications": [
+      "measured",
+      "manufacturer_specified",
+      "estimated",
+      "illustrative",
+      "research_stage"
+    ],
+    "rule": "No technology label determines an efficiency, price, voltage curve or resistance."
+  }
+}

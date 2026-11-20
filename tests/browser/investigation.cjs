@@ -14,7 +14,7 @@ const assert = require("node:assert/strict"),
     }),
     errors = [];
   page.on("pageerror", (e) => errors.push(e.stack));
-  const base = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770");
+  const base = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770/engineering");
   base.searchParams.set("workspace", "analyse");
   await page.goto(base.href);
   await page.click('[data-analyse="investigate"]');

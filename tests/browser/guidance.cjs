@@ -15,7 +15,7 @@ const assert = require("node:assert/strict"),
     page = await context.newPage(),
     errors = [];
   page.on("pageerror", (e) => errors.push(e.stack));
-  const base = process.env.VEUS_URL || "http://127.0.0.1:8770";
+  const base = process.env.VEUS_URL || "http://127.0.0.1:8770/engineering";
   await page.goto(base);
   await page.locator("#welcomeWorkspace").waitFor({ state: "visible" });
   await page.locator('[data-vehicle="hatch"]').waitFor({ state: "attached" });

@@ -32,7 +32,7 @@ def test_vehicle_api_and_existing_routes_remain_available():
             svg = client.get("/static/vehicles/" + p["id"] + ".svg")
             assert svg.status_code == 200
             assert "<svg" in svg.text
-        index = client.get("/").text
+        index = client.get("/engineering").text
         for name in ("workspaces.js", "dashboard.js", "validation.js", "drive.js"):
             assert name in index
 

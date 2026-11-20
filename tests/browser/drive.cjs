@@ -24,7 +24,7 @@ const fs = require("node:fs");
       if (d.type !== "error") latest = d;
     });
   });
-  const entry = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770");
+  const entry = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770/engineering");
   entry.searchParams.set("workspace", "drive");
   await page.goto(entry.href);
   await page.locator('[data-vehicle="hatch"]').waitFor();

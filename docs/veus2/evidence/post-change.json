@@ -1,0 +1,22 @@
+{
+  "module_import_wall_s": 0.38256883099984407,
+  "module_import_peak_rss_kib": 36332,
+  "startup_to_http_s": 0.35556975999952556,
+  "server_rss_after_root_kib": 42328,
+  "root_response_bytes": 1812,
+  "frontend_bytes": 275758,
+  "scope": "One Linux process per measurement, warm filesystem; 20 ms HTTP polling. Neither a benchmark nor a laptop performance claim.",
+  "existing_python_files_changed": [
+    "/workspace/VEUS-ev-testbench/veus/studio/main.py"
+  ],
+  "dependency_freeze_unchanged": true,
+  "dependency_directory_bytes": 297534332,
+  "new_shell_file_bytes": {
+    "veus/studio/static/workbench/app.js": 31480,
+    "veus/studio/static/workbench/schematic.js": 7253,
+    "veus/studio/static/workbench/index.html": 1812,
+    "veus/studio/static/workbench/mark.svg": 203,
+    "veus/studio/static/workbench/workbench.css": 23624
+  },
+  "retained_engineering_sources_unchanged": true
+}

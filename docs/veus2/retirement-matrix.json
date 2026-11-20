@@ -1,0 +1,362 @@
+{
+  "base_commit": "1c4560bcf6e4a80dcb38f105daddebcb73173c8b",
+  "deleted_files": [],
+  "new_default_frontend": "veus/studio/static/workbench",
+  "existing_source_files": [
+    {
+      "file": "veus/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/contracts.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/control/__init__.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/control/longitudinal.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/investigation/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/investigation/__main__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/investigation/analysis.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/investigation/api.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/investigation/catalogue.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/investigation/report.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/cell.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/energy_battery.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/inverter.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/motor.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/pack.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/soh_interface.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/transmission.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/model/vehicle.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/readiness/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/readiness/analysis.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/readiness/api.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/readiness/registry.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/replay/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/replay/__main__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/replay/analysis.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/replay/api.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/replay/report.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/sensors/__init__.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/sensors/config.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/sensors/virtual.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/sim/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/sim/drive_cycle.py",
+      "action": "RETAIN_DEPENDENCY_RETIRE_FROM_PRIMARY_UX",
+      "reason": "Required by verified sessions/offline runners and existing contracts"
+    },
+    {
+      "file": "veus/sim/dynamics.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/sim/session.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/sim/solver.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/studio/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/studio/main.py",
+      "action": "REFACTOR",
+      "reason": "Root entry and explicit migration route; existing engineering APIs unchanged"
+    },
+    {
+      "file": "veus/studio/presets.py",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/dashboard.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/drive.css",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/drive.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/guidance.css",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/guidance.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/index.html",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/investigation.css",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/investigation.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/recording-plots.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/replay-controller.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/replay.css",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/replay.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/scene.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/validation.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/vehicles/coupe.svg",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/vehicles/hatch.svg",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/vehicles/sedan.svg",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/vehicles/suv.svg",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/studio/static/workspaces.js",
+      "action": "RETIRE_FROM_DEFAULT_RETAIN_FOR_MIGRATION",
+      "reason": "Shared historical UI dependencies; not loaded by new shell"
+    },
+    {
+      "file": "veus/testing/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/testing/__main__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/testing/report.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/testing/runner.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/testing/schema.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/__init__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/__main__.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/api.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/calibration.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/experiments.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/measurements.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/physics.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    },
+    {
+      "file": "veus/validation/report.py",
+      "action": "RETAIN",
+      "reason": "Existing engineering/source/import/verification contract retained unchanged"
+    }
+  ]
+}

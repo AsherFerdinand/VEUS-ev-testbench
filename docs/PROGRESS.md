@@ -1,7 +1,7 @@
 # Current checkpoint
 
 - Milestone: **VEUS 2.3 complete**, development branch only; no stable release or main merge.
-- Branch: `feature/veus-2.0-engineering-workbench`; preceding checkpoint `f49fe7c`.
+- Branch: `feature/veus-2.0-engineering-workbench`; implementation `301e916` (subsequent checkpoint metadata only), preceding checkpoint `f49fe7c`.
 - Delivered: one coupled retained-model kernel; constant-speed, acceleration, braking/regen, gradient and coast experiments; fixed selected gearing/vehicle snapshot; separate requested demand and achieved motion; explicit continuous/acknowledged-peak policy and electrical/traction limits.
 - Profiles/routes: four illustrative profiles, pinned FASTSim-distributed UDDS/HWFET, bounded explicit-unit CSV imports, missing-data/coverage/grade policy and synthetic route telemetry. No verified Nordschleife data or lap-time claim.
 - UI: lazy functional Lab, active saved design, one cached plot/shared replay clock, route/cutaway view, immutable frozen result identity, actual JSON/CSV/HTML exports. Replay never reruns the solver. Obsolete Lab prototype removed.

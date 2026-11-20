@@ -1,0 +1,13 @@
+{
+  "implementation_commit": "c76df6de6699d4f9c14d3956b21b3d04215fce4b",
+  "base_commit": "fb1b60b986abdc63ee16bd5f4ad07c45dfaa0f93",
+  "branch": "feature/veus-2.0-engineering-workbench",
+  "python_tests": 237,
+  "clock_tests": 9,
+  "browser_suites": 5,
+  "protected_models_measurement_data_and_dependencies_unchanged": true,
+  "main_expected": "1c4560bcf6e4a80dcb38f105daddebcb73173c8b",
+  "agents": 2,
+  "scope": "Milestone only, no stable release, no coupled simulation or physical-validation claim",
+  "screenshot_manifest_sha256": "972c291f363c8f87cf21da3e733c7cd126cbcfe984e2c25599e35e5871f3348e"
+}

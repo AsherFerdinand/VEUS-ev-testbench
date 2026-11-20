@@ -1,4 +1,5 @@
-import { icon, anatomySVG, flowSVG } from "./schematic.js";
+import { icon, anatomySVG, updateSchematic } from "./schematic.js";
+import { state, loadLibrary } from "./design-state.js";
 const $ = (id) => document.getElementById(id);
 const esc = (v) =>
   String(v).replace(
@@ -17,7 +18,6 @@ const workspaces = [
   ["measurements", "Measurements", "FOLLOW THE EVIDENCE"],
 ];
 let content,
-  design,
   catalogue,
   selectedComponent = "battery",
   anatomyMode = "placement",
@@ -25,7 +25,14 @@ let content,
   challenge = "range",
   study = "mass",
   active = "anatomy";
-let validatedDesign = null;
+let studioCleanup = null;
+const vehicleOptions = {
+  annotations: true,
+  body: "cutaway",
+  view: "complete",
+  selected: null,
+  flow: null,
+};
 const sourceLinks = (ids) =>
   `<div class="source-links">${ids
     .map((id) => {
@@ -48,32 +55,6 @@ async function get(url) {
   const r = await fetch(url);
   if (!r.ok) throw Error(`Cannot load ${url} (${r.status})`);
   return r.json();
-}
-async function validate(value) {
-  const r = await fetch("/api/workbench/design/validate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(value),
-  });
-  const result = await r.json();
-  if (!r.ok)
-    throw Error(
-      typeof result.detail === "string"
-        ? result.detail
-        : JSON.stringify(result.detail),
-    );
-  return result;
-}
-function download(name, data) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(
-    new Blob([JSON.stringify(data, null, 2) + "\n"], {
-      type: "application/json",
-    }),
-  );
-  a.download = name;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
@@ -126,6 +107,8 @@ for (const button of document.querySelectorAll(".workspace-tab")) {
 function navigate(key, update = true) {
   if (!content) return;
   if (!workspaces.some((w) => w[0] === key)) key = "anatomy";
+  studioCleanup?.();
+  studioCleanup = null;
   active = key;
   document.body.dataset.workspace = key;
   for (const b of document.querySelectorAll(".workspace-tab")) {
@@ -166,38 +149,83 @@ function renderAnatomy() {
   };
   $("flow-view").onclick = () => {
     anatomyMode = "flow";
+    vehicleOptions.view = "complete";
+    vehicleOptions.selected = null;
     renderAnatomy();
   };
   drawAnatomy();
-  inspectComponent();
+  if (anatomyMode === "flow") inspectFlow();
+  else inspectComponent();
 }
 function drawAnatomy() {
   const slot = $("schematic-slot");
-  if (anatomyMode === "flow") {
-    slot.innerHTML = `<div class="flow-controls" role="group" aria-label="Conceptual energy path">${[
-      ["propulsion", "Propulsion"],
-      ["regeneration", "Regeneration"],
-      ["charging", "AC charging"],
-      ["auxiliary", "Auxiliary loads"],
-    ]
-      .map(
-        ([id, label]) =>
-          `<button data-flow="${id}" aria-pressed="${flowMode === id}">${label}</button>`,
-      )
-      .join("")}</div>${flowSVG(flowMode)}`;
-    $("anatomy-tooltip").textContent =
-      "Conceptual connections only. Regeneration requires battery acceptance; actual energy direction is not inferred from unknown-sign telemetry.";
-    for (const b of slot.querySelectorAll("[data-flow]"))
-      b.onclick = () => {
-        flowMode = b.dataset.flow;
-        drawAnatomy();
-        slot.querySelector(`[data-flow="${flowMode}"]`).focus();
-      };
-    return;
-  }
-  slot.innerHTML = anatomySVG(content.components);
+  slot.innerHTML = `<div class="vehicle-options"><label>System view<select id="vehicle-view">${["complete", "electrical", "drivetrain", "battery", "thermal"].map((v) => `<option value="${v}" ${vehicleOptions.view === v ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label>Body<select id="vehicle-body">${["cutaway", "transparent", "opaque"].map((v) => `<option ${vehicleOptions.body === v ? "selected" : ""}>${v}</option>`).join("")}</select></label><label><input type="checkbox" id="vehicle-annotations" ${vehicleOptions.annotations ? "checked" : ""}> Annotations</label><button id="vehicle-clear">Show all systems</button></div>${
+    anatomyMode === "flow"
+      ? `<div class="flow-controls">${[
+          ["propulsion", "Propulsion"],
+          ["regeneration", "Regeneration"],
+          ["ac_charging", "AC charging"],
+          ["dc_charging", "DC charging"],
+          ["auxiliary", "Auxiliary loads"],
+        ]
+          .map(
+            ([id, label]) =>
+              `<button data-flow="${id}" aria-pressed="${flowMode === id}">${label}</button>`,
+          )
+          .join("")}</div>`
+      : ""
+  }${anatomySVG(content.components, true, { ...vehicleOptions, flow: anatomyMode === "flow" ? flowMode : null })}<div class="connection-legend"><span class="hv">HV DC / three-phase AC</span><span class="lv">Low voltage</span><span class="control">Control</span><span class="coolant">Coolant</span><span class="mechanical">Mechanical</span></div>`;
+  const svg = slot.querySelector(".anatomy-svg");
+  slot.onclick = (e) => {
+    const marker = e.target.closest("[data-component-link]");
+    if (!marker) return;
+    selectedComponent = marker.dataset.componentLink;
+    vehicleOptions.selected = selectedComponent;
+    updateSchematic(svg, {
+      ...vehicleOptions,
+      flow: anatomyMode === "flow" ? flowMode : null,
+    });
+    inspectComponent();
+  };
+  const update = () =>
+    updateSchematic(svg, {
+      ...vehicleOptions,
+      flow: anatomyMode === "flow" ? flowMode : null,
+    });
+  $("vehicle-view").onchange = (e) => {
+    vehicleOptions.view = e.target.value;
+    update();
+  };
+  $("vehicle-body").onchange = (e) => {
+    vehicleOptions.body = e.target.value;
+    update();
+  };
+  $("vehicle-annotations").onchange = (e) => {
+    vehicleOptions.annotations = e.target.checked;
+    update();
+  };
+  $("vehicle-clear").onclick = () => {
+    vehicleOptions.selected = null;
+    vehicleOptions.view = "complete";
+    $("vehicle-view").value = "complete";
+    update();
+  };
+  for (const b of slot.querySelectorAll("[data-flow]"))
+    b.onclick = () => {
+      flowMode = b.dataset.flow;
+      vehicleOptions.view = "complete";
+      vehicleOptions.selected = null;
+      $("vehicle-view").value = "complete";
+      inspectFlow();
+      for (const x of slot.querySelectorAll("[data-flow]"))
+        x.setAttribute("aria-pressed", x === b);
+      update();
+      $("anatomy-tooltip").textContent =
+        "Conceptual " +
+        b.textContent.toLowerCase() +
+        " path; no live power or energy is calculated.";
+    };
   for (const g of slot.querySelectorAll("[data-component]")) {
-    g.setAttribute("aria-pressed", g.dataset.component === selectedComponent);
     const preview = () => {
       $("anatomy-tooltip").textContent = content.components.find(
         (c) => c.id === g.dataset.component,
@@ -207,8 +235,8 @@ function drawAnatomy() {
     g.onfocus = preview;
     const choose = () => {
       selectedComponent = g.dataset.component;
-      for (const x of slot.querySelectorAll("[data-component]"))
-        x.setAttribute("aria-pressed", x === g);
+      vehicleOptions.selected = selectedComponent;
+      update();
       inspectComponent();
     };
     g.onclick = choose;
@@ -220,13 +248,44 @@ function drawAnatomy() {
     };
   }
 }
+function inspectFlow() {
+  const paths = {
+    propulsion: [
+      "Propulsion",
+      "Battery DC → inverter → three-phase motor → reduction and driven axle.",
+    ],
+    regeneration: [
+      "Regenerative braking",
+      "Driven axle → motor → inverter → HV battery, subject to battery acceptance and conversion limits.",
+    ],
+    ac_charging: [
+      "AC charging",
+      "External AC → onboard charger → protected DC battery path. Traction inverter is bypassed.",
+    ],
+    dc_charging: [
+      "DC charging",
+      "Offboard DC conversion → charge port → conceptual switching and protection → battery. The onboard AC charger and traction inverter are bypassed.",
+    ],
+    auxiliary: [
+      "Auxiliary operation",
+      "HV battery → DC/DC converter → 12 V battery and low-voltage auxiliaries.",
+    ],
+  };
+  const [name, description] = paths[flowMode];
+  $("component-inspector").innerHTML =
+    `<div class="component-number">CONCEPTUAL ENERGY PATH</div><h2>${name}</h2><p>${description}</p><h3>Direction, not magnitude</h3><p>Arrows show the conceptual conversion path. No simulation is running and no measured power or energy is inferred.</p><p class="limit">Switchgear, protection and control are conceptual. This is not a production wiring diagram or safety model.</p>${sourceLinks(["doe-components", "models"])}`;
+}
 function inspectComponent() {
   const c = content.components.find((c) => c.id === selectedComponent);
   $("component-inspector").innerHTML =
     `<div class="component-number">COMPONENT ${c.number} / 10</div><h2>${esc(c.name)}</h2><p>${esc(c.function)}</p><h3>Engineering parameters</h3><p>${esc(c.parameters)}</p><h3>Connected systems</h3><p>${esc(c.relationships)}</p><p class="limit">${esc(c.limitation)}</p><label class="quiet">Choose a component<select id="component-select" aria-label="Choose an EV component">${content.components.map((x) => `<option value="${x.id}" ${x.id === c.id ? "selected" : ""}>${x.number} · ${esc(x.name)}</option>`).join("")}</select></label>${sourceLinks(c.sources)}`;
   $("component-select").onchange = (e) => {
     selectedComponent = e.target.value;
-    drawAnatomy();
+    vehicleOptions.selected = selectedComponent;
+    updateSchematic(document.querySelector("#schematic-slot .anatomy-svg"), {
+      ...vehicleOptions,
+      flow: anatomyMode === "flow" ? flowMode : null,
+    });
     inspectComponent();
   };
 }
@@ -265,91 +324,25 @@ function renderChallenges() {
     navigate(c.workspace);
   };
 }
-const field = (group, key, label, step = "any") =>
-  `<label>${label}<input data-group="${group}" data-field="${key}" type="number" step="${step}" value="${design[group][key]}" required></label>`;
-const select = (group, key, label, values) =>
-  `<label>${label}<select data-group="${group}" data-field="${key}">${values.map((v) => `<option ${design[group][key] === v ? "selected" : ""}>${v}</option>`).join("")}</select></label>`;
-function renderDesign() {
+async function renderDesign() {
   $("workspace-panel").innerHTML =
-    header(
-      "03 / DESIGN INTENT & CONSTRAINTS",
-      "Define a vehicle. Show your assumptions.",
-      "Explore a versioned, illustrative configuration. Technology choices do not automatically change efficiency or performance.",
-      "DESIGN PROTOTYPE",
-    ) +
-    `
- <div class="design-layout"><div><div class="drawing-panel"><div class="drawing-toolbar"><span class="drawing-id">CONFIGURATION STUDY / ILLUSTRATIVE DATA</span><span class="quiet">Focus a field to locate its subsystem</span></div><div id="design-schematic">${anatomySVG(content.components, false)}</div><div class="drawing-footer"><span>No commercial component specifications</span><span>Schema v1 · SI-labelled inputs</span></div></div><div class="prototype-note">Configuration validation and JSON import/export work. The configuration is not yet connected to the retained simulator. Range, cost, charging time and efficiency predictions are unavailable.</div><details><summary>Component sourcing & catalogue policy</summary><p class="quiet">Every future sourced component needs manufacturer/model, source URL, date, units, operating conditions, uncertainty and measured/specified/estimated classification. No commercial catalogue is populated yet.</p><p class="quiet">Cost estimates must remain separate from vehicle production cost and retail price. Supplier prices, power maps and thermal/current compatibility are unresolved.</p></details></div>
- <form id="design-form" class="design-form"><label>Design name<input id="design-name" maxlength="100" value="${esc(design.name)}" required></label><fieldset><legend>01 / Energy storage</legend>${select("battery", "chemistry", "Chemistry · label only", ["unspecified", "LFP", "NMC"])}<div class="field-grid">${field("battery", "gross_capacity_kwh", "Gross capacity · kWh")}${field("battery", "usable_capacity_kwh", "Usable capacity · kWh")}${field("battery", "mass_kg", "Battery mass · kg")}${field("battery", "nominal_voltage_v", "Nominal DC voltage · V")}</div></fieldset>
- <fieldset><legend>02 / Conversion & vehicle</legend><div class="field-grid">${select("motor", "topology", "Motor topology", ["unspecified", "PMSM", "induction"])}${field("motor", "rated_power_kw", "Motor rated power · kW")}${select("inverter", "technology", "Inverter technology", ["unspecified", "silicon", "SiC"])}${field("body", "mass_excluding_battery_kg", "Body + systems, excluding battery · kg")}${field("body", "drag_coefficient", "Drag coefficient · Cd")}${field("body", "frontal_area_m2", "Frontal area · m²")}</div></fieldset>
- <details><summary>Voltage, charging & tariff assumptions</summary><div class="field-grid">${field("battery", "minimum_voltage_v", "Battery minimum · V")}${field("battery", "maximum_voltage_v", "Battery maximum · V")}${field("inverter", "maximum_dc_voltage_v", "Inverter maximum DC · V")}${field("inverter", "continuous_power_kw", "Inverter continuous power · kW")}${field("motor", "rated_dc_minimum_v", "Motor drive minimum DC · V")}${field("motor", "rated_dc_maximum_v", "Motor drive maximum DC · V")}${field("charging", "charger_dc_maximum_v", "Charger maximum DC · V")}${field("charging", "maximum_ac_kw", "Vehicle AC limit · kW")}${field("charging", "maximum_dc_kw", "Vehicle DC limit · kW")}${field("body", "rolling_resistance_coefficient", "Rolling resistance · Crr")}${field("tariffs", "home_eur_kwh", "Home assumption · EUR/kWh")}${field("tariffs", "public_ac_eur_kwh", "Public AC assumption · EUR/kWh")}${field("tariffs", "public_dc_eur_kwh", "Public DC assumption · EUR/kWh")}${field("tariffs", "charging_efficiency", "Charging efficiency assumption · fraction")}</div><label>Reduction ratio · dimensionless<input id="reduction-ratio" type="number" step="any" value="${design.reduction_ratio}"></label><p class="quiet">Single equivalent motor · custom DC bus · thermal behaviour not modelled. Tariffs are editable illustrative assumptions, not European market prices; no energy-cost calculation is executed.</p></details>
- <div class="design-actions"><button type="submit" class="primary">Check configuration</button><button type="button" id="design-export" disabled>Export JSON</button><label class="file-label">Import JSON<input id="design-import" type="file" accept=".json"></label></div><p id="configuration-status" class="configuration-status" role="status">Illustrative defaults. Check the envelope before export.</p></form></div>`;
-  $("design-form").onsubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const value = readDesign();
-      const r = await validate(value);
-      design = r.design;
-      validatedDesign = structuredClone(r.design);
-      $("design-export").disabled = false;
-      $("configuration-status").textContent =
-        r.status + " · " + r.configuration_sha256;
-      notice(
-        "Configuration envelope checked. No simulation or performance calculation executed.",
-      );
-    } catch (e) {
-      validatedDesign = null;
-      $("design-export").disabled = true;
-      $("configuration-status").textContent = e.message;
-    }
-  };
-  $("design-form").oninput = () => {
-    validatedDesign = null;
-    $("design-export").disabled = true;
-    $("configuration-status").textContent =
-      "Unvalidated edits. Check configuration before export.";
-  };
-  for (const input of document.querySelectorAll("[data-group]"))
-    input.onfocus = () => {
-      const group = input.dataset.group;
-      $("design-schematic").classList.toggle("focus-body", group === "body");
-      for (const g of document.querySelectorAll(
-        "#design-schematic [data-component]",
-      ))
-        g.classList.toggle(
-          "focus-component",
-          g.dataset.component ===
-            ({ body: "chassis", charging: "charger", tariffs: "port" }[group] ||
-              group),
-        );
-    };
-  $("design-export").onclick = () => {
-    if (validatedDesign)
-      download("veus-illustrative-design.json", validatedDesign);
-  };
-  $("design-import").onchange = async (e) => {
-    try {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (file.size > 64000) throw Error("Design exceeds 64 KB");
-      const r = await validate(JSON.parse(await file.text()));
-      design = r.design;
-      validatedDesign = null;
-      renderDesign();
-      $("configuration-status").textContent =
-        "Imported valid envelope; review assumptions and check before export.";
-    } catch (e) {
-      $("configuration-status").textContent = "Import rejected: " + e.message;
-    }
-  };
-}
-function readDesign() {
-  const value = structuredClone(design);
-  value.name = $("design-name").value;
-  value.reduction_ratio = $("reduction-ratio").valueAsNumber;
-  for (const input of document.querySelectorAll("[data-group]"))
-    value[input.dataset.group][input.dataset.field] =
-      input.type === "number" ? input.valueAsNumber : input.value;
-  return value;
+    '<p class="quiet">Loading Design Studio…</p>';
+  try {
+    const module = await import("./design-studio.js");
+    if (active !== "design") return;
+    const cleanup = await module.mountStudio($("workspace-panel"), {
+      content,
+      header,
+      notice,
+      sourceLinks,
+    });
+    if (active !== "design") cleanup();
+    else studioCleanup = cleanup;
+  } catch (e) {
+    if (active === "design")
+      $("workspace-panel").textContent =
+        "Design Studio could not load: " + e.message;
+  }
 }
 function renderSimulation() {
   $("workspace-panel").innerHTML =
@@ -437,7 +430,7 @@ function renderOptimization() {
       )
       .join(
         "",
-      )}<p class="quiet">No optimization has been executed. These are study definitions, not ranked designs.</p></aside><article class="study-visual"><div class="eyebrow">BASELINE → MODIFIED / IDENTICAL CONDITIONS</div><h2>${s.question}</h2><div class="equation">${s.equation}</div><h3>Controlled experiment</h3><p>${s.changes}</p><table><thead><tr><th>Study state</th><th>Baseline</th><th>Modified</th></tr></thead><tbody><tr><td>Configuration</td><td>${esc(design.name)} · illustrative</td><td>Not defined</td></tr><tr><td>Simulation result</td><td>Unavailable</td><td>Unavailable</td></tr><tr><td>Objective improvement</td><td colspan="2">Not calculated</td></tr></tbody></table><p class="prototype-note">${s.limits}</p><button id="optimization-design">Review the illustrative design →</button><details><summary>Next: reproducible sweeps, sensitivity and feasibility</summary><p>Persist baseline/variant configurations, constraints, objective units and scenario hashes. Execute both with the same backend runner; retain failed and inconclusive outcomes. Add Pareto methods only when validated objectives and feasible designs exist.</p></details></article></div>`;
+      )}<p class="quiet">No optimization has been executed. These are study definitions, not ranked designs.</p></aside><article class="study-visual"><div class="eyebrow">BASELINE → MODIFIED / IDENTICAL CONDITIONS</div><h2>${s.question}</h2><div class="equation">${s.equation}</div><h3>Controlled experiment</h3><p>${s.changes}</p><table><thead><tr><th>Study state</th><th>Baseline</th><th>Modified</th></tr></thead><tbody><tr><td>Configuration</td><td>${esc(state.design?.name || "No active vehicle design")} · illustrative</td><td>Not defined</td></tr><tr><td>Simulation result</td><td>Unavailable</td><td>Unavailable</td></tr><tr><td>Objective improvement</td><td colspan="2">Not calculated</td></tr></tbody></table><p class="prototype-note">${s.limits}</p><button id="optimization-design">Review the illustrative design →</button><details><summary>Next: reproducible sweeps, sensitivity and feasibility</summary><p>Persist baseline/variant configurations, constraints, objective units and scenario hashes. Execute both with the same backend runner; retain failed and inconclusive outcomes. Add Pareto methods only when validated objectives and feasible designs exist.</p></details></article></div>`;
   for (const b of document.querySelectorAll("[data-study]"))
     b.onclick = () => {
       study = b.dataset.study;
@@ -446,7 +439,19 @@ function renderOptimization() {
     };
   $("optimization-design").onclick = () => navigate("design");
 }
-function renderMeasurements() {
+async function renderMeasurements() {
+  if (!catalogue) {
+    $("workspace-panel").innerHTML =
+      '<p class="quiet">Loading genuine recording catalogue…</p>';
+    try {
+      catalogue = await get("/api/investigation/catalogue");
+    } catch (e) {
+      if (active === "measurements")
+        $("workspace-panel").textContent = e.message;
+      return;
+    }
+    if (active !== "measurements") return;
+  }
   $("workspace-panel").innerHTML =
     header(
       "06 / RECORDED MEASUREMENTS",
@@ -481,12 +486,40 @@ function renderMeasurements() {
   $("measurement-question").onchange = show;
   show();
 }
+loadLibrary();
+function activeLabel() {
+  const label = document.querySelector(".edition-note");
+  if (label)
+    label.textContent = state.design
+      ? "Active · " +
+        state.design.name +
+        (state.evaluation ? "" : " · unchecked")
+      : "Understand · Design · Simulate · Optimize";
+}
+window.addEventListener("veus:design", activeLabel);
+activeLabel();
 try {
-  [content, design, catalogue] = await Promise.all([
-    get("/api/workbench/content"),
-    get("/api/workbench/design"),
-    get("/api/investigation/catalogue"),
-  ]);
+  content = await get("/api/workbench/content");
+  if (state.design) {
+    const snapshot = JSON.stringify(state.design);
+    fetch("/api/workbench/v2/evaluate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: snapshot,
+    })
+      .then(async (r) => {
+        if (!r.ok) throw Error("Saved active design requires review");
+        return r.json();
+      })
+      .then((result) => {
+        if (JSON.stringify(state.design) === snapshot && !state.dirty) {
+          state.evaluation = result;
+          state.design = structuredClone(result.design);
+          activeLabel();
+        }
+      })
+      .catch((e) => notice(e.message + "; open Design Studio to correct it."));
+  }
   $("loading").hidden = true;
   navigate(new URLSearchParams(location.search).get("workspace"), false);
 } catch (e) {

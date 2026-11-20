@@ -13,91 +13,717 @@ const icons = {
 };
 export const icon = (key) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[key]}</svg>`;
-const shapes = {
-  battery:
-    '<path class="component-surface" d="m260 241 142-80 154 86-146 83Z"/><path class="component-side" d="m260 241 150 89v17l-150-88Zm150 89 146-83v17l-146 83Z"/><path class="cell-lines" d="m282 230 149 88m-126-101 149 88m-126-101 149 88m-126-101 149 88m-126-101 149 88"/>',
-  motor:
-    '<path class="component-surface" d="m157 250 50-29 53 30-51 30Z"/><path class="component-side" d="m157 250 52 31v30l-52-31Zm52 31 51-30v29l-51 31Z"/><ellipse cx="184" cy="279" rx="15" ry="21" transform="rotate(-30 184 279)"/>',
-  inverter:
-    '<path class="component-surface" d="m190 209 46-26 49 28-47 26Z"/><path class="component-side" d="m190 209 48 28v17l-48-28Zm48 28 47-26v17l-47 26Z"/><path d="m205 212 30 17m-20-23 30 17m-20-23 30 17"/>',
-  bms: '<path class="component-surface" d="m413 188 29-16 38 22-30 17Z"/><path class="component-side" d="m413 188 37 23v12l-37-23Zm37 23 30-17v12l-30 17Z"/>',
-  gearbox:
-    '<path class="component-surface" d="m124 286 34-20 40 23-34 20Z"/><path class="component-side" d="m124 286 40 23v21l-40-23Zm40 23 34-20v21l-34 20Z"/>',
-  thermal:
-    '<path class="component-surface" d="m347 119 47-26 44 25-47 27Z"/><path class="component-side" d="m347 119 44 26v22l-44-26Zm44 26 47-27v22l-47 27Z"/><path d="m355 121 33 20m-20-28 34 20m-20-27 33 20"/>',
-  dcdc: '<path class="component-surface" d="m484 182 29-17 37 21-29 17Z"/><path class="component-side" d="m484 182 37 21v14l-37-21Zm37 21 29-17v14l-29 17Z"/>',
-  charger:
-    '<path class="component-surface" d="m509 139 37-21 54 31-37 22Z"/><path class="component-side" d="m509 139 54 32v18l-54-32Zm54 32 37-22v18l-37 22Z"/>',
-  port: '<path class="component-surface" d="m613 197 20-12 17 10v31l-20 12-17-10Z"/><circle cx="630" cy="213" r="7"/>',
-  aux: '<path class="component-surface" d="m112 225 26-15 28 16-26 15Z"/><path class="component-side" d="m112 225 28 16v25l-28-16Zm28 16 26-15v25l-26 15Z"/><path d="m124 223 8 4m-2-6-4 8"/>',
-};
-const annotations = {
-  battery: [410, 281, 650, 400, "HV BATTERY"],
-  motor: [200, 277, 48, 194, "TRACTION MOTOR"],
-  inverter: [236, 220, 110, 107, "INVERTER"],
-  bms: [447, 200, 595, 68, "BATTERY MANAGEMENT"],
-  gearbox: [160, 302, 65, 360, "REDUCTION GEAR"],
-  thermal: [395, 130, 357, 44, "THERMAL LOOP"],
-  dcdc: [523, 193, 704, 111, "DC/DC"],
-  charger: [557, 157, 768, 191, "ONBOARD CHARGER"],
-  port: [630, 215, 783, 296, "CHARGE PORT"],
-  aux: [139, 239, 172, 452, "AUXILIARIES"],
-};
-export function anatomySVG(components, interactive = true) {
-  return `<svg class="anatomy-svg" viewBox="0 0 880 520" role="group" aria-label="Original isometric EV component schematic. Illustrative locations, not to scale.">
- <defs><pattern id="draft-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="currentColor" stroke-width=".45"/></pattern></defs>
- <rect x="30" y="14" width="820" height="480" fill="url(#draft-grid)" class="draft-grid"/>
- <path class="chassis-shadow" d="m90 276 319-182 296 164-322 188Z"/>
- <g class="wheels"><ellipse cx="160" cy="293" rx="23" ry="40" transform="rotate(-30 160 293)"/><ellipse cx="351" cy="394" rx="23" ry="40" transform="rotate(-30 351 394)"/><ellipse cx="462" cy="105" rx="23" ry="40" transform="rotate(-30 462 105)"/><ellipse cx="654" cy="215" rx="23" ry="40" transform="rotate(-30 654 215)"/></g>
- <path class="chassis-side" d="m104 258 307-177 275 155v20L379 433 104 278Z"/>
- <path class="chassis-top" d="m104 258 307-177 275 155-307 177Z"/>
- <path class="frame-lines" d="m125 259 286-161 254 140-286 161Zm64-35 250 141m-181-180 250 141m-184-179 251 140m-270-44 243-138"/>
- <path class="thermal-lines" d="m246 258 138-80 140 80m-201-91 68-39"/>
- ${components
-   .map((c, i) => {
-     const [x, y, mx, my, label] = annotations[c.id];
-     return `<g class="anatomy-component c-${c.id}" data-component="${c.id}" ${interactive ? `tabindex="0" role="button" aria-pressed="${i === 0}" aria-describedby="anatomy-tooltip"` : ""} aria-label="${c.number} ${c.name}"><title>${c.name}: ${c.function}</title>${shapes[c.id]}<path class="leader" d="M${x} ${y} L${mx} ${my}"/><circle class="anchor-dot" cx="${x}" cy="${y}" r="3"/><circle class="annotation" cx="${mx}" cy="${my}" r="13"/><text class="annotation-number" x="${mx}" y="${my + 4}" text-anchor="middle">${c.number}</text><text class="annotation-label" x="${mx}" y="${my + 29}" text-anchor="middle">${label}</text></g>`;
-   })
-   .join("")}
- <text x="32" y="506" class="drawing-note">EV / SYSTEMS STUDY 01</text><text x="848" y="506" text-anchor="end" class="drawing-note">CONCEPTUAL PLACEMENT · NOT TO SCALE</text></svg>`;
+
+// Coherent axonometric projection; x is vehicle length, y is width, z is height.
+// Units are drawing coordinates, not manufacturer dimensions or a packaging model.
+const p = (x, y, z = 0) => [
+  450 + 0.86 * x + 0.58 * y,
+  328 - 0.39 * x + 0.35 * y - z,
+];
+const xy = (v) => v.map((n) => n.toFixed(1)).join(" ");
+const line = (points) =>
+  points.map((v, i) => (i ? "L" : "M") + xy(p(...v))).join(" ");
+const polygon = (points) => line(points) + "Z";
+const escape = (text) =>
+  String(text).replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ],
+  );
+function box(x, y, z, length, width, height, extra = "") {
+  return `<g ${extra}><path class="component-side" d="${polygon([
+    [x, y, z],
+    [x + length, y, z],
+    [x + length, y, z + height],
+    [x, y, z + height],
+  ])}"/><path class="component-side end-face" d="${polygon([
+    [x, y, z],
+    [x, y + width, z],
+    [x, y + width, z + height],
+    [x, y, z + height],
+  ])}"/><path class="component-surface" d="${polygon([
+    [x, y, z + height],
+    [x + length, y, z + height],
+    [x + length, y + width, z + height],
+    [x, y + width, z + height],
+  ])}"/></g>`;
 }
-export function flowSVG(mode) {
-  const flows = {
-    propulsion: {
-      path: "M160 160H340H510H615",
-      label: "Battery → inverter → motor → reduction → wheels",
-    },
-    regeneration: {
-      path: "M680 160H510H340H225",
-      label:
-        "Wheels → motor → inverter → battery, subject to acceptance limits",
-    },
-    charging: {
-      path: "M160 350H340V420H80V160H95",
-      label:
-        "AC supply → onboard charger → battery. DC fast charging bypasses the onboard AC converter.",
-    },
-    auxiliary: {
-      path: "M160 160V280H340H445",
-      label: "HV battery → DC/DC → low-voltage auxiliaries",
-    },
-  };
-  const f = flows[mode];
-  return `<svg viewBox="30 90 780 390" class="flow-svg" role="img" aria-label="${f.label}"><defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="currentColor"/></marker></defs><g class="flow-network"><path d="M160 160H340H510H680M160 350H340V420H80V160H160M160 160V280H340H510"/></g><path d="${f.path}" class="flow-active" marker-end="url(#flow-arrow)"/>${[
-    [160, 160, "HV BATTERY"],
-    [340, 160, "INVERTER"],
-    [510, 160, "MOTOR"],
-    [680, 160, "GEAR / WHEELS"],
-    [160, 350, "AC SUPPLY"],
-    [340, 350, "ONBOARD CHARGER"],
-    [340, 280, "DC/DC"],
-    [510, 280, "LV AUXILIARIES"],
+const circle = (x, y, z, r, cls) => {
+  const [a, b] = p(x, y, z);
+  return `<circle class="${cls}" cx="0" cy="0" r="${r}" transform="matrix(.86 -.39 0 -1 ${a} ${b})"/>`;
+};
+function wheel(x, y) {
+  const inner = y < 0 ? y + 16 : y - 16;
+  return `<g class="vehicle-wheel"><path class="tyre-wall" d="${polygon([
+    [x - 34, y, 34],
+    [x - 34, inner, 34],
+    [x + 34, inner, 34],
+    [x + 34, y, 34],
+  ])}"/>${circle(x, inner, 34, 34, "tyre-inner")}${circle(x, y, 34, 34, "tyre")}${circle(x, y, 34, 25, "rim")}${circle(x, y, 34, 20, "rim-inner")}${[
+    0, 1, 2, 3, 4,
   ]
-    .map(
-      ([x, y, t]) =>
-        `<g><rect x="${x - 65}" y="${y - 26}" width="130" height="52" rx="5"/><text x="${x}" y="${y + 4}" text-anchor="middle">${t}</text></g>`,
-    )
+    .map((i) => {
+      const a = (i * Math.PI * 2) / 5;
+      return `<path class="rim-spoke" d="${line([
+        [x, y, 34],
+        [x + 21 * Math.cos(a), y, 34 + 21 * Math.sin(a)],
+      ])}"/>`;
+    })
+    .join("")}${circle(x, y, 34, 5, "hub")}</g>`;
+}
+function cylinder(x, y, z, r, width) {
+  const a = -2.308,
+    dx = r * Math.cos(a),
+    dz = r * Math.sin(a);
+  return `<g class="motor-cylinder">${circle(x, y, z, r, "motor-end far-end")}<path class="component-side" d="${polygon(
+    [
+      [x + dx, y, z + dz],
+      [x + dx, y + width, z + dz],
+      [x - dx, y + width, z - dz],
+      [x - dx, y, z - dz],
+    ],
+  )}"/>${[0, 10, 20, 30, 40, 50]
+    .filter((i) => i <= width)
+    .map((d) => circle(x, y + d, z, r, "motor-rib"))
     .join(
       "",
-    )}<text x="440" y="455" text-anchor="middle" class="drawing-note">SCHEMATIC PATH ONLY · NO POWER OR ENERGY CALCULATED</text></svg>`;
+    )}${circle(x, y + width, z, r, "motor-end")}${circle(x, y + width, z, r * 0.56, "motor-center")}<path class="motor-shaft" d="${line(
+    [
+      [x, y + width, z],
+      [x, y + width + 22, z],
+    ],
+  )}"/></g>`;
+}
+const centers = {
+  battery: [10, 0, 51],
+  motor: [-170, 3, 53],
+  inverter: [-115, -30, 79],
+  bms: [111, 25, 75],
+  gearbox: [-170, 48, 53],
+  thermal: [-236, -5, 66],
+  dcdc: [193, -42, 90],
+  charger: [190, 42, 90],
+  port: [240, 92, 80],
+  aux: [-215, 54, 73],
+};
+const labels = {
+  battery: [666, 400, "HV BATTERY"],
+  motor: [90, 338, "TRACTION MOTOR"],
+  inverter: [150, 112, "INVERTER"],
+  bms: [569, 54, "BATTERY MANAGEMENT"],
+  gearbox: [262, 462, "REDUCTION GEAR"],
+  thermal: [74, 221, "RADIATOR / LOOP"],
+  dcdc: [762, 120, "DC/DC CONVERTER"],
+  charger: [792, 231, "ONBOARD CHARGER"],
+  port: [786, 348, "CHARGE PORT"],
+  aux: [110, 432, "12 V AUXILIARY"],
+};
+const shape = {
+  battery: () =>
+    `${box(-112, -66, 28, 249, 132, 18)}${Array.from({ length: 8 }, (_, i) => box(-107 + i * 30, -61, 47, 26, 58, 6)).join("")}${Array.from({ length: 8 }, (_, i) => box(-107 + i * 30, 3, 47, 26, 58, 6)).join("")}${box(133, -52, 49, 18, 26, 12, 'class="hv-protection"')}<text class="protection-label" x="${p(141, -38, 67)[0]}" y="${p(141, -38, 67)[1]}">+/−</text>`,
+  motor: () => cylinder(-170, -32, 53, 21, 48),
+  inverter: () =>
+    `${box(-140, -65, 60, 50, 58, 16)}${Array.from(
+      { length: 8 },
+      (_, i) =>
+        `<path class="cooling-fin" d="${line([
+          [-136 + i * 6, -61, 78],
+          [-136 + i * 6, -12, 78],
+        ])}"/>`,
+    ).join("")}<path class="terminal" d="${line([
+      [-94, -50, 78],
+      [-87, -50, 78],
+    ])}"/>`,
+  bms: () =>
+    `${box(89, 8, 62, 40, 34, 11)}<path class="circuit-detail" d="${line([
+      [95, 16, 74],
+      [105, 16, 74],
+      [105, 30, 74],
+      [119, 30, 74],
+    ])}"/>`,
+  gearbox: () =>
+    `${box(-193, 25, 40, 47, 36, 28)}${circle(-171, 62, 54, 15, "gear-cover")}${circle(-171, 62, 54, 5, "gear-hub")}`,
+  thermal: () =>
+    `${box(-247, -67, 36, 14, 134, 30)}${Array.from(
+      { length: 16 },
+      (_, i) =>
+        `<path class="radiator-fin" d="${line([
+          [-249, -61 + i * 8, 40],
+          [-249, -61 + i * 8, 64],
+        ])}"/>`,
+    ).join(
+      "",
+    )}${box(-217, -69, 60, 28, 25, 14)}${circle(-204, -43, 72, 7, "coolant-cap")}`,
+  dcdc: () =>
+    `${box(170, -67, 70, 47, 44, 17)}${Array.from(
+      { length: 5 },
+      (_, i) =>
+        `<path class="cooling-fin" d="${line([
+          [175 + i * 8, -62, 88],
+          [175 + i * 8, -27, 88],
+        ])}"/>`,
+    ).join("")}`,
+  charger: () =>
+    `${box(151, 12, 70, 79, 52, 18)}${Array.from(
+      { length: 8 },
+      (_, i) =>
+        `<path class="cooling-fin" d="${line([
+          [157 + i * 9, 17, 89],
+          [157 + i * 9, 59, 89],
+        ])}"/>`,
+    ).join("")}`,
+  port: () =>
+    `<path class="port-surround" d="${polygon([
+      [223, 93, 67],
+      [254, 93, 67],
+      [254, 93, 97],
+      [223, 93, 97],
+    ])}"/>${circle(239, 94, 82, 10, "port-insert")}${circle(235, 95, 84, 2, "port-pin")}${circle(243, 95, 84, 2, "port-pin")}${circle(239, 95, 77, 2, "port-pin")}`,
+  aux: () =>
+    `${box(-235, 34, 47, 36, 35, 24)}${box(-230, 39, 72, 5, 7, 4)}${box(-206, 39, 72, 5, 7, 4)}<path class="battery-sign" d="${line(
+      [
+        [-228, 57, 73],
+        [-221, 57, 73],
+      ],
+    )} ${line([
+      [-224.5, 53.5, 73],
+      [-224.5, 60.5, 73],
+    ])}"/>`,
+};
+// Connections describe one conceptual front-drive architecture. Protection/switching
+// is a schematic boundary, not a safety implementation or an electrical simulation.
+const connections = [
+  [
+    "battery-inverter",
+    "hv",
+    "battery inverter",
+    [
+      [-108, -42, 52],
+      [-97, -57, 59],
+      [-96, -57, 78],
+      [-115, -55, 78],
+    ],
+    "Battery DC bus to traction inverter",
+  ],
+  [
+    "battery-dcdc",
+    "hv",
+    "battery dcdc",
+    [
+      [137, -37, 58],
+      [157, -72, 62],
+      [188, -72, 88],
+      [188, -50, 88],
+    ],
+    "HV bus to DC/DC input",
+  ],
+  [
+    "charger-battery",
+    "hv",
+    "charger battery",
+    [
+      [157, 24, 88],
+      [145, 24, 65],
+      [143, -40, 65],
+      [134, -40, 57],
+    ],
+    "Onboard charger DC output through conceptual protection to battery",
+  ],
+  [
+    "port-ac",
+    "ac",
+    "port charger",
+    [
+      [239, 90, 82],
+      [237, 72, 82],
+      [215, 72, 88],
+      [215, 57, 88],
+    ],
+    "External AC charge input to onboard charger",
+  ],
+  [
+    "port-dc",
+    "hv",
+    "port battery",
+    [
+      [239, 91, 76],
+      [253, 74, 57],
+      [159, 74, 57],
+      [147, -39, 60],
+      [135, -39, 57],
+    ],
+    "External DC charging through conceptual switching/protection directly to pack; bypasses onboard AC conversion",
+  ],
+  [
+    "dcdc-aux",
+    "lv",
+    "dcdc aux",
+    [
+      [173, -50, 80],
+      [160, -82, 76],
+      [-237, -82, 70],
+      [-238, 52, 66],
+      [-218, 52, 73],
+    ],
+    "DC/DC low-voltage output to 12 V battery and auxiliary system",
+  ],
+  [
+    "bms-inverter",
+    "control",
+    "bms inverter",
+    [
+      [108, 22, 75],
+      [87, -76, 66],
+      [-125, -76, 70],
+      [-123, -57, 78],
+    ],
+    "BMS limits and inverter control communication",
+  ],
+  [
+    "bms-charger",
+    "control",
+    "bms charger",
+    [
+      [115, 31, 75],
+      [134, 49, 83],
+      [158, 49, 88],
+    ],
+    "Battery management charge-control communication",
+  ],
+  [
+    "bms-thermal",
+    "control",
+    "bms thermal",
+    [
+      [101, 14, 75],
+      [77, -80, 68],
+      [-208, -80, 70],
+      [-208, -61, 74],
+    ],
+    "Thermal control communication; no implemented control law",
+  ],
+  [
+    "coolant-supply",
+    "coolant",
+    "thermal battery inverter motor",
+    [
+      [-240, -44, 63],
+      [-206, -58, 72],
+      [-137, -61, 74],
+      [-133, -15, 73],
+      [-157, 5, 67],
+      [-126, 57, 55],
+      [110, 57, 55],
+    ],
+    "Conceptual coolant supply through drive unit and battery cold plate",
+  ],
+  [
+    "coolant-return",
+    "coolant",
+    "thermal battery inverter motor",
+    [
+      [114, 60, 54],
+      [134, 66, 43],
+      [-131, 68, 43],
+      [-190, 15, 54],
+      [-237, 55, 61],
+    ],
+    "Conceptual coolant return to radiator; temperature and flow are not calculated",
+  ],
+  [
+    "drive-shaft",
+    "mechanical",
+    "motor gearbox",
+    [
+      [-170, 16, 53],
+      [-170, 38, 57],
+    ],
+    "Motor output shaft to reduction gearbox",
+  ],
+  [
+    "gear-output",
+    "mechanical",
+    "gearbox",
+    [
+      [-171, 48, 54],
+      [-171, 48, 34],
+    ],
+    "Reduction output to driven axle",
+  ],
+  [
+    "driven-axle",
+    "mechanical",
+    "gearbox motor",
+    [
+      [-171, -105, 34],
+      [-171, 105, 34],
+    ],
+    "Conceptual driven front axle; not an inferred production drivetrain",
+  ],
+];
+for (let i = 0; i < 3; i++)
+  connections.push([
+    `phase-${i + 1}`,
+    "phase",
+    "inverter motor",
+    [
+      [-126 - i * 5, -17, 78],
+      [-112 - i * 5, -4, 73],
+      [-143 - i * 5, 3, 69],
+      [-159 - i * 4, 4, 66],
+    ],
+    `Motor phase ${i + 1} from inverter`,
+  ]);
+const flowLinks = {
+  propulsion: [
+    "battery-inverter",
+    "phase-1",
+    "phase-2",
+    "phase-3",
+    "drive-shaft",
+    "gear-output",
+    "driven-axle",
+  ],
+  regeneration: [
+    "driven-axle",
+    "gear-output",
+    "drive-shaft",
+    "phase-1",
+    "phase-2",
+    "phase-3",
+    "battery-inverter",
+  ],
+  ac_charging: ["port-ac", "charger-battery"],
+  dc_charging: ["port-dc"],
+  auxiliary: ["battery-dcdc", "dcdc-aux"],
+};
+const viewComponents = {
+  complete: null,
+  electrical: [
+    "battery",
+    "inverter",
+    "bms",
+    "dcdc",
+    "charger",
+    "port",
+    "aux",
+    "motor",
+  ],
+  drivetrain: ["motor", "gearbox", "inverter"],
+  battery: ["battery", "bms", "port", "charger"],
+  thermal: ["thermal", "battery", "motor", "inverter"],
+};
+let drawingId = 0;
+function shell() {
+  const flank = [
+    [-269, 91, 41],
+    [-263, 91, 66],
+    [-183, 91, 77],
+    [-106, 91, 89],
+    [151, 91, 93],
+    [225, 91, 86],
+    [267, 91, 66],
+    [270, 91, 39],
+  ];
+  // The lower flank follows wheel-arch contours instead of a rectangular cover.
+  let near =
+    line(flank) +
+    ` L${xy(p(212, 91, 29))} Q${xy(p(207, 91, 91))} ${xy(p(165, 91, 92))} Q${xy(p(124, 91, 91))} ${xy(p(120, 91, 29))} L${xy(p(-121, 91, 29))} Q${xy(p(-123, 91, 91))} ${xy(p(-165, 91, 92))} Q${xy(p(-207, 91, 91))} ${xy(p(-209, 91, 29))} L${xy(p(-263, 91, 29))}Z`;
+  return `<g class="vehicle-body" aria-label="Generic sedan bodywork with bonnet, cabin, roof and rear deck">
+ <path class="body-far" d="${polygon([
+   [-267, -82, 44],
+   [-261, -82, 65],
+   [-180, -84, 77],
+   [-105, -83, 89],
+   [-40, -65, 146],
+   [96, -64, 149],
+   [161, -82, 101],
+   [225, -82, 87],
+   [267, -80, 65],
+   [270, -80, 41],
+ ])}"/>
+ <path class="body-bonnet" d="${polygon([
+   [-263, -76, 67],
+   [-181, -82, 78],
+   [-108, -78, 90],
+   [-108, 78, 90],
+   [-181, 82, 78],
+   [-263, 76, 67],
+ ])}"/>
+ <path class="body-boot" d="${polygon([
+   [160, -80, 99],
+   [226, -79, 88],
+   [266, -72, 67],
+   [266, 72, 67],
+   [226, 79, 88],
+   [160, 80, 99],
+ ])}"/>
+ <path class="body-side" d="${near}"/>
+ <path class="glass windscreen" d="${polygon([
+   [-108, -78, 92],
+   [-42, -61, 146],
+   [-42, 61, 146],
+   [-108, 78, 92],
+ ])}"/>
+ <path class="body-roof" d="${polygon([
+   [-41, -62, 147],
+   [95, -62, 150],
+   [95, 62, 150],
+   [-41, 62, 147],
+ ])}"/>
+ <path class="glass rear-screen" d="${polygon([
+   [97, -62, 149],
+   [161, -78, 101],
+   [161, 78, 101],
+   [97, 62, 149],
+ ])}"/>
+ <path class="glass side-window" d="${polygon([
+   [-94, 81, 96],
+   [-36, 66, 141],
+   [92, 66, 144],
+   [145, 81, 105],
+ ])}"/>
+ <path class="window-pillar" d="${line([
+   [28, 69, 143],
+   [34, 83, 101],
+ ])}"/>
+ <path class="body-seam" d="${line([
+   [-105, 92, 87],
+   [-100, 92, 38],
+ ])} ${line([
+   [32, 92, 96],
+   [33, 92, 31],
+ ])} ${line([
+   [149, 92, 97],
+   [139, 92, 46],
+ ])}"/>
+ <path class="door-handle" d="${line([
+   [-30, 93, 91],
+   [-10, 93, 92],
+ ])} ${line([
+   [83, 93, 94],
+   [102, 93, 94],
+ ])}"/>
+ <path class="front-fascia" d="${polygon([
+   [-267, -76, 64],
+   [-269, 0, 69],
+   [-267, 76, 64],
+   [-271, 76, 39],
+   [-275, 0, 35],
+   [-271, -76, 39],
+ ])}"/>
+ <path class="headlamp" d="${line([
+   [-271, -70, 61],
+   [-275, -30, 64],
+ ])} ${line([
+   [-275, 30, 64],
+   [-271, 70, 61],
+ ])}"/>
+ <path class="bumper-detail" d="${line([
+   [-275, -47, 43],
+   [-278, 0, 40],
+   [-275, 47, 43],
+ ])}"/>
+ <path class="taillamp" d="${line([
+   [270, -67, 66],
+   [272, -36, 68],
+ ])} ${line([
+   [272, 36, 68],
+   [270, 67, 66],
+ ])}"/>
+ <path class="roof-rail" d="${line([
+   [-103, -82, 90],
+   [-42, -65, 148],
+   [95, -65, 151],
+   [165, -83, 101],
+ ])} ${line([
+   [-103, 82, 90],
+   [-42, 65, 148],
+   [95, 65, 151],
+   [165, 83, 101],
+ ])}"/>
+ </g>`;
+}
+function cabin() {
+  const seat = (x, y) =>
+    `<path d="${polygon([
+      [x, y, 66],
+      [x + 38, y, 66],
+      [x + 38, y + 28, 66],
+      [x, y + 28, 66],
+    ])} ${polygon([
+      [x + 36, y, 67],
+      [x + 38, y, 119],
+      [x + 38, y + 28, 119],
+      [x + 36, y + 28, 67],
+    ])}"/>`;
+  return `<g class="vehicle-cabin" aria-label="Illustrative passenger cabin and seating envelope">${seat(-42, -48)}${seat(-42, 20)}<path d="${polygon(
+    [
+      [75, -60, 65],
+      [120, -60, 65],
+      [120, 60, 65],
+      [75, 60, 65],
+    ],
+  )} ${polygon([
+    [120, -60, 66],
+    [130, -60, 110],
+    [130, 60, 110],
+    [120, 60, 66],
+  ])}"/></g>`;
+}
+function normalizedOptions(options = {}) {
+  return {
+    annotations: options.annotations !== false,
+    body: ["cutaway", "transparent", "opaque"].includes(options.body)
+      ? options.body
+      : "cutaway",
+    view: options.view in viewComponents ? options.view : "complete",
+    selected: options.selected ?? null,
+    flow: options.flow === "charging" ? "ac_charging" : options.flow || null,
+  };
+}
+function states(options) {
+  const view = viewComponents[options.view],
+    selected = options.selected;
+  const active = new Set(flowLinks[options.flow] || []);
+  return {
+    component(id) {
+      return [
+        selected === id ? "is-selected" : "",
+        view && !view.includes(id) ? "is-hidden-system" : "",
+        selected && selected !== id ? "is-dim" : "",
+      ].join(" ");
+    },
+    link(id, kind, connects) {
+      const related = selected && connects.split(" ").includes(selected),
+        kinds = {
+          electrical: ["hv", "phase", "ac", "lv", "control"],
+          drivetrain: ["mechanical", "phase"],
+          battery: ["hv", "ac", "control", "coolant"],
+          thermal: ["coolant", "control"],
+        }[options.view],
+        viewAllowed =
+          !view ||
+          (connects.split(" ").some((c) => view.includes(c)) &&
+            kinds.includes(kind));
+      return [
+        related ? "is-related" : "",
+        selected && !related ? "is-dim" : "",
+        !viewAllowed ? "is-hidden-system" : "",
+        active.has(id) ? "is-flow-active is-flow" : "",
+      ].join(" ");
+    },
+  };
+}
+export function anatomySVG(components, interactive = true, options = {}) {
+  const opts = normalizedOptions(options),
+    id = `ev-${++drawingId}`,
+    state = states(opts);
+  const known = components.filter((c) => shape[c.id]);
+  return `<svg class="anatomy-svg vehicle-cutaway" data-body="${opts.body}" data-view="${opts.view}" data-annotations="${opts.annotations}" data-flow="${opts.flow || ""}" data-prefix="${id}" data-selected="${opts.selected || ""}" viewBox="${opts.annotations ? "0 0 900 520" : "145 102 610 400"}" role="group" aria-label="Original generic electric sedan cutaway. Conceptual front-drive architecture, not to scale or manufacturer-specific.">
+ <defs><pattern id="${id}-grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="currentColor" stroke-width=".5"/></pattern><marker id="${id}-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="context-stroke"/></marker></defs>
+ <rect class="vehicle-grid" x="26" y="20" width="848" height="475" fill="url(#${id}-grid)"/>
+ <path class="vehicle-shadow" d="${polygon([
+   [-290, -106, -7],
+   [278, -106, -7],
+   [288, 114, -7],
+   [-285, 114, -7],
+ ])}"/>
+ ${wheel(165, -105)}${wheel(-171, -105)}
+ <g class="vehicle-chassis"><path class="undertray" d="${polygon([
+   [-270, -82, 28],
+   [269, -82, 28],
+   [269, 82, 28],
+   [-270, 82, 28],
+ ])}"/><path class="chassis-rail" d="${line([
+   [-265, -76, 33],
+   [265, -76, 33],
+ ])} ${line([
+   [-265, 76, 33],
+   [265, 76, 33],
+ ])}"/><path class="rear-axle-context" d="${line([
+   [165, -105, 34],
+   [165, 105, 34],
+ ])}"/></g>
+ <g class="vehicle-systems">${known.map((c) => `<g class="anatomy-component c-${c.id} ${state.component(c.id)}" data-component="${c.id}" ${interactive ? `tabindex="0" role="button" aria-pressed="${opts.selected === c.id}" aria-describedby="anatomy-tooltip"` : ""} aria-label="${escape(c.number + " " + c.name)}"><title>${escape(c.name + ": " + c.function)}</title>${shape[c.id]()}</g>`).join("")}</g>
+ <g class="vehicle-connections" aria-label="Conceptual high voltage, three-phase, low voltage, control, coolant and mechanical connections">${connections.map(([key, kind, connects, points, label]) => `<path class="vehicle-link link-${kind} ${state.link(key, kind, connects)}" data-link="${key}" data-kind="${kind}" data-connects="${connects}" d="${line(points)}" ${opts.flow && flowLinks[opts.flow]?.includes(key) ? `marker-${opts.flow === "regeneration" ? "start" : "end"}="url(#${id}-arrow)"` : ""}><title>${escape(label)}</title></path>`).join("")}</g>
+ ${wheel(165, 107)}${wheel(-171, 107)}${cabin()}${shell()}
+ <g class="vehicle-annotations">${known
+   .map((c) => {
+     const [mx, my, label] = labels[c.id],
+       [cx, cy] = p(...centers[c.id]);
+     return `<g class="vehicle-label c-${c.id}" data-label="${c.id}" data-component-link="${c.id}"><path class="leader" d="M${cx.toFixed(1)} ${cy.toFixed(1)}L${mx} ${my}"/><circle class="anchor-dot" cx="${cx}" cy="${cy}" r="3"/><circle class="annotation" cx="${mx}" cy="${my}" r="13"/><text class="annotation-number" x="${mx}" y="${my + 4}" text-anchor="middle">${escape(c.number)}</text><text class="annotation-label" x="${mx}" y="${my + 27}" text-anchor="middle">${label}</text></g>`;
+   })
+   .join("")}</g>
+ <g class="vehicle-drawing-notes"><text x="30" y="505" class="drawing-note">EV CUTAWAY / CONCEPT FRONT-DRIVE ARCHITECTURE</text><text x="870" y="505" class="drawing-note" text-anchor="end">ILLUSTRATIVE PLACEMENT · NOT TO SCALE</text></g></svg>`;
+}
+export function updateSchematic(svg, options = {}) {
+  if (!svg) return;
+  const opts = normalizedOptions({
+      annotations: svg.dataset.annotations !== "false",
+      body: svg.dataset.body,
+      view: svg.dataset.view,
+      flow: svg.dataset.flow || null,
+      selected: svg.dataset.selected || null,
+      ...options,
+    }),
+    state = states(opts);
+  svg.setAttribute(
+    "viewBox",
+    opts.annotations ? "0 0 900 520" : "145 102 610 400",
+  );
+  svg.dataset.body = opts.body;
+  svg.dataset.view = opts.view;
+  svg.dataset.annotations = String(opts.annotations);
+  svg.dataset.flow = opts.flow || "";
+  svg.dataset.selected = opts.selected || "";
+  for (const g of svg.querySelectorAll("[data-component]")) {
+    g.classList.toggle("is-selected", g.dataset.component === opts.selected);
+    g.classList.toggle(
+      "is-dim",
+      !!opts.selected && g.dataset.component !== opts.selected,
+    );
+    g.classList.toggle(
+      "is-hidden-system",
+      !!viewComponents[opts.view] &&
+        !viewComponents[opts.view].includes(g.dataset.component),
+    );
+    if (g.getAttribute("role") === "button") {
+      const visible =
+        !viewComponents[opts.view] ||
+        viewComponents[opts.view].includes(g.dataset.component);
+      g.setAttribute("tabindex", visible ? "0" : "-1");
+      g.setAttribute("aria-hidden", String(!visible));
+      g.setAttribute(
+        "aria-pressed",
+        String(g.dataset.component === opts.selected),
+      );
+    }
+  }
+  for (const link of svg.querySelectorAll("[data-link]")) {
+    link.setAttribute(
+      "class",
+      `vehicle-link link-${link.dataset.kind} ${state.link(link.dataset.link, link.dataset.kind, link.dataset.connects)}`,
+    );
+    link.removeAttribute("marker-start");
+    link.removeAttribute("marker-end");
+    if (flowLinks[opts.flow]?.includes(link.dataset.link))
+      link.setAttribute(
+        opts.flow === "regeneration" ? "marker-start" : "marker-end",
+        `url(#${svg.dataset.prefix}-arrow)`,
+      );
+  }
+  for (const label of svg.querySelectorAll("[data-label]")) {
+    label.classList.toggle(
+      "is-hidden-system",
+      !!viewComponents[opts.view] &&
+        !viewComponents[opts.view].includes(label.dataset.label),
+    );
+    label.classList.toggle(
+      "is-label-selected",
+      label.dataset.label === opts.selected,
+    );
+  }
 }

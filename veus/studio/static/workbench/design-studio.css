@@ -1,0 +1,250 @@
+.library-toolbar {
+  display: flex;
+  gap: 9px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.library-toolbar label {
+  font-size: 10px;
+  color: var(--muted);
+}
+.library-toolbar select,
+.library-toolbar input {
+  display: block;
+  padding: 8px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  max-width: 260px;
+  min-width: 0;
+}
+.library-toolbar .design-title {
+  flex: 1;
+}
+.design-title input {
+  width: 100%;
+  max-width: none;
+}
+.library-note {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 8px 0 17px;
+}
+.library-more {
+  position: relative;
+}
+.library-more > summary {
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 11px;
+}
+.library-more > div {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: var(--paper);
+  padding: 15px;
+  border: 1px solid var(--line);
+  z-index: 10;
+  min-width: 240px;
+  box-shadow: var(--shadow);
+}
+.library-more button,
+.library-more input {
+  display: block;
+  margin: 8px 0;
+  max-width: 210px;
+}
+.studio-layout {
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+.studio-editor h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 15px 0;
+}
+.studio-editor .advanced-fields {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+.studio-editor details {
+  margin: 14px 0;
+}
+.studio-editor label {
+  line-height: 1.45;
+}
+.studio-editor .quiet {
+  font-size: 10px;
+}
+.studio-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.studio-view-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+.studio-view-controls select {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 4px;
+}
+.specification-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0;
+  margin-top: 16px;
+}
+.specification-strip span {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 8px;
+  color: var(--muted);
+}
+.specification-strip strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 450;
+  margin-top: 7px;
+}
+.specification-strip small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.studio-evidence > details {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.studio-evidence summary {
+  font-size: 12px;
+}
+.compatibility-row {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+  font-size: 11px;
+}
+.compatibility-row > span {
+  color: var(--muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.compatibility-row p {
+  margin: 0;
+}
+.compatibility-row[data-status="incompatible"] > span {
+  color: #b04c45;
+}
+.compatibility-row[data-status="warning"] > span {
+  color: #a17a32;
+}
+.calculation-row h3 {
+  font-size: 12px;
+  font-weight: 550;
+}
+.calculation-row code {
+  font-size: 11px;
+}
+.calculation-row {
+  border-top: 1px solid var(--line);
+  padding: 8px 0;
+}
+.studio-evidence .acknowledgement {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  font-size: 11px;
+  margin: 8px 0;
+}
+.studio-evidence .acknowledgement input {
+  margin-top: 4px;
+}
+.studio-evidence select {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 7px;
+  max-width: 100%;
+}
+#design-comparison {
+  overflow-x: auto;
+}
+#catalogue-evidence {
+  max-height: 330px;
+  overflow: auto;
+}
+@media (min-width: 1101px) and (max-height: 850px) {
+  .studio-layout .anatomy-svg {
+    height: 300px;
+  }
+  .studio-editor {
+    padding: 14px;
+  }
+  .studio-editor h2 {
+    font-size: 18px;
+  }
+  .studio-editor input,
+  .studio-editor select {
+    padding: 5px;
+    margin: 3px 0 9px;
+  }
+  .studio-layout .drawing-toolbar {
+    padding: 9px 14px;
+  }
+}
+@media (max-width: 760px) {
+  .studio-layout {
+    grid-template-columns: 1fr;
+  }
+  .library-toolbar select,
+  .library-toolbar input {
+    max-width: 100%;
+  }
+  .library-toolbar .design-title {
+    flex-basis: 100%;
+  }
+  .studio-view-controls {
+    gap: 8px;
+  }
+  .specification-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .compatibility-row {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+  .vehicle-options {
+    padding: 8px;
+  }
+  .connection-legend {
+    gap: 8px;
+  }
+  .studio-layout .anatomy-svg {
+    height: 310px;
+  }
+  #design-comparison table {
+    min-width: 530px;
+  }
+}
+.studio-evidence p,
+.studio-evidence td,
+.library-note {
+  overflow-wrap: anywhere;
+}
+.library-toolbar .design-title {
+  min-width: 170px;
+}

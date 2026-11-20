@@ -1,0 +1,50 @@
+{
+  "base_commit": "fb1b60b986abdc63ee16bd5f4ad07c45dfaa0f93",
+  "branch": "feature/veus-2.0-engineering-workbench",
+  "before": {
+    "startup_s": 0.44034832599936635,
+    "startup_rss_kib": 42312,
+    "operation_rss_kib": 42820,
+    "idle_server_cpu_percent": 0.0,
+    "operation_ms_median": 0.9031030003825435
+  },
+  "after": {
+    "startup_s": 0.4914810519985622,
+    "startup_rss_kib": 42972,
+    "operation_rss_kib": 43364,
+    "idle_server_cpu_percent": 0.0,
+    "operation_ms_median": 1.5606150000166963
+  },
+  "browser": {
+    "before": {
+      "first_resource_body_bytes": 90226,
+      "anatomy_heap_bytes": 2414396,
+      "design_heap_bytes": 3350112,
+      "selection_ms_median": 0.2000000011175871,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "browser_main_thread_idle_task_percent": 0.07941666666666514,
+      "pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      }
+    },
+    "after": {
+      "first_resource_body_bytes": 100170,
+      "anatomy_heap_bytes": 2334584,
+      "design_heap_bytes": 3323384,
+      "selection_ms_median": 0.8000000007450581,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "browser_main_thread_idle_task_percent": 0.10216666666666707,
+      "pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      }
+    }
+  },
+  "installed_freeze_unchanged": true,
+  "scope": "Shared cloud Linux snapshots, warm-up excluded, three samples; no performance gain or Windows hardware guarantee. JS heap is not browser RSS. API v1 validation and v2 evaluation have different responsibilities."
+}

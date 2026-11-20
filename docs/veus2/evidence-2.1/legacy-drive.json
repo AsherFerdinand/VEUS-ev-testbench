@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "performance": {
+    "viewPosition": 5.422106388414206,
+    "viewGap": null,
+    "frameCount": 300,
+    "averageFrameMs": 16.776999999999994,
+    "selected": "sedan"
+  },
+  "screenshots": "/tmp/veus-drive-screens",
+  "errors": []
+}

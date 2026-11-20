@@ -21,7 +21,7 @@ const assert = require("node:assert/strict"),
   page.on("websocket", (w) => sockets.push(w.url()));
   page.on("request", (r) => requests.push(r.url()));
   const base = process.env.VEUS_URL || "http://127.0.0.1:8770";
-  const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus2-screens";
+  const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus21-screens";
   fs.mkdirSync(out, { recursive: true });
   await page.goto(base);
   await page.locator("#component-inspector h2").waitFor();
@@ -62,11 +62,18 @@ const assert = require("node:assert/strict"),
   );
   await page.selectOption("#component-select", "battery");
   await page.click("#flow-view");
-  for (const flow of ["propulsion", "regeneration", "charging", "auxiliary"]) {
+  for (const flow of [
+    "propulsion",
+    "regeneration",
+    "ac_charging",
+    "dc_charging",
+    "auxiliary",
+  ]) {
     await page.click(`[data-flow="${flow}"]`);
-    assert.equal(await page.locator(".flow-active").count(), 1);
-    assert(
-      (await page.locator(".flow-svg").getAttribute("aria-label")).length > 20,
+    assert((await page.locator(".vehicle-link.is-flow").count()) > 0);
+    assert.equal(
+      await page.locator(".anatomy-svg").getAttribute("data-flow"),
+      flow,
     );
   }
   await page.click("#placement-view");
@@ -75,6 +82,55 @@ const assert = require("node:assert/strict"),
   assert(
     drawing.y + drawing.height < dockTop.y,
     "Whole schematic visible above laptop navigation",
+  );
+  for (const body of ["transparent", "opaque", "cutaway"]) {
+    await page.selectOption("#vehicle-body", body);
+    assert.equal(
+      await page.locator(".anatomy-svg").getAttribute("data-body"),
+      body,
+    );
+  }
+  await page.uncheck("#vehicle-annotations");
+  assert.equal(
+    await page.locator(".anatomy-svg").getAttribute("data-annotations"),
+    "false",
+  );
+  await page.check("#vehicle-annotations");
+  for (const view of [
+    "electrical",
+    "drivetrain",
+    "battery",
+    "thermal",
+    "complete",
+  ]) {
+    await page.selectOption("#vehicle-view", view);
+    assert.equal(
+      await page.locator(".anatomy-svg").getAttribute("data-view"),
+      view,
+    );
+  }
+  for (const id of [
+    "battery",
+    "motor",
+    "inverter",
+    "bms",
+    "gearbox",
+    "thermal",
+    "dcdc",
+    "charger",
+    "port",
+    "aux",
+  ]) {
+    await page.locator(`[data-component="${id}"]`).focus();
+    await page.keyboard.press("Enter");
+    assert.equal(
+      await page.locator(".anatomy-svg").getAttribute("data-selected"),
+      id,
+    );
+  }
+  assert.equal(
+    await page.locator('.vehicle-link[data-kind="phase"]').count(),
+    3,
   );
   await page.locator("#tab-anatomy").focus();
   await page.keyboard.press("ArrowRight");
@@ -92,25 +148,26 @@ const assert = require("node:assert/strict"),
     ),
   );
   await page.click("#challenge-experiment");
-  assert.equal(await page.locator("#design-form").count(), 1);
-  await page
-    .locator('[data-group="battery"][data-field="usable_capacity_kwh"]')
-    .fill("70");
-  await page.click('#design-form button[type="submit"]');
+  await page.locator("#design-group").waitFor();
   await page.waitForFunction(() =>
     document
       .getElementById("configuration-status")
-      .textContent.includes("Usable capacity"),
+      .textContent.startsWith("Checked"),
   );
-  assert(await page.locator("#design-export").isDisabled());
-  await page
-    .locator('[data-group="battery"][data-field="usable_capacity_kwh"]')
-    .fill("60");
+  await page.locator('[data-field="usable_capacity_kwh"]').fill("70");
+  await page.click("#design-check");
+  await page.waitForFunction(() =>
+    document.querySelector('.compatibility-row[data-status="incompatible"]'),
+  );
+  assert(await page.locator("#prepare-adapter").isDisabled());
+  await page.locator('[data-field="usable_capacity_kwh"]').fill("60");
   await page.locator("#design-name").fill("<script>engineering</script>");
-  await page.click('#design-form button[type="submit"]');
+  await page.click("#design-check");
   await page.waitForFunction(
-    () => !document.getElementById("design-export").disabled,
+    () =>
+      !document.querySelector('.compatibility-row[data-status="incompatible"]'),
   );
+  await page.locator(".library-more summary").click();
   const [file] = await Promise.all([
     page.waitForEvent("download"),
     page.click("#design-export"),
@@ -119,7 +176,7 @@ const assert = require("node:assert/strict"),
   const design = JSON.parse(
     fs.readFileSync(out + "/illustrative-design.json", "utf8"),
   );
-  assert.equal(design.schema_version, 1);
+  assert.equal(design.schema_version, 2);
   assert.equal(design.classification, "illustrative");
   await page
     .locator("#design-import")
@@ -127,9 +184,95 @@ const assert = require("node:assert/strict"),
   await page.waitForFunction(() =>
     document
       .getElementById("configuration-status")
-      .textContent.includes("Imported valid"),
+      .textContent.startsWith("Checked"),
   );
   assert.equal(await page.locator("script:not([src])").count(), 0);
+  await page.locator("#design-name").fill("Baseline analytical study");
+  await page.click("#design-save");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#library-select option").length === 2,
+  );
+  await page.reload();
+  await page.locator("#design-group").waitFor();
+  assert.equal(
+    await page.locator("#design-name").inputValue(),
+    "Baseline analytical study",
+  );
+  await page
+    .getByText("Prepare for the retained physics model", { exact: true })
+    .click();
+  await page.click("#prepare-adapter");
+  await page.waitForFunction(() =>
+    document
+      .getElementById("adapter-result")
+      .textContent.includes("acknowledged"),
+  );
+  for (const box of await page.locator("[data-ack]").all()) await box.check();
+  await page.click("#prepare-adapter");
+  await page.waitForFunction(() =>
+    document
+      .getElementById("adapter-result")
+      .textContent.includes("prepared_for_model_inspection"),
+  );
+  assert(
+    (await page.locator("#adapter-result").innerText()).includes(
+      "no experiment executed",
+    ),
+  );
+  await page.click("#design-duplicate");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#library-select option").length === 3,
+  );
+  await page.selectOption("#component-record", "battery-80");
+  await page.waitForFunction(() =>
+    document.getElementById("specifications").textContent.includes("1,848"),
+  );
+  await page.locator("#comparison-details summary").click();
+  await page.selectOption("#comparison-baseline", {
+    label: "Baseline analytical study",
+  });
+  await page.click("#compare-designs");
+  await page.locator("#design-comparison table").first().waitFor();
+  assert(
+    (await page.locator("#design-comparison").innerText()).includes("100"),
+  );
+  assert(
+    (await page.locator("#design-comparison").innerText()).includes(
+      "Specifications only",
+    ),
+  );
+  await page.selectOption("#component-record", "battery-64");
+  await page.waitForFunction(() =>
+    document.getElementById("specifications").textContent.includes("1,748"),
+  );
+  assert.equal(await page.locator("#design-comparison table").count(), 0);
+  assert(
+    (await page.locator("#design-comparison").innerText()).includes(
+      "compare again",
+    ),
+  );
+  await page.selectOption("#component-record", "battery-80");
+  await page.waitForFunction(() =>
+    document.getElementById("specifications").textContent.includes("1,848"),
+  );
+  await page.click("#design-save");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#library-select option").length === 3,
+  );
+  await page.locator(".library-more summary").click();
+  page.once("dialog", (d) => d.dismiss());
+  await page.click("#design-delete");
+  assert.equal(await page.locator("#library-select option").count(), 3);
+  page.once("dialog", (d) => d.accept());
+  await page.click("#design-delete");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#library-select option").length === 2,
+  );
+  await page.locator("#design-group").selectOption("operating_point");
+  await page.locator('[data-field="dc_power_kw"]').fill("90");
+  await page.click("#tab-anatomy");
+  await page.waitForTimeout(400);
+  assert.equal(await page.locator("#component-inspector h2").count(), 1);
   await page.click("#tab-simulation");
   await page.click("#prescribed-mode");
   assert(
@@ -198,7 +341,7 @@ const assert = require("node:assert/strict"),
       await page.screenshot({ path: `${out}/${key}-${theme}.png` });
       if (key === "anatomy") {
         await page.click("#flow-view");
-        await page.click('[data-flow="charging"]');
+        await page.click('[data-flow="ac_charging"]');
         await page.screenshot({ path: `${out}/energy-paths-${theme}.png` });
         await page.click("#placement-view");
       }
@@ -233,6 +376,47 @@ const assert = require("node:assert/strict"),
   await page.goto(base + "/engineering?workspace=analyse");
   await page.locator("#replayPanel").waitFor({ state: "attached" });
   assert(await page.locator('[data-analyse="investigate"]').isVisible());
+  const corrupt = await browser.newPage();
+  await corrupt.goto(base);
+  await corrupt.locator("#component-inspector").waitFor();
+  await corrupt.evaluate(() =>
+    localStorage.setItem("veus.design-library.v2", "{broken"),
+  );
+  await corrupt.goto(base + "/?workspace=design");
+  await corrupt.locator("#library-status").waitFor();
+  assert(
+    (await corrupt.locator("#library-status").innerText()).includes(
+      "stored data was not changed",
+    ),
+  );
+  assert.equal(
+    await corrupt.evaluate(() =>
+      localStorage.getItem("veus.design-library.v2"),
+    ),
+    "{broken",
+  );
+  await corrupt.close();
+  const blocked = await browser.newPage();
+  await blocked.addInitScript(() => {
+    Storage.prototype.getItem = () => {
+      throw Error("Storage blocked");
+    };
+    Storage.prototype.setItem = () => {
+      throw Error("Storage blocked");
+    };
+  });
+  await blocked.goto(base + "/?workspace=design");
+  await blocked.locator("#design-save").waitFor();
+  await blocked.waitForFunction(
+    () => !document.getElementById("design-save").disabled,
+  );
+  await blocked.click("#design-save");
+  await blocked.waitForFunction(() =>
+    document
+      .getElementById("notice")
+      .textContent.includes("stored data was not changed"),
+  );
+  await blocked.close();
   assert.deepEqual(errors, []);
   const result = {
     status: "PASS",
@@ -243,6 +427,11 @@ const assert = require("node:assert/strict"),
     keyboard_components: true,
     keyboard_tabs: true,
     design_validation_roundtrip: true,
+    persistence_and_comparison: true,
+    corrupt_storage_preserved: true,
+    blocked_storage_handled: true,
+    component_effects: true,
+    delete_confirmation: true,
     prototype_results_not_fabricated: true,
     legacy_migration: true,
     default_shell_websockets: 0,

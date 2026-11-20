@@ -1,0 +1,201 @@
+{
+  "scope": "Warm-up excluded; three fresh Chromium pages. Load includes networkidle 500 ms. Main-thread task fraction is not total browser CPU; JS heap is not process RSS. Selection measures synchronous handler time, not full paint latency. Timer wrappers count pending application callbacks, not browser internals.",
+  "samples": [
+    {
+      "warmup": true,
+      "load_ms": 699,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 23624
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 31480
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 7253
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/api/workbench/design",
+          "bytes": 942
+        },
+        {
+          "path": "/api/investigation/catalogue",
+          "bytes": 15130
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 90226,
+      "editor_requests": [
+        "/static/workbench/mark.svg"
+      ],
+      "anatomy_heap_bytes": 2414396,
+      "design_heap_bytes": 3350152,
+      "browser_main_thread_idle_task_percent": 0.10724999999999855,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.40000000037252903
+    },
+    {
+      "warmup": false,
+      "load_ms": 651,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 23624
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 31480
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 7253
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/api/workbench/design",
+          "bytes": 942
+        },
+        {
+          "path": "/api/investigation/catalogue",
+          "bytes": 15130
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 90226,
+      "editor_requests": [
+        "/static/workbench/mark.svg"
+      ],
+      "anatomy_heap_bytes": 2414396,
+      "design_heap_bytes": 3350112,
+      "browser_main_thread_idle_task_percent": 0.09633333333333254,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.2000000011175871
+    },
+    {
+      "warmup": false,
+      "load_ms": 652,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 23624
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 31480
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 7253
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/api/workbench/design",
+          "bytes": 942
+        },
+        {
+          "path": "/api/investigation/catalogue",
+          "bytes": 15130
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 90226,
+      "editor_requests": [
+        "/static/workbench/mark.svg"
+      ],
+      "anatomy_heap_bytes": 2414396,
+      "design_heap_bytes": 3350096,
+      "browser_main_thread_idle_task_percent": 0.07941666666666514,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.30000000074505806
+    },
+    {
+      "warmup": false,
+      "load_ms": 651,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 23624
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 31480
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 7253
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/api/workbench/design",
+          "bytes": 942
+        },
+        {
+          "path": "/api/investigation/catalogue",
+          "bytes": 15130
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 90226,
+      "editor_requests": [
+        "/static/workbench/mark.svg"
+      ],
+      "anatomy_heap_bytes": 2414788,
+      "design_heap_bytes": 3350492,
+      "browser_main_thread_idle_task_percent": 0.07824999999999963,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.2000000011175871
+    }
+  ]
+}

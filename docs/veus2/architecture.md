@@ -1,6 +1,6 @@
-# VEUS 2.0 foundation architecture
+# VEUS workbench architecture
 
-The foundation separates explanatory knowledge, design intent, experiment execution,
+The workbench separates explanatory knowledge, design intent, experiment execution,
 results and presentation. It deliberately does not connect technology labels to new
 physics. Read [the audit and retirement matrix](audit.md) before changing boundaries.
 
@@ -16,7 +16,7 @@ flowchart LR
     P --> O[Existing results and engineering reports]
 ```
 
-The new shell does not import the legacy frontend scripts, create a WebSocket,
+The shell does not import the legacy frontend scripts, create a WebSocket,
 simulate a vehicle or generate charts from fabricated data. The Measurements page
 uses the existing catalogue's actual importer metadata and directs users to the
 working evidence tools. Placeholder Lab readouts use an em dash and unavailable
@@ -26,17 +26,17 @@ values, not results or manufacturer specifications.
 
 ## Current modules and routes
 
-| Layer                 | Responsibility                                      | Foundation implementation                                                |
-| --------------------- | --------------------------------------------------- | ------------------------------------------------------------------------ |
-| Engineering models    | SI dynamics, battery energy, limits                 | Existing `model/`, `sim/`; unchanged                                     |
-| Engineering knowledge | Sources, component roles, challenge mechanisms      | `workbench/content.json` with explicit classifications and review status |
-| Component catalogue   | Future sourced products, conditions and uncertainty | Policy/required fields only; no commercial products populated            |
-| Vehicle configuration | Typed version 1 design intent and envelope checks   | `workbench/schema.py`, bounded validation API                            |
-| Experiments           | Scenario definitions, deterministic execution       | Existing `testing/`; new design-to-runner adapter not yet implemented    |
-| Results               | Raw traces, metrics, acceptance, provenance         | Existing testing/validation/investigation reports; unchanged             |
-| Optimization          | Study objectives/controlled conditions              | Frontend study prototype; no optimizer or performance score              |
-| Measurements          | Import, data readiness, polarity/coverage gates     | Existing services and migration UI; real catalogue metadata in new shell |
-| Presentation          | Original SVG, accessible annotations, tabs, themes  | `static/workbench/`; independent of old global UI state                  |
+| Layer                 | Responsibility                                                         | Foundation implementation                                                |
+| --------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Engineering models    | SI dynamics, battery energy, limits                                    | Existing `model/`, `sim/`; unchanged                                     |
+| Engineering knowledge | Sources, component roles, challenge mechanisms                         | `workbench/content.json` with explicit classifications and review status |
+| Component catalogue   | Future sourced products, conditions and uncertainty                    | 13 representative records; no commercial specifications                  |
+| Vehicle configuration | v1 preserved; v2 snapshots, checks, specifications and bounded library | `workbench/schema.py`, bounded validation API                            |
+| Experiments           | Scenario definitions, deterministic execution                          | Existing `testing/`; new design-to-runner adapter not yet implemented    |
+| Results               | Raw traces, metrics, acceptance, provenance                            | Existing testing/validation/investigation reports; unchanged             |
+| Optimization          | Study objectives/controlled conditions                                 | Frontend study prototype; no optimizer or performance score              |
+| Measurements          | Import, data readiness, polarity/coverage gates                        | Existing services and migration UI; real catalogue metadata in new shell |
+| Presentation          | Original SVG, accessible annotations, tabs, themes                     | `static/workbench/`; independent of old global UI state                  |
 
 - `/` serves the new foundation shell. `?workspace=anatomy` is the default;
   `challenges`, `design`, `simulation`, `optimization`, `measurements` are deep links.
@@ -51,7 +51,23 @@ values, not results or manufacturer specifications.
 - Existing HTTP APIs and WebSockets are retained unchanged. `/engineering-docs/`
   serves checked-in technical documents and evidence; Markdown may download as text.
 
-## Design schema: what it checks and what it does not
+## Versioned design engineering
+
+Version 2 is implemented in `workbench/design.py`, `catalogue.py`, `engineering.py`
+and `adapter.py`; v1 routes remain unchanged. The lazy-loaded `design-studio.js`
+uses shared `design-state.js` for one active design and a bounded local library.
+Only the active workspace is rendered. `schematic.js` and `vehicle.css` are shared;
+selection/body/view changes update existing SVG elements. The standalone duplicate
+flow renderer was removed. Measured recording metadata now loads only on entering
+Measurements; component records and editor styles load only on entering Design Studio.
+
+Current contracts, mass accounting, calculations, readiness and storage limits are
+authoritative in [design-engineering.md](design-engineering.md). Anatomy and design
+do not execute physics, poll, animate continuously or open WebSockets. The model
+adapter prepares separate retained dynamics and energy model objects; it does not
+claim a verified coupled experiment runner.
+
+## Historical v1 design boundary (API preserved)
 
 Version 1 rejects unknown keys, unsupported versions, non-finite numbers and invalid
 ranges. Usable capacity cannot exceed gross capacity. Minimum, nominal and maximum
@@ -74,10 +90,11 @@ behaviour is `not_modelled`; drivetrain is one equivalent motor, not an asserted
 layout. Tariffs are assumptions, not market prices. No EUR/km or charging time is
 calculated without energy demand and charging models.
 
-Validated configurations can be exported and imported as JSON with a deterministic
+In v1, validated configurations can be exported and imported as JSON with a deterministic
 canonical configuration hash. Browser edits are held in memory; only checked designs
-become the baseline when navigating. Refresh does not persist a design. Save/duplicate,
-comparisons and sourced catalogue selection remain future work.
+become the baseline when navigating. Refresh does not persist a design. That historical behaviour is superseded in the v2 editor by a persistent library,
+specification comparisons and representative component selection. Commercial records
+remain unpopulated.
 
 ## Frontend interaction and accessibility
 

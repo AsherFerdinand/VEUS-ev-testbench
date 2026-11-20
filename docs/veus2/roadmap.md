@@ -1,6 +1,6 @@
 # VEUS 2.0 redevelopment roadmap
 
-This milestone stops at **Foundation and UX Redesign**, not a stable 2.0 release.
+Current milestone: **VEUS 2.1 Design Engineering**, still not a stable release. Foundation evidence remains historical.
 The order below follows engineering dependencies rather than the number of tabs.
 
 | Milestone                           | Concrete result                                                                                                                                                          | Evidence required before advancing                                                                                                                  |
@@ -13,6 +13,14 @@ The order below follows engineering dependencies rather than the number of tabs.
 | 5 · Measurement UX replacement      | Question → signals → evidence → report in the new shell, replacing old DOM bindings                                                                                      | Import, source hashes, readiness, polarity/energy gates, selected event indices and exports match Phase 11; migration UI deletion only after parity |
 | 6 · Additional engineering models   | Charging acceptance curves, thermal network, calibrated losses, cost/energy-tariff studies as independently scoped modules                                               | Independent model/data validation, documented uncertainty and units; component subtotal distinguished from complete production cost/retail price    |
 | 7 · Optimization if justified       | Feasible constrained studies, then Pareto methods if multiple defensible objectives exist                                                                                | Verified objective functions, meaningful design bounds, evidence-backed costs/performance; do not add algorithms for appearance                     |
+
+## Completed in VEUS 2.1
+
+The vehicle/component contract step now includes 13 representative records, version 2
+resolved snapshots, a bounded persistent local library, compatibility/specifications and
+an explicit retained-model adapter. The shared cutaway has electrical, mechanical and
+thermal layers. Commercial catalogue sourcing and full Simulation Lab execution remain
+future work. See [design engineering](design-engineering.md) and [current checkpoint](../PROGRESS.md).
 
 ## Unresolved evidence and models
 

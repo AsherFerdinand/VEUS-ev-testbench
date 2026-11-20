@@ -1,0 +1,441 @@
+/* Shared cutaway geometry skin. No frame loop or live simulation. */
+.vehicle-cutaway {
+  --shell: #dce2df;
+  --shell-edge: #71877e;
+  --glass: #7a9aab;
+  isolation: isolate;
+}
+.vehicle-grid {
+  color: var(--line);
+  opacity: 0.65;
+}
+.vehicle-shadow {
+  fill: var(--soft);
+  opacity: 0.6;
+}
+.undertray {
+  fill: var(--paper);
+  stroke: var(--muted);
+  stroke-width: 1.1;
+}
+.chassis-rail {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 3;
+}
+.rear-axle-context {
+  fill: none;
+  stroke: #77807c;
+  stroke-width: 5;
+}
+.vehicle-wheel {
+  stroke-linejoin: round;
+}
+.tyre,
+.tyre-inner {
+  fill: #303837;
+  stroke: #65706c;
+  stroke-width: 2;
+}
+.tyre-wall {
+  fill: #35403c;
+  stroke: none;
+}
+.rim {
+  fill: #aebbb6;
+  stroke: #d9e0db;
+  stroke-width: 2;
+}
+.rim-inner {
+  fill: #515d5a;
+  stroke: #d8dfdb;
+  stroke-width: 1;
+}
+.rim-spoke {
+  fill: none;
+  stroke: #d3ded7;
+  stroke-width: 3;
+}
+.hub {
+  fill: #dce3dd;
+  stroke: #687970;
+  stroke-width: 2;
+}
+.vehicle-body {
+  pointer-events: none;
+  fill: var(--shell);
+  stroke: var(--shell-edge);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.body-bonnet,
+.body-boot {
+  fill: var(--shell);
+  fill-opacity: 0.2;
+}
+.body-far {
+  fill-opacity: 0.12;
+}
+.body-side {
+  fill-opacity: 0.13;
+}
+.body-roof {
+  fill-opacity: 0.13;
+}
+.glass {
+  fill: var(--glass);
+  fill-opacity: 0.22;
+  stroke: var(--shell-edge);
+  stroke-width: 1.2;
+}
+.window-pillar {
+  fill: none;
+  stroke: var(--shell-edge);
+  stroke-width: 2.5;
+  opacity: 0.7;
+}
+.body-seam {
+  fill: none;
+  stroke: var(--shell-edge);
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+.door-handle {
+  stroke: var(--shell-edge);
+  stroke-width: 2;
+  fill: none;
+}
+.front-fascia {
+  fill: var(--shell);
+  fill-opacity: 0.3;
+}
+.headlamp {
+  stroke: #d9cfa1;
+  stroke-width: 4;
+  fill: none;
+}
+.bumper-detail {
+  stroke: var(--shell-edge);
+  stroke-width: 3;
+  fill: none;
+}
+.taillamp {
+  stroke: #aa7870;
+  stroke-width: 3;
+  fill: none;
+}
+.roof-rail {
+  fill: none;
+  stroke: var(--shell-edge);
+  stroke-width: 2.1;
+  opacity: 0.8;
+}
+.vehicle-cutaway[data-body="transparent"] .vehicle-body {
+  opacity: 0.3;
+}
+.vehicle-cutaway[data-body="opaque"] .body-bonnet,
+.vehicle-cutaway[data-body="opaque"] .body-boot,
+.vehicle-cutaway[data-body="opaque"] .body-roof {
+  fill-opacity: 0.94;
+}
+.vehicle-cutaway[data-body="opaque"] .body-side,
+.vehicle-cutaway[data-body="opaque"] .body-far,
+.vehicle-cutaway[data-body="opaque"] .front-fascia {
+  fill-opacity: 0.86;
+}
+.vehicle-cutaway[data-body="opaque"] .glass {
+  fill-opacity: 0.84;
+}
+.vehicle-cutaway[data-body="opaque"] .vehicle-connections {
+  opacity: 0.2;
+}
+.vehicle-cutaway[data-body="cutaway"] .body-bonnet {
+  fill-opacity: 0.26;
+}
+.vehicle-cutaway[data-body="cutaway"] .body-roof {
+  fill-opacity: 0.12;
+}
+.vehicle-cutaway[data-body="cutaway"] .body-side {
+  fill-opacity: 0.2;
+}
+.vehicle-cutaway .anatomy-component {
+  stroke-linejoin: round;
+  transition: opacity 0.12s ease;
+}
+.vehicle-cutaway .anatomy-component .component-surface {
+  stroke-width: 1.15;
+}
+.vehicle-cutaway .anatomy-component .component-side {
+  stroke-width: 0.9;
+}
+.vehicle-cutaway .component-side.end-face {
+  filter: none;
+}
+.vehicle-cutaway .cooling-fin {
+  fill: none;
+  stroke: var(--component);
+  stroke-width: 1.3;
+}
+.motor-end {
+  fill: var(--component-light);
+  stroke: var(--component);
+  stroke-width: 1.2;
+}
+.motor-center {
+  fill: var(--component-dark);
+  stroke: var(--component);
+  stroke-width: 1;
+}
+.motor-rib {
+  fill: none;
+  stroke: var(--component);
+  stroke-width: 0.85;
+  opacity: 0.7;
+}
+.motor-shaft {
+  stroke: #626f6a;
+  stroke-width: 6;
+  fill: none;
+}
+.gear-cover,
+.gear-hub {
+  fill: var(--component-light);
+  stroke: var(--component);
+  stroke-width: 1.3;
+}
+.gear-hub {
+  fill: #6d8176;
+}
+.radiator-fin {
+  stroke: #5a8a87;
+  stroke-width: 1.5;
+  fill: none;
+}
+.coolant-cap {
+  fill: #9bc6bd;
+  stroke: #527d75;
+}
+.terminal {
+  stroke: #c98e4b;
+  stroke-width: 4;
+  fill: none;
+}
+.circuit-detail {
+  stroke: var(--component);
+  stroke-width: 1.4;
+  fill: none;
+}
+.port-surround {
+  fill: #dce3dd;
+  stroke: #667e72;
+  stroke-width: 1.4;
+}
+.port-insert {
+  fill: #354d49;
+  stroke: #a8bcb3;
+  stroke-width: 1.3;
+}
+.port-pin {
+  fill: #d9d4b7;
+  stroke: none;
+}
+.battery-sign {
+  stroke: var(--component);
+  stroke-width: 1.5;
+  fill: none;
+}
+.protection-label {
+  font-size: 8px;
+  stroke: none;
+  fill: #856434;
+  text-anchor: middle;
+}
+.vehicle-connections {
+  pointer-events: none;
+}
+.vehicle-link {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.6;
+  vector-effect: non-scaling-stroke;
+}
+.link-hv,
+.link-ac {
+  stroke: #c97e3f;
+}
+.link-ac {
+  stroke-width: 2;
+  stroke-dasharray: 5 2;
+}
+.link-phase {
+  stroke: #cc8245;
+  stroke-width: 1.5;
+}
+.link-lv {
+  stroke: #588cac;
+  stroke-width: 2;
+}
+.link-control {
+  stroke: #9a7da7;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.link-coolant {
+  stroke: #559e97;
+  stroke-width: 2.6;
+}
+.link-mechanical {
+  stroke: #52625b;
+  stroke-width: 4;
+}
+.vehicle-link.is-related {
+  stroke-width: 4;
+  opacity: 1;
+}
+.vehicle-link.link-phase.is-related {
+  stroke-width: 2.5;
+}
+.vehicle-link.is-flow-active {
+  stroke-width: 4;
+  opacity: 1;
+  stroke-dasharray: none;
+}
+.vehicle-link.link-phase.is-flow-active {
+  stroke-width: 2.6;
+}
+.vehicle-link.is-dim {
+  opacity: 0.12;
+}
+.vehicle-cutaway .anatomy-component.is-dim {
+  opacity: 0.3;
+}
+.vehicle-cutaway .anatomy-component.is-selected {
+  opacity: 1;
+}
+.vehicle-cutaway .is-selected .component-surface,
+.vehicle-cutaway .is-selected .motor-end {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+}
+.vehicle-cutaway .is-selected:focus-visible {
+  outline: none;
+}
+.vehicle-cutaway .anatomy-component:focus-visible .component-surface,
+.vehicle-cutaway .anatomy-component:focus-visible .motor-end {
+  stroke: var(--ink);
+  stroke-width: 2.8;
+}
+.vehicle-annotations {
+  pointer-events: none;
+}
+.vehicle-label .annotation,
+.vehicle-label .annotation-label {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.vehicle-label {
+  color: var(--component);
+}
+.vehicle-label .annotation {
+  stroke: var(--paper);
+  stroke-width: 1.8;
+}
+.vehicle-label .annotation-number {
+  font-size: 11px;
+  font-weight: 650;
+}
+.vehicle-label .annotation-label {
+  font-size: 8.5px;
+  letter-spacing: 0.45px;
+}
+.vehicle-label .leader {
+  stroke-width: 0.85;
+}
+.vehicle-label.is-label-selected .annotation {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+}
+.vehicle-cutaway[data-annotations="false"] .vehicle-annotations {
+  display: none;
+}
+.vehicle-cutaway .is-hidden-system {
+  opacity: 0.08 !important;
+  pointer-events: none;
+}
+.vehicle-cutaway[data-view="thermal"] .vehicle-body,
+.vehicle-cutaway[data-view="electrical"] .vehicle-body,
+.vehicle-cutaway[data-view="battery"] .vehicle-body,
+.vehicle-cutaway[data-view="drivetrain"] .vehicle-body {
+  opacity: 0.25;
+}
+.vehicle-cutaway[data-view="thermal"] .vehicle-wheel,
+.vehicle-cutaway[data-view="electrical"] .vehicle-wheel,
+.vehicle-cutaway[data-view="battery"] .vehicle-wheel {
+  opacity: 0.4;
+}
+html[data-theme="dark"] .vehicle-cutaway {
+  --shell: #9caaa7;
+  --shell-edge: #8ca09a;
+  --glass: #91b4c2;
+}
+html[data-theme="dark"] .vehicle-shadow {
+  fill: #0f1818;
+  opacity: 0.65;
+}
+html[data-theme="dark"] .undertray {
+  fill: #253331;
+}
+html[data-theme="dark"] .vehicle-label .annotation {
+  stroke: #26332f;
+}
+html[data-theme="dark"] .link-hv,
+html[data-theme="dark"] .link-phase {
+  stroke: #df9a5c;
+}
+html[data-theme="dark"] .link-lv {
+  stroke: #78b0ce;
+}
+html[data-theme="dark"] .link-control {
+  stroke: #c0a0ce;
+}
+html[data-theme="dark"] .link-coolant {
+  stroke: #80c6ba;
+}
+@media (min-width: 1101px) and (max-height: 850px) {
+  .vehicle-cutaway .annotation-number {
+    font-size: 13px;
+  }
+  .vehicle-cutaway .annotation-label {
+    font-size: 9.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vehicle-cutaway .anatomy-component {
+    transition: none;
+  }
+}
+
+.vehicle-label.c-battery {
+  --component: #6f9280;
+}
+
+.vehicle-cabin {
+  fill: var(--paper);
+  fill-opacity: 0.08;
+  stroke: var(--shell-edge);
+  stroke-width: 1;
+  opacity: 0.45;
+  pointer-events: none;
+}
+.vehicle-cutaway[data-selected]:not([data-selected=""]) .vehicle-cabin {
+  opacity: 0.15;
+}
+
+.vehicle-link.is-flow-active.is-dim {
+  opacity: 1;
+}
+
+.vehicle-cutaway[data-annotations="false"] .vehicle-drawing-notes {
+  display: none;
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "file": "battery-connections.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 178500,
+    "sha256": "4285608ee41b7b4179337372625da1779ad5a52f10c66ef9d72975de69b714fd"
+  },
+  {
+    "file": "charging-paths.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 178408,
+    "sha256": "422ee75f8657355a5ca0d1392401dfefb380752b459cdcf6e871947ce0732211"
+  },
+  {
+    "file": "compatibility.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 179214,
+    "sha256": "1a5cead329115a94d73a6ac0da0b4d9b07916720eb52dff31586b159983221dc"
+  },
+  {
+    "file": "complete-body-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 164984,
+    "sha256": "1e81604b459cd6d9696f4cf81d2ce7b61b4486f6f8c1e467c690b71d7feeddf8"
+  },
+  {
+    "file": "complete-cutaway-light.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 188748,
+    "sha256": "02ca79d27b976237e5e79a6f71bb5d19435f654f99184907931caac4d93c78c7"
+  },
+  {
+    "file": "design-comparison.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 84254,
+    "sha256": "19e8b022a2a8a0366798dbeb64a27ab8022275d97c0125c560ef4aa3a6b5ab5d"
+  },
+  {
+    "file": "design-studio-dark.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 182153,
+    "sha256": "6901793067402d5101d5215b2123f832ee86dda5bef672189e931c24c7122c56"
+  },
+  {
+    "file": "motor-inverter.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 172173,
+    "sha256": "2915e943196862ef0e325d1a993a031255600b6aa801d232bc1596779a0a6cba"
+  },
+  {
+    "file": "thermal.png",
+    "width": 1366,
+    "height": 768,
+    "bytes": 171495,
+    "sha256": "92403764ecd59482cb1b6abbff2977fedf808bbcd29cb2796de805333db0617c"
+  }
+]

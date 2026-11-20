@@ -10,3 +10,8 @@ venv/
 .coverage.*
 htmlcov/
 reports/
+
+# Local tools and optional browser runner output
+.venv/
+.ruff_cache/
+test-results/

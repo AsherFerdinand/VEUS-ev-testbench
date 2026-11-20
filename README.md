@@ -5,30 +5,34 @@
 An EV engineering workbench for understanding vehicle systems, making explicit
 design assumptions and investigating reproducible experiments and measured evidence.
 
-**VEUS 2.0 Foundation** is a redevelopment milestone, not a stable release. The new
-shell is functional; the replacement Simulation Lab, Optimization and question-driven
+**VEUS 2.1 Design Engineering** adds a reusable EV cutaway and functional design library, not a stable release. The the replacement Simulation Lab, Optimization and question-driven
 Measurements interfaces are prototypes. Existing numerical models and engineering
 tools remain accessible during migration. No real-vehicle prediction accuracy is claimed.
 
-![EV Anatomy: original interactive isometric component schematic](docs/veus2/evidence/anatomy-light.png)
+![Original interactive EV cutaway](docs/veus2/evidence-2.1/complete-cutaway-light.png)
 
 ## Six engineering workspaces
 
-| Workspace          | Available in this foundation                                                                                                                             |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **EV Anatomy**     | Ten keyboard-accessible components, engineering inspector, EV/combustion comparison and conceptual propulsion/regen/charging/auxiliary energy paths.     |
-| **EV Challenges**  | Eight source-referenced engineering questions, underlying physics, technology trade-offs and proposed experiments.                                       |
-| **Design Studio**  | Interactive illustrative configuration, typed version 1 schema, envelope checks, JSON import/export. No performance predictions or commercial catalogue. |
-| **Simulation Lab** | Instrumentation and experiment-mode prototype; no new-run execution or made-up traces. Retained engineering tools and offline solvers remain available.  |
-| **Optimization**   | Controlled study definitions and explicit objectives/constraints; no executed optimizer, improvement scores or cost estimates.                           |
-| **Measurements**   | Genuine VED catalogue metadata and question selection; existing import/readiness/investigation/report workflows are linked during migration.             |
+Designs persist in this browser (16 designs / 180 KB). Export JSON for backup and transfer.
+Version 1 files need manual reconstruction because their mass boundary differs; the import
+explains this instead of guessing. All catalogue values are representative assumptions,
+not manufacturer specifications. No range, charging-time or simulated outcome is invented.
+
+| Workspace          | Available in this milestone                                                                                                                                                      |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **EV Anatomy**     | Ten keyboard-accessible components, engineering inspector, EV/combustion comparison and conceptual propulsion/regen/charging/auxiliary energy paths.                             |
+| **EV Challenges**  | Eight source-referenced engineering questions, underlying physics, technology trade-offs and proposed experiments.                                                               |
+| **Design Studio**  | Functional illustrative configuration, typed version 2 designs, representative catalogue, compatibility/specifications, local save/duplicate/compare and explicit model adapter. |
+| **Simulation Lab** | Instrumentation and experiment-mode prototype; no new-run execution or made-up traces. Retained engineering tools and offline solvers remain available.                          |
+| **Optimization**   | Controlled study definitions and explicit objectives/constraints; no executed optimizer, improvement scores or cost estimates.                                                   |
+| **Measurements**   | Genuine VED catalogue metadata and question selection; existing import/readiness/investigation/report workflows are linked during migration.                                     |
 
 Manual keyboard driving, landscapes and ADAS interfaces are retired from the new
 primary navigation. They remain isolated in the migration toolset because the
 existing replay/calibration frontend still shares their DOM and state dependencies.
 No physics/controller changes or useful-test deletions are part of this milestone.
 
-## Run the foundation
+## Run VEUS 2.1
 
 Use Python **3.12**. In Windows PowerShell:
 
@@ -55,6 +59,21 @@ On Linux use `python3.12 -m venv venv` and `venv/bin/python`. The new branch is 
 merged into `main`; the archived Phase 11/portfolio implementation is preserved at
 `archive/veus-pre-2.0` and its original feature/docs references.
 
+## Update an existing checkout
+
+From this repository in Anaconda Prompt with Python 3.12 selected:
+
+```bat
+git fetch origin
+git switch feature/veus-2.0-engineering-workbench
+git pull --ff-only
+python -m pip install -r requirements-report.txt
+python -m uvicorn veus.studio.main:app --port 8770
+```
+
+Keep local edits before switching/pulling. Open http://localhost:8770; saved designs
+are specific to that browser and port. See the [design engineering guide](docs/veus2/design-engineering.md).
+
 ## Existing engineering capabilities
 
 Use **http://localhost:8770/engineering?workspace=analyse** for CSV import, Data
@@ -76,7 +95,11 @@ The genuine VED recordings still contain **534 samples / 460.4 s** and **367 sam
 unknown current polarity prevents energy-direction/regeneration claims. Replay does
 not establish physical model validation; the Phase 8 assessment remains **INCONCLUSIVE**.
 
-## Foundation review and evidence
+## Design engineering and review
+
+- [Design contracts, catalogue, equations, compatibility and adapter](docs/veus2/design-engineering.md)
+- [VEUS 2.1 screenshots, verification and efficiency measurements](docs/veus2/evidence-2.1/README.md)
+- [Current checkpoint](docs/PROGRESS.md) · [Repository map](docs/REPO_MAP.md)
 
 - [Architecture audit and retain/refactor/retire/remove matrix](docs/veus2/audit.md)
 - [New architecture, route contracts and design limitations](docs/veus2/architecture.md)

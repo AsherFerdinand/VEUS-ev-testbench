@@ -1329,3 +1329,86 @@ pre {
   stroke: var(--accent);
   stroke-width: 3;
 }
+
+.vehicle-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.vehicle-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+.vehicle-options select {
+  padding: 4px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 10px;
+}
+.vehicle-options button {
+  font-size: 10px;
+  padding: 5px 8px;
+}
+.connection-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 13px;
+  font-size: 8px;
+  color: var(--muted);
+  padding: 8px;
+}
+.connection-legend span:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 2px;
+  margin-right: 4px;
+  background: var(--muted);
+}
+.connection-legend .hv:before {
+  background: #cd7c35;
+}
+.connection-legend .lv:before {
+  background: #547fae;
+}
+.connection-legend .control:before {
+  background: #9871a3;
+}
+.connection-legend .coolant:before {
+  background: #4f9892;
+}
+.connection-legend .mechanical:before {
+  background: #52605c;
+}
+
+@media (min-width: 1101px) and (max-height: 850px) {
+  .anatomy-layout .anatomy-svg {
+    height: 300px;
+  }
+  .anatomy-layout .flow-controls {
+    padding: 6px 18px;
+  }
+  .anatomy-layout .flow-controls button {
+    padding: 3px 7px;
+  }
+}
+.edition {
+  min-width: 0;
+}
+.edition-note {
+  max-width: 310px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.brand {
+  flex-shrink: 0;
+}

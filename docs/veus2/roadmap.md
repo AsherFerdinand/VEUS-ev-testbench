@@ -1,6 +1,6 @@
 # VEUS 2.0 redevelopment roadmap
 
-Current milestone: **VEUS 2.1 Design Engineering**, still not a stable release. Foundation evidence remains historical.
+Current milestone: **VEUS 2.3 Simulation Lab and profiles**, still not a stable release. Foundation evidence remains historical.
 The order below follows engineering dependencies rather than the number of tabs.
 
 | Milestone                           | Concrete result                                                                                                                                                          | Evidence required before advancing                                                                                                                  |
@@ -19,7 +19,7 @@ The order below follows engineering dependencies rather than the number of tabs.
 The vehicle/component contract step now includes 13 representative records, version 2
 resolved snapshots, a bounded persistent local library, compatibility/specifications and
 an explicit retained-model adapter. The shared cutaway has electrical, mechanical and
-thermal layers. Commercial catalogue sourcing and full Simulation Lab execution remain
+thermal layers. Commercial catalogue sourcing and full Optimization execution remain
 future work. See [design engineering](design-engineering.md) and [current checkpoint](../PROGRESS.md).
 
 ## Unresolved evidence and models
@@ -43,3 +43,7 @@ future work. See [design engineering](design-engineering.md) and [current checkp
 No advanced ageing, commercial pricing, charging-curve simulation, track dynamics
 or multi-objective optimizer is implemented in foundation. Review this milestone
 before advancing to a new engineering phase.
+
+Milestones 2 and 3 now have coupled experiment/profile execution, frozen exports,
+source/coverage policies and verification evidence. See [Simulation Lab](simulation-lab.md)
+and [profiles/routes](profiles-routes.md). This task stops after 2.3.

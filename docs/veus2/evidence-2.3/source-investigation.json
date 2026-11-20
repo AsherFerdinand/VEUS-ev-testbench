@@ -1,0 +1,108 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/NREL/fastsim/main/LICENSE",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NREL/fastsim/main/LICENSE.txt",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NREL/fastsim/main/python/fastsim/resources/cycles/udds.csv",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NREL/fastsim/main/fastsim/resources/cycles/udds.csv",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://www.epa.gov/vehicle-and-fuel-emissions-testing/dynamometer-drive-schedules",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://unece.org/transport/vehicle-regulations/worldwide-harmonized-light-vehicles-test-procedure-wltp",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://www.openstreetmap.org/relation/35608",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/LICENSE",
+    "status": 200,
+    "bytes": 11357,
+    "file": "/tmp/veus-profile-source-review/LICENSE",
+    "preview": "                                 Apache License\n                           Versi"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/NOTICE",
+    "status": 200,
+    "bytes": 610,
+    "file": "/tmp/veus-profile-source-review/NOTICE",
+    "preview": "Copyright 2020 Alliance for Energy Innovation, LLC\n \nLicensed under the Apache L"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/python/fastsim/resources/cycles/udds.csv",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/fastsim-core/resources/cycles/udds.csv",
+    "status": 200,
+    "bytes": 22246,
+    "file": "/tmp/veus-profile-source-review/fastsim-core_resources_cycles_udds.csv",
+    "preview": "time_seconds,speed_meters_per_second,grade\n0,0,0\n1,0,0\n2,0,0\n3,0,0\n4,0,0\n5,0,0\n6"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/python/fastsim/resources/cycles/hwfet.csv",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/fastsim-3/fastsim-core/resources/cycles/hwfet.csv",
+    "status": 200,
+    "bytes": 13599,
+    "file": "/tmp/veus-profile-source-review/fastsim-core_resources_cycles_hwfet.csv",
+    "preview": "time_seconds,speed_meters_per_second,grade\n0,0,0\n1,0,0\n2,0,0\n3,0.894094506,0\n4,2"
+  },
+  {
+    "id": "udds",
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/fastsim-core/resources/cycles/udds.csv",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "bytes": 22246,
+    "sha256": "ccd6754d83e2d1e0ff321051bd5cc83fdf4b4529028154bfd137d2c7b04c362c",
+    "retrieved_on": "2026-11-20"
+  },
+  {
+    "id": "hwfet",
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/fastsim-core/resources/cycles/hwfet.csv",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "bytes": 13599,
+    "sha256": "c244d5c3942bcc404d44b643dc0359131176f6d3aaecfcd78a8d7cf391b29f13",
+    "retrieved_on": "2026-11-20"
+  },
+  {
+    "id": "LICENSE",
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/LICENSE",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "bytes": 11357,
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "retrieved_on": "2026-11-20"
+  },
+  {
+    "id": "NOTICE",
+    "url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/NOTICE",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "bytes": 610,
+    "sha256": "fe55689c75832dd11b37e4f417aff0b05277e4831c226a2d16bae1f422ecb5b6",
+    "retrieved_on": "2026-11-20"
+  },
+  {
+    "url": "https://nuerburgring.de/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+    "note": "No usable geometry/elevation/speed or licence confirmed; do not infer universal unavailability."
+  },
+  {
+    "url": "https://www.openstreetmap.org/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+    "note": "No usable geometry/elevation/speed or licence confirmed; do not infer universal unavailability."
+  }
+]

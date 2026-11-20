@@ -1,0 +1,14 @@
+{
+  "checkpoint": "A, before profile/route implementation",
+  "tests_passed": 54,
+  "elapsed_s": 7.03,
+  "command": "python -m pytest tests/test_lab_kernel.py tests/test_energy.py tests/test_session.py tests/test_physics.py -q",
+  "scope": "Coupled engine plus unchanged legacy equations/regressions; reported by implementation agent after fixing failures",
+  "source_sha256": {
+    "veus/lab/kernel.py": "fea06e8d9c0af89cbae96c97d9cc5d35114bc45c4e5c2b018360f46a91e9f2b8",
+    "veus/lab/runner.py": "a0f75dde4d216711747130fd182aee21d692b1f868db3027b053816375d6cd0d",
+    "veus/model/energy_battery.py": "705a54a67c26e14b4cb077fd7a414c24396782738fd61be38a1ef007b9e58a6d",
+    "veus/sim/dynamics.py": "61682a7794c666434d1f999525416fa27b51e9765919f57cb6d104d7a8157ba3",
+    "tests/test_lab_kernel.py": "8bcab3d5d40a9dd309a0f572d33ad14cf4eb7191c67aaf2d9f6a9dde83f2a4bb"
+  }
+}

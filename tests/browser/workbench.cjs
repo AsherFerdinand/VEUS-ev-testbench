@@ -274,15 +274,14 @@ const assert = require("node:assert/strict"),
   await page.waitForTimeout(400);
   assert.equal(await page.locator("#component-inspector h2").count(), 1);
   await page.click("#tab-simulation");
-  await page.click("#prescribed-mode");
+  await page.locator("#lab-kind").waitFor();
+  await page.click("#lab-run");
   assert(
-    (await page.locator("#mode-explanation").innerText()).includes(
-      "not a prediction",
-    ),
+    (await page.locator("#lab-status").innerText())
+      .toLowerCase()
+      .includes("acknowledge"),
   );
-  assert(
-    await page.getByRole("button", { name: "Run in new Lab" }).isDisabled(),
-  );
+  assert.equal(requests.filter((u) => u.endsWith("/api/lab/run")).length, 0);
   await page.click("#tab-optimization");
   await page.click('[data-study="aero"]');
   assert((await page.locator(".equation").innerText()).includes("Cd"));
@@ -432,7 +431,7 @@ const assert = require("node:assert/strict"),
     blocked_storage_handled: true,
     component_effects: true,
     delete_confirmation: true,
-    prototype_results_not_fabricated: true,
+    lab_requires_acknowledgements: true,
     legacy_migration: true,
     default_shell_websockets: 0,
     startup,

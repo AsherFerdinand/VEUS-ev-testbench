@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "screenshots": "/tmp/veus23-workbench",
+  "workspaces": 6,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "widths": [
+    1366,
+    1024,
+    820,
+    390
+  ],
+  "keyboard_components": true,
+  "keyboard_tabs": true,
+  "design_validation_roundtrip": true,
+  "persistence_and_comparison": true,
+  "corrupt_storage_preserved": true,
+  "blocked_storage_handled": true,
+  "component_effects": true,
+  "delete_confirmation": true,
+  "lab_requires_acknowledgements": true,
+  "legacy_migration": true,
+  "default_shell_websockets": 0,
+  "startup": {
+    "resources": [
+      {
+        "name": "workbench.css",
+        "bytes": 25136
+      },
+      {
+        "name": "vehicle.css",
+        "bytes": 8319
+      },
+      {
+        "name": "app.js",
+        "bytes": 25929
+      },
+      {
+        "name": "schematic.js",
+        "bytes": 22471
+      },
+      {
+        "name": "design-state.js",
+        "bytes": 3184
+      },
+      {
+        "name": "content",
+        "bytes": 11594
+      },
+      {
+        "name": "mark.svg",
+        "bytes": 203
+      }
+    ],
+    "heap_bytes": 2456533
+  },
+  "page_errors": []
+}

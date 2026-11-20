@@ -1,0 +1,29 @@
+{
+  "checkpoint": "B, integrated profiles/routes",
+  "full_python_tests": 267,
+  "elapsed_s": 22.74,
+  "clock_tests": 9,
+  "browser_suites": [
+    "workbench",
+    "lab",
+    "drive",
+    "replay",
+    "guidance",
+    "investigation"
+  ],
+  "changed_python_ruff": "F/E9 pass",
+  "physical_validation": "INCONCLUSIVE",
+  "source_sha256": {
+    "veus/lab/__init__.py": "14e876b89002174b2170dfc89d1abfd71ab8ae35acda802cd7a45212a3fa4908",
+    "veus/lab/__main__.py": "449b85279f301722039da552e7eb84e4c7b2c16c4b9a6ebd6e41c03e73f2fd16",
+    "veus/lab/api.py": "c41740dcf3a5ddd8d07ed157606c788c784d275e815e20f06e7d1abe4f286b86",
+    "veus/lab/kernel.py": "c8e4945c0e51d0fac4f2e04ed9d1d6447507f8e86e338d8e0810223c0f2efd42",
+    "veus/lab/profiles.py": "dd253f0a27970aa869e02c31c6da3b5565014a3b98e1dc0cf30cc01c68e806b9",
+    "veus/lab/report.py": "7d1ef639387f65b20b6b73dbb387b5f7447996e257335b06bcf20944e51c800a",
+    "veus/lab/runner.py": "175fdda073b4fa9a76e450e7afa8ef24c9d388b84e49e7df716349bcbc1944af",
+    "veus/lab/schema.py": "55ec9f7b8e0ae04302836179204ad769982ecf110a4211c4f295c4088c96bffc",
+    "tests/test_lab_kernel.py": "67784f0b618574e4aef23f8ff428c999872b27ba5ad31c1a276fa6c86f79a593",
+    "tests/test_lab_profiles.py": "a8152f28f8295ab7b514cc2dd77a4d824b5820eaec3819a2f44675e1c66ae4f6",
+    "tests/test_lab_references.py": "68704be73c596b771675561836362a44d731b420d5f7e9990b5afc528dc03bd6"
+  }
+}

@@ -37,6 +37,12 @@ from veus.workbench.engineering import router as design_engineering_router
 
 app.include_router(design_engineering_router)
 
+from veus.lab.api import router as lab_router
+from veus.lab.profiles import router as lab_profiles_router
+
+app.include_router(lab_router)
+app.include_router(lab_profiles_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

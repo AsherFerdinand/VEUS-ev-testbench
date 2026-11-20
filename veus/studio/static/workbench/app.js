@@ -308,7 +308,7 @@ function renderChallenges() {
     ]
       .map(
         ([n, t, body]) =>
-          `<section class="challenge-stage"><span>${n} / ${t.split(" ")[0].toUpperCase()}</span><div><h3>${t}</h3><p>${esc(body)}</p>${n === "04" ? `<a href="/?workspace=${c.workspace}" id="challenge-experiment">Open ${workspaces.find((w) => w[0] === c.workspace)[1]} prototype →</a>` : ""}</div></section>`,
+          `<section class="challenge-stage"><span>${n} / ${t.split(" ")[0].toUpperCase()}</span><div><h3>${t}</h3><p>${esc(body)}</p>${n === "04" ? `<a href="/?workspace=${c.workspace}" id="challenge-experiment">Open ${workspaces.find((w) => w[0] === c.workspace)[1]} →</a>` : ""}</div></section>`,
       )
       .join(
         "",
@@ -344,27 +344,21 @@ async function renderDesign() {
         "Design Studio could not load: " + e.message;
   }
 }
-function renderSimulation() {
-  $("workspace-panel").innerHTML =
-    header(
-      "04 / CONTROLLED EXPERIMENTS",
-      "One question. Repeatable conditions.",
-      "Configure an experiment, execute the model, then replay its results. These responsibilities stay separate.",
-      "LAYOUT PROTOTYPE",
-    ) +
-    `
- <div class="lab-layout"><div class="instrument-panel"><div class="instrument-heading"><span>SIMULATION LAB / NO RUN LOADED</span><span>NOT EXECUTED</span></div><div class="instruments"><svg class="speedometer" viewBox="0 0 300 230" role="img" aria-label="Speed unavailable; no experiment executed"><path d="M53 185A110 110 0 1 1 247 185" fill="none" stroke="#3c5866" stroke-width="13"/><path d="M53 185A110 110 0 0 1 55 72" fill="none" stroke="#7c9e9e" stroke-width="2"/><text x="150" y="142" font-size="64" text-anchor="middle">—</text><text x="150" y="174" font-size="11" text-anchor="middle">km/h · NO DATA</text><text x="150" y="216" font-size="8" text-anchor="middle">SPEED / SHARED REPLAY CURSOR</text></svg><div><div class="instrument-readout"><span>BATTERY SOC</span><strong>—</strong><small>% · unavailable</small></div><div class="instrument-readout"><span>BATTERY POWER</span><strong>—</strong><small>kW · unavailable</small></div><div class="instrument-readout"><span>EXPERIMENT TIME</span><strong>—</strong><small>s · unavailable</small></div></div></div><div class="instrument-empty"><strong>Route view · no sourced geometry loaded</strong>Track geometry and elevation need provenance and a compatible model. No fictional route, speed trace or lap-time prediction is displayed.</div><svg class="plot-placeholder" viewBox="0 0 760 100" role="img" aria-label="Empty telemetry plot"><path d="M35 12V78H745M35 45H745"/><text x="390" y="45" text-anchor="middle">NO EXPERIMENT RESULT · PLOT UNAVAILABLE</text><text x="390" y="98" text-anchor="middle">Elapsed time · s</text></svg><div class="transport-prototype"><button disabled aria-label="Replay unavailable">▶</button><span class="transport-line"></span><span>No result cursor</span></div></div>
- <aside class="inspector"><div class="eyebrow">EXPERIMENT DEFINITION</div><h2>What should the model answer?</h2><div class="segmented" aria-label="Experiment mode"><button id="predictive-mode" aria-pressed="true">Predictive</button><button id="prescribed-mode" aria-pressed="false">Prescribed profile</button></div><p id="mode-explanation">Predictive dynamics: the retained model integrates motion from applied forces. Its limitations still apply.</p><h3>Planned experiment library</h3><p>Constant-speed consumption · urban and motorway profiles · gradients · acceleration · braking and regeneration.</p><button disabled>Run in new Lab · not available</button><p class="limit">No standardized cycle or Nordschleife geometry is bundled. A longitudinal model does not establish credible lap-time prediction.</p><a href="/engineering?workspace=validate">Open existing engineering tools →</a><p class="quiet">Migration route: original settings, telemetry, sensors and exports remain operational. Offline verification is available today.</p><pre>python -m veus.testing physics --output reports/physics-new</pre></aside></div>`;
-  for (const id of ["predictive", "prescribed"])
-    $(id + "-mode").onclick = () => {
-      for (const x of ["predictive", "prescribed"])
-        $(x + "-mode").setAttribute("aria-pressed", x === id);
-      $("mode-explanation").textContent =
-        id === "predictive"
-          ? "Predictive dynamics: the retained model integrates motion from applied forces. Its limitations still apply."
-          : "Prescribed profile: target speed is an input for demand calculation, not a prediction that the vehicle can achieve it. Feasibility checks and a sourced cycle are required.";
-    };
+async function renderSimulation() {
+  const panel = $("workspace-panel");
+  panel.innerHTML = '<p class="quiet">Loading Simulation Lab…</p>';
+  try {
+    const module = await import("./lab.js");
+    if (active !== "simulation" || !panel.isConnected) return;
+    const cleanup = await module.mountLab(panel, { header, notice, content });
+    if (active !== "simulation" || !panel.isConnected) cleanup();
+    else studioCleanup = cleanup;
+  } catch (e) {
+    if (active === "simulation" && panel.isConnected)
+      panel.textContent = "Simulation Lab could not load: " + e.message;
+  }
 }
+
 const studies = {
   mass: {
     title: "Mass sensitivity",

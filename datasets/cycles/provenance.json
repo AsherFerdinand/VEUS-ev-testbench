@@ -1,0 +1,44 @@
+{
+  "udds": {
+    "id": "udds",
+    "name": "UDDS \u00b7 FASTSim-distributed reference",
+    "source_url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/fastsim-core/resources/cycles/udds.csv",
+    "licence": "Apache-2.0, FASTSim repository distribution; see UPSTREAM-LICENSE.txt and UPSTREAM-NOTICE.txt",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "retrieved_on": "2026-11-20",
+    "sample_count": 1370,
+    "duration_s": 1369.0,
+    "maximum_speed_ms": 25.34757924,
+    "distance_m": 11990.433188725,
+    "sample_intervals_s": [
+      1.0
+    ],
+    "sha256": "ccd6754d83e2d1e0ff321051bd5cc83fdf4b4529028154bfd137d2c7b04c362c",
+    "bytes": 22246,
+    "notes": [
+      "Untouched FASTSim-distributed CSV, not independently compared against an official EPA original. No regulatory certification claim.",
+      "The source grade=0 represents a flat cycle assumption, not surveyed road elevation. No geographic coordinates are supplied."
+    ]
+  },
+  "hwfet": {
+    "id": "hwfet",
+    "name": "HWFET \u00b7 FASTSim-distributed reference",
+    "source_url": "https://raw.githubusercontent.com/NatLabRockies/fastsim/6a07d4d816c847d500315a4e5759e157853c563b/fastsim-core/resources/cycles/hwfet.csv",
+    "licence": "Apache-2.0, FASTSim repository distribution; see UPSTREAM-LICENSE.txt and UPSTREAM-NOTICE.txt",
+    "upstream_commit": "6a07d4d816c847d500315a4e5759e157853c563b",
+    "retrieved_on": "2026-11-20",
+    "sample_count": 766,
+    "duration_s": 765.0,
+    "maximum_speed_ms": 26.77813045,
+    "distance_m": 16506.817470511,
+    "sample_intervals_s": [
+      1.0
+    ],
+    "sha256": "c244d5c3942bcc404d44b643dc0359131176f6d3aaecfcd78a8d7cf391b29f13",
+    "bytes": 13599,
+    "notes": [
+      "Untouched FASTSim-distributed CSV, not independently compared against an official EPA original. No regulatory certification claim.",
+      "The source grade=0 represents a flat cycle assumption, not surveyed road elevation. No geographic coordinates are supplied."
+    ]
+  }
+}

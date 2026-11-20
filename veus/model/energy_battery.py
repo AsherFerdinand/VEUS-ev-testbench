@@ -24,7 +24,11 @@ class EnergyBattery:
             raise ValueError('Invalid battery parameters')
         self.energy_j = self.capacity_kwh*3_600_000*self.soc
 
-    def power_limits(self, dt_s: float) -> tuple[float, float]:
+    def power_limits(self, dt_s: float, *, terminal_minimum_v: float | None = None,
+                     terminal_maximum_v: float | None = None,
+                     terminal_current_limit_a: float | None = None,
+                     discharge_power_limit_w: float | None = None,
+                     charge_power_limit_w: float | None = None) -> tuple[float, float]:
         if not math.isfinite(dt_s) or dt_s <= 0:
             raise ValueError('Positive finite timestep required')
         # Restrict to the stable high-voltage branch; Vterminal >= 0.5 Voc.
@@ -36,8 +40,31 @@ class EnergyBattery:
         # Fixed voltage window: 0.5 Voc <= terminal voltage <= 1.1 Voc.
         if self.resistance_ohm:
             charge_i = min(charge_i, 0.1*self.voltage_v/self.resistance_ohm)
+        optional = (terminal_minimum_v, terminal_maximum_v, terminal_current_limit_a,
+                    discharge_power_limit_w, charge_power_limit_w)
+        if any(v is not None and (not math.isfinite(v) or v < 0) for v in optional):
+            raise ValueError('Electrical envelope limits must be finite and nonnegative')
+        if terminal_minimum_v is not None and terminal_maximum_v is not None and terminal_minimum_v > terminal_maximum_v:
+            raise ValueError('Terminal voltage limits are reversed')
+        if terminal_current_limit_a is not None:
+            max_i = min(max_i, terminal_current_limit_a)
+            charge_i = min(charge_i, terminal_current_limit_a)
+        if self.resistance_ohm:
+            if terminal_minimum_v is not None:
+                max_i = min(max_i, max(0, (self.voltage_v-terminal_minimum_v)/self.resistance_ohm))
+            if terminal_maximum_v is not None:
+                charge_i = min(charge_i, max(0, (terminal_maximum_v-self.voltage_v)/self.resistance_ohm))
+        else:
+            if terminal_minimum_v is not None and self.voltage_v < terminal_minimum_v:
+                max_i = 0
+            if terminal_maximum_v is not None and self.voltage_v > terminal_maximum_v:
+                charge_i = 0
         discharge = (self.voltage_v-max_i*self.resistance_ohm)*max_i
         charge = (self.voltage_v+charge_i*self.resistance_ohm)*charge_i
+        if discharge_power_limit_w is not None:
+            discharge = min(discharge, discharge_power_limit_w)
+        if charge_power_limit_w is not None:
+            charge = min(charge, charge_power_limit_w)
         return discharge, charge
 
     def exchange(self, terminal_power_w: float, dt_s: float) -> dict:

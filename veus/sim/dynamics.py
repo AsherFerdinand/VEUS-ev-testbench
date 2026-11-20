@@ -12,6 +12,13 @@ def _finite(**values: float) -> None:
         raise ValueError(f"Values must be finite: {', '.join(values)}")
 
 
+def road_loads(vehicle, speed_ms, gradient_rad=0.0, air_density_kg_m3=1.225):
+    """Shared road-force decomposition at a moving forward speed, SI units."""
+    return dict(aerodynamic_n=0.5*air_density_kg_m3*vehicle.cd*vehicle.frontal_area_m2*speed_ms**2,
+                rolling_n=vehicle.rr_coeff*vehicle.mass_kg*9.81*math.cos(gradient_rad),
+                gradient_n=vehicle.mass_kg*9.81*math.sin(gradient_rad))
+
+
 @dataclass(frozen=True)
 class VehicleState:
     time_s: float = 0.0
@@ -82,9 +89,8 @@ class LongitudinalSimulator:
         drive = min(raw_drive, limit)
         # A single lumped contact patch: braking uses remaining force capacity.
         brake = min(brake_force_n, max(0.0, limit - drive))
-        grade = v.mass_kg * 9.81 * math.sin(self.gradient_rad)
-        aero = 0.5 * self.air_density_kg_m3 * v.cd * v.frontal_area_m2 * state.velocity_ms**2
-        rolling = v.rr_coeff * normal
+        road = road_loads(v, state.velocity_ms, self.gradient_rad, self.air_density_kg_m3)
+        grade, aero, rolling = road['gradient_n'], road['aerodynamic_n'], road['rolling_n']
         if state.velocity_ms == 0:
             # Static holding prevents spontaneous rollback in this forward-only model.
             rolling = min(rolling, max(0.0, drive - grade - brake))

@@ -46,8 +46,8 @@ and compact findings. Old technical signal/rate controls, cutaway renderer and
 sticky sidebar styles were removed. The unchanged replay-clock script is another
 3,363 B, excluded from both Lab totals. Initial subresources exclude the navigation
 HTML response; these figures are the existing script's decoded resource-body
-metric, not compressed wire transfer. A 12 KiB RSS difference and sub-millisecond seek
-variation are measurement noise, not meaningful gains or regressions. Server RSS
+metric, not compressed wire transfer. The small RSS difference and frame-phase-dependent seek timings do not establish
+meaningful gains or regressions. Server RSS
 is not browser memory; the JS heap snapshot is not total Chromium process memory.
 A shared cloud host and next-rAF callback do not establish desktop display latency
 or a real-time guarantee. No thermal or electrical hardware safety is implied.

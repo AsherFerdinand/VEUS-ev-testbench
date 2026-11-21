@@ -1,3 +1,8 @@
+import {
+  appearanceOf,
+  appearances,
+  vehicleThumbnail,
+} from "./vehicle-appearance.js";
 import { anatomySVG, updateSchematic } from "./schematic.js";
 import {
   state,
@@ -173,7 +178,11 @@ export async function mountStudio(root, { content, header, notice }) {
     controller = null,
     group = "battery",
     comparison = null;
-  const cat = await catalogue();
+  const [cat, presetData] = await Promise.all([
+    catalogue(),
+    request("presets"),
+  ]);
+  let selectedPreset = presetData.presets[0]?.id;
   if (!root.isConnected) return () => {};
   if (!state.design) state.design = await request("design");
   const find = (id) => root.querySelector("#" + id);
@@ -185,14 +194,24 @@ export async function mountStudio(root, { content, header, notice }) {
     root.innerHTML =
       header(
         "03 / CONFIGURATION → EVIDENCE → MODEL",
-        "Design a system. Know its limits.",
-        "Representative components, explicit assumptions and checked specifications. Save a baseline before changing a design.",
+        "Choose your vehicle. Make it yours.",
+        "Three original EVs. Explicit engineering assumptions. Your own configuration.",
         "FUNCTIONAL DESIGN STUDIO",
       ) +
       `
- <div class="library-toolbar"><label>Local design library<select id="library-select"><option value="">Unsaved design</option>${state.library.map((r) => `<option value="${esc(r.id)}" ${r.id === state.activeId ? "selected" : ""}>${esc(r.design.name)}</option>`).join("")}</select></label><label class="design-title">Active design<input id="design-name" maxlength="100" value="${esc(state.design.name)}"></label><button id="design-save" class="primary">Save design</button><button id="design-new">New</button><button id="design-duplicate">Duplicate</button><details class="library-more"><summary>Files & library</summary><div><button id="design-export">Export JSON</button><label>Import JSON<input id="design-import" type="file" accept=".json"></label><button id="design-delete">Delete saved design…</button><button id="library-reset">Reset library…</button></div></details></div>
+ <section class="vehicle-preset-selection" aria-label="Illustrative vehicle presets"><div class="vehicle-preset-cards">${presetData.presets.map((p) => `<button data-preset="${p.id}" aria-pressed="${p.id === selectedPreset}" class="vehicle-preset-card">${vehicleThumbnail(appearanceOf(p.design))}<span><small>ILLUSTRATIVE / ${esc(p.id.toUpperCase())}</small><strong>${esc(p.name)}</strong><em>${esc(p.description)}</em></span></button>`).join("")}</div><div class="preset-action"><p id="preset-preview-label">Preview a default; your active and saved designs remain unchanged.</p><button id="preset-apply">Customize preset as a new design →</button></div><details id="preset-comparison"><summary>Compare the three default presets · not your customized values</summary><div id="preset-bars"></div></details></section>
+ <div class="library-toolbar"><label>Local design library<select id="library-select"><option value="">Unsaved design</option>${state.library.map((r) => `<option value="${esc(r.id)}" ${r.id === state.activeId ? "selected" : ""}>${esc(r.design.name)}</option>`).join("")}</select></label><label class="design-title">Active design<input id="design-name" maxlength="100" value="${esc(state.design.name)}"></label><button id="design-save" class="primary">${state.activeId ? "Save design" : "Save as new design"}</button><button id="design-new">New</button><button id="design-duplicate">Duplicate</button><details class="library-more"><summary>Files & library</summary><div><button id="design-export">Export JSON</button><label>Import JSON<input id="design-import" type="file" accept=".json"></label><button id="design-delete">Delete saved design…</button><button id="library-reset">Reset library…</button></div></details></div>
  <p class="library-note" id="library-status">${state.storageError ? esc(state.storageError) : "Local browser storage · up to 16 designs / 180 KB · export JSON for a portable backup."}</p>
- <div class="design-layout studio-layout"><div><div class="drawing-panel"><div class="drawing-toolbar"><span class="drawing-id">ACTIVE VEHICLE / ${esc(state.design.catalogue_version)}</span><div class="studio-view-controls"><label>Body<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, { selected: componentId[group], body: "cutaway" })}</div><p id="anatomy-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>Original conceptual vehicle · not production geometry</span><span>Illustrative components / no performance inferred from labels</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><div class="studio-evidence"><details id="compatibility-details" open><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
+ <div class="design-layout studio-layout"><div><div class="drawing-panel"><div class="drawing-toolbar"><span class="drawing-id">ACTIVE VEHICLE / ${esc(state.design.catalogue_version)}</span><div class="studio-view-controls"><label>Visual body<select id="studio-appearance">${Object.entries(
+   appearances,
+ )
+   .map(
+     ([k, a]) =>
+       `<option value="${k}" ${appearanceOf(state.design) === k ? "selected" : ""}>${a.name} · ${a.label}</option>`,
+   )
+   .join(
+     "",
+   )}</select></label><label>Layers<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, drawingOptions())}</div><p id="anatomy-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>${state.design.appearance ? "Selected visual class" : "Legacy appearance fallback: R1"} · illustrative packaging, not CAD</span><span>Single equivalent drive unit · no AWD or downforce model</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><div class="studio-evidence"><details id="compatibility-details"><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
  <aside class="design-form studio-editor"><label>Subsystem<select id="design-group">${Object.entries(
    names,
  )
@@ -205,6 +224,7 @@ export async function mountStudio(root, { content, header, notice }) {
    )}</select></label><div id="component-editor"></div><p id="configuration-status" class="configuration-status" role="status">Checking current design…</p><button id="design-check" type="button">Check specifications</button><details><summary>Catalogue evidence & classification</summary><div id="catalogue-evidence"></div></details></aside></div>`;
     editor();
     bind();
+    presetControls();
     updateSchematic(root.querySelector(".anatomy-svg"), {
       selected: componentId[group],
       body: "cutaway",
@@ -217,6 +237,72 @@ export async function mountStudio(root, { content, header, notice }) {
       find("configuration-status").textContent =
         "Checked · " + statusText(state.evaluation.compatibility_status);
     } else evaluation();
+  }
+  function drawingOptions() {
+    return {
+      selected: componentId[group],
+      body: find("studio-body")?.value || "cutaway",
+      annotations: find("studio-annotations")?.checked ?? true,
+      appearance: appearanceOf(state.design),
+      batteryId: state.design.component_ids.battery,
+      motorId: state.design.component_ids.motor,
+    };
+  }
+  function redraw() {
+    find("design-schematic").innerHTML = anatomySVG(
+      content.components,
+      true,
+      drawingOptions(),
+    );
+    bind();
+  }
+  function presetControls() {
+    for (const card of root.querySelectorAll("[data-preset]"))
+      card.onclick = () => {
+        selectedPreset = card.dataset.preset;
+        for (const item of root.querySelectorAll("[data-preset]"))
+          item.setAttribute("aria-pressed", String(item === card));
+        const preset = presetData.presets.find((p) => p.id === selectedPreset);
+        find("preset-preview-label").textContent =
+          "Preview: " +
+          preset.name +
+          " · apply explicitly to create an unsaved draft. Saved designs are not replaced.";
+      };
+    find("preset-apply").onclick = () => {
+      if (
+        state.dirty &&
+        !confirm(
+          "Discard unsaved edits and customize this preset? Saved designs will remain unchanged.",
+        )
+      )
+        return;
+      const preset = presetData.presets.find((p) => p.id === selectedPreset);
+      state.design = structuredClone(preset.design);
+      state.activeId = null;
+      state.evaluation = null;
+      state.dirty = true;
+      invalidateComparison();
+      shell();
+      syncLabel();
+    };
+    find("studio-appearance").onchange = (e) => {
+      state.design.appearance = e.target.value;
+      state.dirty = true;
+      invalidateComparison();
+      redraw();
+      evaluation();
+    };
+    const metrics = [
+      ["Usable battery", "kWh", (p) => p.design.battery.usable_capacity_kwh],
+      ["Vehicle mass", "kg", (p) => p.specifications.total_mass_kg.value],
+      ["Peak motor", "kW", (p) => p.design.motor.peak_power_kw],
+    ];
+    find("preset-bars").innerHTML = metrics
+      .map(([title, unit, value]) => {
+        const max = Math.max(...presetData.presets.map(value));
+        return `<div><h3>${title} / ${unit}</h3>${presetData.presets.map((p) => `<div class="preset-bar"><span>${esc(p.id.toUpperCase())}</span><i style="width:${(value(p) / max) * 65}%"></i><b>${fmt(value(p))} ${unit}</b></div>`).join("")}</div>`;
+      })
+      .join("");
   }
   function invalidateComparison() {
     comparison = null;
@@ -246,6 +332,7 @@ export async function mountStudio(root, { content, header, notice }) {
         state.dirty = true;
         invalidateComparison();
         editor();
+        redraw();
         evaluation();
       };
     find("component-editor").oninput = (e) => {
@@ -314,6 +401,11 @@ export async function mountStudio(root, { content, header, notice }) {
         statusText(result.compatibility_status) +
         " · not physical validation";
       renderResults(result);
+      if (
+        find("design-schematic")?.querySelector("svg")?.dataset.appearance !==
+        appearanceOf(state.design)
+      )
+        redraw();
       syncLabel();
     } catch (e) {
       if (!connected() || current !== generation || e.name === "AbortError")
@@ -332,15 +424,33 @@ export async function mountStudio(root, { content, header, notice }) {
   }
   function renderResults(r) {
     const specs = r.specifications;
-    find("specifications").innerHTML = [
-      "total_mass_kg",
-      "usable_nominal_capacity_ah",
-      "peak_power_to_weight_kw_per_tonne",
-      "drag_area_m2",
-    ]
+    const d = r.design;
+    const dashboard = [
+      ["Usable battery", d.battery.usable_capacity_kwh, "kWh"],
+      ["Total mass", specs.total_mass_kg?.value, "kg"],
+      ["Peak motor", d.motor.peak_power_kw, "kW"],
+      [
+        "Peak power / mass",
+        specs.peak_power_to_weight_kw_per_tonne?.value / 1000,
+        "kW/kg",
+      ],
+      ["Drag coefficient", d.body.drag_coefficient, "Cd"],
+      ["Nominal battery", d.battery.nominal_voltage_v, "V"],
+      [
+        "Battery current limits",
+        `${fmt(d.battery.discharge_limit_a)} / ${fmt(d.battery.charge_limit_a)}`,
+        "A discharge / charge",
+      ],
+      [
+        "Drivetrain",
+        "Single equivalent motor",
+        `fixed ${fmt(d.gearbox.reduction_ratio)}:1`,
+      ],
+    ];
+    find("specifications").innerHTML = dashboard
       .map(
-        (k) =>
-          `<div><span>${esc(k.replaceAll("_", " "))}</span><strong>${fmt(specs[k]?.value)} <small>${esc(specs[k]?.unit || "")}</small></strong></div>`,
+        ([label, value, unit]) =>
+          `<div><span>${esc(label)}</span><strong>${typeof value === "string" ? esc(value) : fmt(value)} <small>${esc(unit)}</small></strong></div>`,
       )
       .join("");
     find("compatibility-status").textContent =
@@ -383,6 +493,7 @@ export async function mountStudio(root, { content, header, notice }) {
     return structuredClone(state.design);
   }
   function bind() {
+    if (find("preset-apply")) presetControls();
     find("design-group").onchange = (e) => {
       group = e.target.value;
       editor();

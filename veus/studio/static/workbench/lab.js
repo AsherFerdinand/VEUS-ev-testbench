@@ -452,7 +452,7 @@ export async function mountLab(root, { header, notice }) {
     if (!inputs) {
       $("lab-overlay-label").hidden = true;
       $("lab-visual-caption").textContent =
-        "VEUS Arrow · fictional body, not a validated vehicle. Scenery follows achieved distance.";
+        "VEUS vehicle · fictional body, not a validated vehicle. Scenery follows achieved distance.";
       return;
     }
     updateOverlayChoices();
@@ -719,6 +719,7 @@ export async function mountLab(root, { header, notice }) {
         kind: $("lab-kind").value,
         grade_percent: Number($("lab-grade").value),
       },
+      design,
     );
   }
   function defaults() {
@@ -856,7 +857,13 @@ export async function mountLab(root, { header, notice }) {
       $("lab-play").textContent = playback.playing ? "Ⅱ Pause" : "▶ Play";
       drawPlot(playback.time_s);
       drawVisual(sample, playback.time_s);
-      updateScene(root, sample, playback.time_s, result.experiment);
+      updateScene(
+        root,
+        sample,
+        playback.time_s,
+        result.experiment,
+        result.vehicle,
+      );
       quickFindings(sample);
     }
   }

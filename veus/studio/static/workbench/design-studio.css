@@ -248,3 +248,241 @@
 .library-toolbar .design-title {
   min-width: 170px;
 }
+/* 2.3.2 vehicle configurator. Preset preview never mutates the active design. */
+.vehicle-preset-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.vehicle-preset-card {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  min-width: 0;
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  gap: 12px;
+}
+.vehicle-preset-card svg {
+  width: 45%;
+  min-width: 0;
+  flex: none;
+  max-height: 110px;
+}
+.vehicle-preset-card span {
+  min-width: 0;
+}
+.vehicle-preset-card small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+}
+.vehicle-preset-card strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 550;
+  margin: 4px 0;
+}
+.vehicle-preset-card em {
+  display: block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.vehicle-preset-card[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 -2px var(--accent);
+  background: var(--accent-soft);
+}
+.preset-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 10px 0;
+}
+.preset-action p {
+  font-size: 10px;
+  color: var(--muted);
+}
+.preset-action button {
+  font-size: 11px;
+  flex: none;
+}
+.vehicle-preset-selection > details {
+  font-size: 11px;
+  margin: 10px 0 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+#preset-bars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 10px;
+}
+#preset-bars h3 {
+  font-size: 11px;
+  font-weight: 500;
+}
+.preset-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 7px 0;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.preset-bar i {
+  display: block;
+  height: 9px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.preset-bar b {
+  font-weight: 400;
+}
+.studio-layout {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+}
+.studio-layout .drawing-panel {
+  background: linear-gradient(145deg, var(--paper), var(--soft));
+  border-radius: 10px;
+}
+.studio-view-controls {
+  flex-wrap: wrap;
+}
+.studio-view-controls select {
+  max-width: 160px;
+}
+.studio-layout .drawing-toolbar {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.studio-layout .drawing-footer {
+  font-size: 9px;
+  gap: 10px;
+}
+.studio-layout .specification-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+.studio-layout .specification-strip > div {
+  min-width: 0;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.studio-layout .specification-strip strong {
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+.studio-layout .specification-strip small {
+  font-size: 9px;
+}
+.studio-layout .specification-strip span {
+  font-size: 10px;
+}
+.studio-editor .field-grid {
+  gap: 10px;
+}
+.studio-editor h2 {
+  font-size: 17px;
+}
+.studio-editor .quiet {
+  font-size: 10px;
+}
+.studio-evidence > details {
+  font-size: 11px;
+}
+.library-toolbar {
+  margin-top: 14px;
+}
+.library-toolbar button {
+  font-size: 11px;
+  padding: 8px 11px;
+}
+.studio-layout #anatomy-tooltip {
+  font-size: 10px;
+}
+body[data-workspace="design"] .page-heading h1 {
+  font-size: 28px;
+}
+body[data-workspace="design"] .page-heading {
+  margin-bottom: 18px;
+}
+@media (max-width: 1000px) {
+  .vehicle-preset-card {
+    display: block;
+    padding: 10px;
+  }
+  .vehicle-preset-card svg {
+    width: 100%;
+    height: 90px;
+  }
+  .vehicle-preset-card strong {
+    font-size: 15px;
+  }
+  .studio-layout {
+    grid-template-columns: minmax(0, 1fr) 270px;
+  }
+  .studio-layout .specification-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .studio-layout {
+    grid-template-columns: 1fr;
+  }
+  .vehicle-preset-cards {
+    gap: 7px;
+  }
+  .vehicle-preset-card em {
+    display: none;
+  }
+  .vehicle-preset-card strong {
+    font-size: 12px;
+  }
+  .vehicle-preset-card small {
+    font-size: 7px;
+  }
+  .vehicle-preset-card svg {
+    height: 64px;
+  }
+  .preset-action {
+    align-items: start;
+    flex-wrap: wrap;
+  }
+  .preset-action button {
+    width: 100%;
+  }
+  #preset-bars {
+    grid-template-columns: 1fr;
+  }
+  .studio-view-controls {
+    gap: 6px;
+  }
+  .studio-layout .specification-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .studio-layout .specification-strip strong {
+    font-size: 16px;
+  }
+}
+.studio-layout .anatomy-svg {
+  max-height: 440px;
+  width: 100%;
+}
+.studio-layout .specification-strip {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .studio-layout .anatomy-svg {
+    max-height: none;
+  }
+}

@@ -391,7 +391,7 @@ def get_design():
 @router.get("/schema")
 def get_schema():
     schema = VehicleDesignV2.model_json_schema()
-    schema["required"] = list(schema["properties"])
+    schema["required"] = [key for key in schema["properties"] if key != "appearance"]
     for definition in schema.get("$defs", {}).values():
         if "properties" in definition:
             definition["required"] = list(definition["properties"])
@@ -520,3 +520,10 @@ async def reject_ambiguous_legacy_design(request: Request):
         422,
         "Version 1 uses body mass excluding battery only and lacks the component masses, torque, speed and electrical assumptions required by version 2. Automatic migration would invent values or double-count mass. Create a version 2 design, explicitly enter the body/residual mass excluding all six listed components, copy verified values, and review the unknown fields before saving. The original version 1 file remains usable through the retained foundation API.",
     )
+
+
+@router.get("/presets")
+def get_presets():
+    from .presets import vehicle_presets
+
+    return vehicle_presets()

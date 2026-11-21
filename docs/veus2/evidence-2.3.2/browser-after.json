@@ -1,0 +1,241 @@
+{
+  "scope": "Warm-up excluded; three fresh Chromium pages. Load includes networkidle 500 ms. Main-thread task fraction is not total browser CPU; JS heap is not process RSS. Selection measures synchronous handler time, not full paint latency. Timer wrappers count pending application callbacks, not browser internals.",
+  "samples": [
+    {
+      "warmup": true,
+      "load_ms": 838,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25136
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 21951
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3127
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 101569,
+      "editor_requests": [
+        "/static/workbench/design-studio.js",
+        "/static/workbench/design-studio.css",
+        "/api/workbench/v2/catalogue",
+        "/api/workbench/v2/presets",
+        "/static/workbench/mark.svg",
+        "/api/workbench/v2/design",
+        "/api/workbench/v2/evaluate"
+      ],
+      "anatomy_heap_bytes": 2355484,
+      "design_heap_bytes": 3527620,
+      "browser_main_thread_idle_task_percent": 0.1732499999999998,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 1.2000000029802322
+    },
+    {
+      "warmup": false,
+      "load_ms": 762,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25136
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 21951
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3127
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 101569,
+      "editor_requests": [
+        "/static/workbench/design-studio.js",
+        "/static/workbench/mark.svg",
+        "/static/workbench/design-studio.css",
+        "/api/workbench/v2/catalogue",
+        "/api/workbench/v2/presets",
+        "/api/workbench/v2/design",
+        "/api/workbench/v2/evaluate"
+      ],
+      "anatomy_heap_bytes": 2342404,
+      "design_heap_bytes": 3506212,
+      "browser_main_thread_idle_task_percent": 0.22983333333333422,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.6000000014901161
+    },
+    {
+      "warmup": false,
+      "load_ms": 690,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25136
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 21951
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3127
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 101569,
+      "editor_requests": [
+        "/static/workbench/design-studio.js",
+        "/static/workbench/design-studio.css",
+        "/api/workbench/v2/catalogue",
+        "/api/workbench/v2/presets",
+        "/static/workbench/mark.svg",
+        "/api/workbench/v2/design",
+        "/api/workbench/v2/evaluate"
+      ],
+      "anatomy_heap_bytes": 2341628,
+      "design_heap_bytes": 3488352,
+      "browser_main_thread_idle_task_percent": 0.10624999999999987,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 0.6000000014901161
+    },
+    {
+      "warmup": false,
+      "load_ms": 613,
+      "first_load_resources": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25136
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 21951
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3127
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11594
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        }
+      ],
+      "first_resource_body_bytes": 101569,
+      "editor_requests": [
+        "/static/workbench/design-studio.js",
+        "/static/workbench/design-studio.css",
+        "/api/workbench/v2/catalogue",
+        "/api/workbench/v2/presets",
+        "/static/workbench/mark.svg",
+        "/api/workbench/v2/design",
+        "/api/workbench/v2/evaluate"
+      ],
+      "anatomy_heap_bytes": 2316800,
+      "design_heap_bytes": 3456712,
+      "browser_main_thread_idle_task_percent": 0.09025000000000005,
+      "idle_background_requests": 0,
+      "static_websockets": 0,
+      "static_pending_timers": {
+        "timeouts": 0,
+        "intervals": 0,
+        "frames": 0
+      },
+      "selection_ms_median": 1
+    }
+  ]
+}

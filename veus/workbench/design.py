@@ -1,7 +1,7 @@
 """Version 2 design snapshots: structural validation, not a compatibility verdict."""
 
 from typing import Literal
-from pydantic import Field
+from pydantic import Field, model_serializer
 from veus.contracts import StrictModel
 
 CATALOGUE_VERSION = "representative-v1"
@@ -103,6 +103,7 @@ class VehicleDesignV2(StrictModel):
         default="Study 01 · representative EV", min_length=1, max_length=100
     )
     classification: Literal["illustrative"] = "illustrative"
+    appearance: Literal["sedan", "performance", "suv"] | None = None
     catalogue_version: Literal["representative-v1"] = CATALOGUE_VERSION
     component_ids: dict[str, str] = Field(
         default_factory=lambda: {
@@ -124,3 +125,11 @@ class VehicleDesignV2(StrictModel):
     gearbox: Gearbox = Field(default_factory=Gearbox)
     operating_point: OperatingPoint = Field(default_factory=OperatingPoint)
     assumptions: Assumptions = Field(default_factory=Assumptions)
+
+    @model_serializer(mode="wrap")
+    def serialize_appearance(self, handler):
+        """Keep historical snapshots byte-equivalent when appearance was not supplied."""
+        values = handler(self)
+        if values.get("appearance") is None:
+            values.pop("appearance", None)
+        return values

@@ -282,9 +282,10 @@ const assert = require("node:assert/strict"),
       .includes("acknowledge"),
   );
   assert.equal(requests.filter((u) => u.endsWith("/api/lab/run")).length, 0);
-  await page.click("#tab-optimization");
-  await page.click('[data-study="aero"]');
-  assert((await page.locator(".equation").innerText()).includes("Cd"));
+  assert.equal(await page.locator("#tab-optimization").count(), 0);
+  await page.goto(base + "/?workspace=optimization");
+  await page.locator("#compare-designs").waitFor({ state: "attached" });
+  assert.equal(new URL(page.url()).searchParams.get("workspace"), "design");
   await page.click("#tab-measurements");
   await page.selectOption("#measurement-recording", "ved-10-1567-full");
   assert(
@@ -299,7 +300,7 @@ const assert = require("node:assert/strict"),
   await page.goBack();
   assert.equal(
     await page.locator("body").getAttribute("data-workspace"),
-    "optimization",
+    "design",
   );
   await page.goForward();
   assert.equal(
@@ -323,7 +324,6 @@ const assert = require("node:assert/strict"),
       "challenges",
       "design",
       "simulation",
-      "optimization",
       "measurements",
     ]) {
       await page.click("#tab-" + key);
@@ -358,7 +358,6 @@ const assert = require("node:assert/strict"),
       "challenges",
       "design",
       "simulation",
-      "optimization",
       "measurements",
     ]) {
       await page.click("#tab-" + key);
@@ -423,7 +422,7 @@ const assert = require("node:assert/strict"),
   const result = {
     status: "PASS",
     screenshots: out,
-    workspaces: 6,
+    workspaces: 5,
     themes: ["light", "dark"],
     widths: [1366, 1024, 820, 390],
     keyboard_components: true,

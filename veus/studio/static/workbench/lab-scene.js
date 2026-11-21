@@ -1,3 +1,8 @@
+import {
+  appearanceOf,
+  sideVehicle,
+  appearances,
+} from "./vehicle-appearance.js";
 // Original fictional VEUS Arrow body. Display transforms only; no simulation equations.
 export const scenarios = {
   constant_speed: [
@@ -31,18 +36,6 @@ export const scenarios = {
     "M2 8h13m-9 4h16M2 16h13",
   ],
 };
-const car = (id, color = "url(#pearl)") => `<g id="${id}">
- <ellipse cx="290" cy="246" rx="234" ry="14" fill="#020711" opacity=".65"/>
- <g fill="#0a111b" stroke="#2e4052" stroke-width="3"><circle cx="154" cy="218" r="40"/><circle cx="433" cy="218" r="40"/></g>
- <g fill="#273747" stroke="#8495a6" stroke-width="3"><circle cx="154" cy="218" r="25"/><circle cx="433" cy="218" r="25"/></g>
- <g stroke="#a4b4c2" stroke-width="3"><path d="M154 194v48m-24-24h48m-41-17l34 34m-34 0l34-34M433 194v48m-24-24h48m-41-17l34 34m-34 0l34-34"/></g>
- <path d="M54 209l12-35 66-13 86-57q10-7 30-7h74q24 1 48 24l42 35 81 20 26 29-7 21h-38q-2-52-41-52t-44 52H198q-3-52-44-52t-44 52H65z" fill="${color}" stroke="#c5d6e3" stroke-width="2"/>
- <path d="M167 157l66-46h80q20 1 38 19l29 27z" fill="#112336" stroke="#657d92" stroke-width="2"/>
- <path d="M278 111l-3 46m-82 17h171l24 36H214" fill="none" stroke="#8295a6" stroke-width="2"/>
- <path d="M77 181l44-7m347 8l31 15" stroke="#74efff" stroke-width="5" stroke-linecap="round"/>
- <path d="M202 217h179" stroke="#45d2d0" stroke-width="3"/><path d="M77 206l25-2m382 3h23" stroke="#263c50" stroke-width="7"/>
- <path d="M129 165l69 3m185-5l53 10" fill="none" stroke="#fff" opacity=".7" stroke-width="3"/>
- <text x="305" y="191" fill="#354d60" font-family="sans-serif" font-size="10" letter-spacing="5">VEUS</text></g>`;
 export function sceneSVG() {
   return `<svg id="lab-scene-svg" viewBox="0 0 1000 380" role="img" aria-label="Original VEUS electric sports car in an illustrative driving scene">
  <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0c192c"/><stop offset="1" stop-color="#294358"/></linearGradient><linearGradient id="pearl" x2=".1" y2="1"><stop stop-color="#f8fcff"/><stop offset=".45" stop-color="#c6d6e2"/><stop offset="1" stop-color="#7d95a9"/></linearGradient><linearGradient id="roadshade" x2="0" y2="1"><stop stop-color="#293745"/><stop offset="1" stop-color="#101d2b"/></linearGradient><pattern id="road-dashes" width="140" height="8" patternUnits="userSpaceOnUse"><path d="M0 4h70" stroke="#b3c8ce" stroke-width="3"/></pattern></defs>
@@ -52,16 +45,28 @@ export function sceneSVG() {
  <g id="lab-horizon" stroke="#547687" stroke-width="2" opacity=".45"><path d="M0 195h1000M0 213h1000"/><path d="M25 195v-55m210 55v-35m320 35v-55m210 55v-35"/></g>
  <g id="lab-road-slope"><path d="M-120 231H1120V470H-120z" fill="url(#roadshade)"/><path d="M-120 234H1120" stroke="#608698" stroke-width="2"/>
  <rect id="lab-road-motion" x="-160" y="311" width="1400" height="8" fill="url(#road-dashes)"/>
- <g id="lab-other-car" transform="translate(530 141) scale(.45)" opacity=".48">${car("lab-reference-car", "#5e788a")}</g>
+ <g id="lab-other-car" transform="translate(530 141) scale(.45)" opacity=".48">${sideVehicle("sedan", "lab-reference-car", "#5e788a")}</g>
  <g id="lab-light" transform="translate(850 104)"><path d="M0 20v128" stroke="#577384" stroke-width="6"/><rect x="-16" y="0" width="32" height="78" rx="10" fill="#101b28" stroke="#567081"/><circle id="lab-light-red" cy="20" r="8" fill="#4a3440"/><circle cy="40" r="7" fill="#4c4937"/><circle id="lab-light-green" cy="60" r="8" fill="#4ae3aa"/></g>
- <g id="lab-hero-car" transform="translate(185 94) scale(.78)">${car("lab-arrow")}</g></g>
+ <g id="lab-hero-car" transform="translate(185 94) scale(.78)">${sideVehicle("performance", "lab-arrow")}</g></g>
  <text id="lab-scene-label" x="24" y="31" fill="#c1e3e8" font-family="sans-serif" font-size="11" letter-spacing="2">VEUS ARROW / ILLUSTRATIVE BODY</text>
  <text id="lab-scene-state" x="24" y="355" fill="#94bdcb" font-family="sans-serif" font-size="11">Run a scenario to load its recorded motion.</text>
  </svg>`;
 }
-export function updateScene(root, sample, time, experiment) {
+export function updateScene(root, sample, time, experiment, design) {
   const $ = (id) => root.querySelector("#" + id);
   if (!$("lab-scene-svg")) return;
+  const appearance = appearanceOf(design),
+    hero = $("lab-hero-car");
+  if (hero.dataset.appearance !== appearance) {
+    hero.innerHTML = sideVehicle(appearance, "lab-arrow");
+    hero.dataset.appearance = appearance;
+  }
+  $("lab-scene-svg").setAttribute(
+    "aria-label",
+    `${appearances[appearance].name} ${appearances[appearance].label} in an illustrative longitudinal scene`,
+  );
+  $("lab-scene-label").textContent =
+    appearances[appearance].name + " / ILLUSTRATIVE BODY";
   const kind = experiment?.kind || "constant_speed",
     position = sample?.position_m ?? 0,
     grade = sample?.grade_percent ?? experiment?.grade_percent ?? 0;

@@ -439,3 +439,61 @@ html[data-theme="dark"] .link-coolant {
 .vehicle-cutaway[data-annotations="false"] .vehicle-drawing-notes {
   display: none;
 }
+/* Three original visual body profiles share the conceptual subsystem renderer. */
+.class-body .body-intake {
+  fill: #1c3447;
+  stroke: #708c9e;
+  stroke-width: 1.5;
+}
+.class-body .body-wing {
+  fill: #445d6b;
+  stroke: #90a9b8;
+  stroke-width: 1.2;
+}
+.class-body .body-led {
+  fill: none;
+  stroke: #64c8d9;
+  stroke-width: 4;
+}
+.class-body .body-seam {
+  fill: none;
+  stroke: #8198a7;
+  stroke-width: 1;
+}
+.vehicle-cutaway[data-appearance="performance"] .vehicle-cabin {
+  opacity: 0.16;
+}
+.vehicle-cutaway[data-body="cutaway"] .class-body {
+  opacity: 0.32;
+  pointer-events: none;
+}
+.vehicle-cutaway[data-body="transparent"] .class-body {
+  opacity: 0.16;
+  pointer-events: none;
+}
+.vehicle-cutaway[data-body="opaque"] .class-body {
+  opacity: 1;
+  pointer-events: none;
+}
+/* X-ray surfaces retain the body silhouette while leaving systems selectable. */
+.vehicle-cutaway[data-body="cutaway"] .class-body {
+  opacity: 1;
+  stroke-width: 2;
+}
+.vehicle-cutaway[data-body="cutaway"] .class-body .body-near {
+  fill-opacity: 0.16;
+}
+.vehicle-cutaway[data-body="cutaway"] .class-body .body-roof {
+  fill-opacity: 0.38;
+}
+.vehicle-cutaway[data-body="cutaway"] .class-body .body-far {
+  fill-opacity: 0.06;
+}
+.class-body .body-glass {
+  fill: var(--glass);
+  fill-opacity: 0.3;
+  stroke: var(--shell-edge);
+}
+.vehicle-cutaway[data-body="opaque"] .class-body .body-near {
+  fill-opacity: 0.94;
+}

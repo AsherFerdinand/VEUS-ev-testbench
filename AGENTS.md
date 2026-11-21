@@ -8,7 +8,7 @@
 - Keep calculations in Python. Reuse `model/`, `sim/`, `testing/` and measurement readiness/import/report services.
 - `veus/lab/` owns coupled experiments and bounded profile/route execution; preserve requested versus achieved demand and explicit source/grade coverage.
 - `veus/workbench/` owns design/catalogue/compatibility/calculation/adapter contracts. Never infer efficiency or electrical parameters from technology labels.
-- `static/workbench/` owns the six-workspace shell and shared original SVG. Use one active design state; load editor code on demand.
+- `static/workbench/` owns the five-workspace shell and shared original SVG. Use one active design state; load editor code on demand.
 - Preserve `/engineering` and its assets until essential replacement workflows pass equivalence. Do not add manual-driving or ADAS features.
 
 ## Environment and commands
@@ -17,7 +17,7 @@
 - Launch: `python -m uvicorn veus.studio.main:app --port 8770`.
 - Targeted checks first; full suite once integrated: `python -m pytest -q`.
 - Clock checks: `node --test tests/browser/replay-controller.test.cjs`.
-- Browser suites: `tests/browser/workbench.cjs`, `drive.cjs`, `replay.cjs`, `guidance.cjs`, `investigation.cjs`, `lab.cjs`.
+- Browser suites: `tests/browser/vehicle-classes.cjs`, `tests/browser/workbench.cjs`, `drive.cjs`, `replay.cjs`, `guidance.cjs`, `investigation.cjs`, `lab.cjs`.
 - Optional browser tooling: set `PLAYWRIGHT_MODULE`, `CHROMIUM_PATH`, `VEUS_URL`, `VEUS_SCREENSHOTS`; legacy suites use `/engineering`.
 - Git's managed proxy may require `git -c protocol.version=0 ...`; preserve proxy/CA/auth settings. Never extract tokens.
 

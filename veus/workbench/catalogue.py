@@ -157,8 +157,197 @@ def catalogue():
             ),
         ),
     ]
+    # Additive fictional VEUS class records: original IDs/values remain immutable.
+    class_definitions = [
+        (
+            "battery-s1",
+            "battery",
+            "S1 representative 60 kWh usable pack",
+            "NMC label only",
+            dict(chemistry="NMC", charge_limit_a=250, discharge_limit_a=700),
+        ),
+        (
+            "motor-s1",
+            "motor",
+            "S1 representative 180 kW peak motor",
+            "PMSM label only",
+            dict(
+                topology="PMSM",
+                rated_power_kw=145,
+                peak_power_kw=180,
+                rated_torque_nm=220,
+                peak_torque_nm=350,
+                maximum_speed_rpm=14000,
+                mass_kg=75,
+            ),
+        ),
+        (
+            "body-s1",
+            "body",
+            "S1 sedan body and residual systems",
+            "Illustrative sedan",
+            dict(
+                mass_excluding_components_kg=1191,
+                drag_coefficient=0.25,
+                rolling_resistance_coefficient=0.011,
+            ),
+        ),
+        (
+            "battery-r1",
+            "battery",
+            "R1 representative 90 kWh usable pack",
+            "NMC label only",
+            dict(
+                chemistry="NMC",
+                gross_capacity_kwh=96,
+                usable_capacity_kwh=90,
+                mass_kg=560,
+                minimum_voltage_v=600,
+                nominal_voltage_v=800,
+                maximum_voltage_v=900,
+                discharge_limit_a=900,
+                charge_limit_a=400,
+                resistance_ohm=0.045,
+            ),
+        ),
+        (
+            "motor-r1",
+            "motor",
+            "R1 representative 450 kW peak motor",
+            "PMSM label only",
+            dict(
+                topology="PMSM",
+                rated_power_kw=300,
+                peak_power_kw=450,
+                rated_torque_nm=500,
+                peak_torque_nm=800,
+                maximum_speed_rpm=18000,
+                mass_kg=100,
+                drive_dc_minimum_v=500,
+                drive_dc_maximum_v=950,
+            ),
+        ),
+        (
+            "inverter-r1",
+            "inverter",
+            "R1 representative 520 kW peak inverter",
+            "SiC label only",
+            dict(
+                technology="SiC",
+                minimum_dc_voltage_v=500,
+                maximum_dc_voltage_v=950,
+                continuous_power_kw=350,
+                peak_power_kw=520,
+                maximum_dc_current_a=1100,
+                mass_kg=40,
+            ),
+        ),
+        (
+            "body-r1",
+            "body",
+            "R1 performance body and residual systems",
+            "Illustrative performance body; no downforce model",
+            dict(
+                mass_excluding_components_kg=1201,
+                drag_coefficient=0.30,
+                frontal_area_m2=2.1,
+                wheel_radius_m=0.335,
+            ),
+        ),
+        (
+            "battery-x1",
+            "battery",
+            "X1 representative 100 kWh usable pack",
+            "LFP label only",
+            dict(
+                chemistry="LFP",
+                gross_capacity_kwh=108,
+                usable_capacity_kwh=100,
+                mass_kg=650,
+                minimum_voltage_v=350,
+                nominal_voltage_v=450,
+                maximum_voltage_v=510,
+                discharge_limit_a=900,
+                charge_limit_a=350,
+            ),
+        ),
+        (
+            "motor-x1",
+            "motor",
+            "X1 representative 250 kW peak motor",
+            "Induction label only",
+            dict(
+                topology="induction",
+                rated_power_kw=180,
+                peak_power_kw=250,
+                rated_torque_nm=350,
+                peak_torque_nm=500,
+                maximum_speed_rpm=14000,
+                mass_kg=95,
+                drive_dc_minimum_v=300,
+                drive_dc_maximum_v=650,
+            ),
+        ),
+        (
+            "inverter-x1",
+            "inverter",
+            "X1 representative 300 kW peak inverter",
+            "Silicon label only",
+            dict(
+                technology="silicon",
+                minimum_dc_voltage_v=300,
+                maximum_dc_voltage_v=650,
+                continuous_power_kw=230,
+                peak_power_kw=300,
+                maximum_dc_current_a=1000,
+                mass_kg=35,
+            ),
+        ),
+        (
+            "body-x1",
+            "body",
+            "X1 SUV body and residual systems",
+            "Illustrative SUV",
+            dict(
+                mass_excluding_components_kg=1621,
+                drag_coefficient=0.32,
+                frontal_area_m2=2.75,
+                wheel_radius_m=0.37,
+                rolling_resistance_coefficient=0.013,
+            ),
+        ),
+        (
+            "charger-wide-22",
+            "charging",
+            "22 kW AC / 150 kW DC representative envelope",
+            "Wide DC voltage; AC onboard and DC offboard",
+            dict(
+                maximum_ac_kw=22,
+                maximum_dc_kw=150,
+                minimum_dc_voltage_v=250,
+                maximum_dc_voltage_v=950,
+                maximum_dc_current_a=450,
+                mass_kg=20,
+            ),
+        ),
+        (
+            "dcdc-wide-2",
+            "dcdc",
+            "Wide-voltage 2 kW representative DC/DC",
+            "HV to 12 V",
+            dict(input_maximum_v=950, mass_kg=4),
+        ),
+        (
+            "gearbox-heavy-9",
+            "gearbox",
+            "9:1 representative high-torque reduction",
+            "Single equivalent drive unit",
+            dict(reduction_ratio=9, maximum_input_torque_nm=900, mass_kg=25),
+        ),
+    ]
+    new_ids = {record[0] for record in class_definitions}
     records = []
-    for id, kind, label, tech, changes in definitions:
+    for id, kind, label, tech, changes in definitions + class_definitions:
         values = d[kind] | changes
         records.append(
             Component(
@@ -167,7 +356,15 @@ def catalogue():
                 label=label,
                 technology=tech,
                 parameters=values,
-                parameter_metadata={k: ParameterEvidence(unit=unit(k)) for k in values},
+                parameter_metadata={
+                    k: ParameterEvidence(
+                        unit=unit(k),
+                        source_id="veus-classes-2.3.2"
+                        if id in new_ids
+                        else "veus-representative",
+                    )
+                    for k in values
+                },
             ).model_dump(mode="json")
         )
     return dict(
@@ -183,7 +380,17 @@ def catalogue():
                 authority="VEUS illustrative design study, not a manufacturer",
                 classification="illustrative",
                 limitations="No commercial datasheet retrieval or manufacturer values. Missing peak durations, phase current data and calibrated efficiency maps remain missing.",
-            )
+            ),
+            dict(
+                id="veus-classes-2.3.2",
+                title="VEUS S1/R1/X1 fictional representative class assumptions",
+                url="/engineering-docs/veus2/design-engineering.md",
+                publication_date="2026-11-21",
+                retrieved_on=None,
+                authority="Original VEUS illustrative design study, not a manufacturer",
+                classification="illustrative",
+                limitations="Fictional class envelopes. No commercial specifications, CAD dimensions, energy-density inference, downforce or performance validation. Original catalogue record values are unchanged.",
+            ),
         ],
         components=records,
     )

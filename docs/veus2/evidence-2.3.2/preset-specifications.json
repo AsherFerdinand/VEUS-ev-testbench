@@ -1,0 +1,1134 @@
+{
+  "schema_version": 1,
+  "catalogue_version": "representative-v1",
+  "presets": [
+    {
+      "id": "s1",
+      "name": "VEUS S1 \u2014 Electric Sedan",
+      "appearance": "sedan",
+      "description": "Efficiency-focused everyday sedan: balanced usable energy, mass and motor output.",
+      "classification": "illustrative",
+      "design": {
+        "schema_version": 2,
+        "name": "VEUS S1 \u2014 Electric Sedan",
+        "classification": "illustrative",
+        "appearance": "sedan",
+        "catalogue_version": "representative-v1",
+        "component_ids": {
+          "battery": "battery-s1",
+          "motor": "motor-s1",
+          "inverter": "inverter-260",
+          "body": "body-s1",
+          "charging": "charger-11",
+          "dcdc": "dcdc-wide-2",
+          "gearbox": "gearbox-9"
+        },
+        "battery": {
+          "chemistry": "NMC",
+          "gross_capacity_kwh": 64.0,
+          "usable_capacity_kwh": 60.0,
+          "mass_kg": 420.0,
+          "minimum_voltage_v": 300.0,
+          "nominal_voltage_v": 400.0,
+          "maximum_voltage_v": 450.0,
+          "discharge_limit_a": 700.0,
+          "charge_limit_a": 250.0,
+          "resistance_ohm": 0.05
+        },
+        "motor": {
+          "topology": "PMSM",
+          "rated_power_kw": 145.0,
+          "peak_power_kw": 180.0,
+          "rated_torque_nm": 220.0,
+          "peak_torque_nm": 350.0,
+          "maximum_speed_rpm": 14000.0,
+          "mass_kg": 75.0,
+          "drive_dc_minimum_v": 250.0,
+          "drive_dc_maximum_v": 500.0,
+          "efficiency_assumption": 0.94,
+          "peak_duration_s": null
+        },
+        "inverter": {
+          "technology": "SiC",
+          "minimum_dc_voltage_v": 250.0,
+          "maximum_dc_voltage_v": 500.0,
+          "continuous_power_kw": 200.0,
+          "peak_power_kw": 260.0,
+          "maximum_dc_current_a": 800.0,
+          "maximum_phase_current_a": null,
+          "mass_kg": 30.0,
+          "efficiency_assumption": 0.97,
+          "peak_duration_s": null
+        },
+        "body": {
+          "mass_excluding_components_kg": 1191.0,
+          "drag_coefficient": 0.25,
+          "frontal_area_m2": 2.2,
+          "rolling_resistance_coefficient": 0.011,
+          "wheel_radius_m": 0.32
+        },
+        "charging": {
+          "maximum_ac_kw": 11.0,
+          "maximum_dc_kw": 100.0,
+          "minimum_dc_voltage_v": 250.0,
+          "maximum_dc_voltage_v": 500.0,
+          "maximum_dc_current_a": 300.0,
+          "mass_kg": 12.0,
+          "efficiency_assumption": 0.93
+        },
+        "dcdc": {
+          "input_minimum_v": 250.0,
+          "input_maximum_v": 950.0,
+          "output_voltage_v": 12.0,
+          "rated_power_kw": 2.0,
+          "mass_kg": 4.0
+        },
+        "gearbox": {
+          "reduction_ratio": 9.0,
+          "mechanical_efficiency": 0.97,
+          "maximum_input_torque_nm": 350.0,
+          "mass_kg": 18.0
+        },
+        "operating_point": {
+          "dc_voltage_v": 400.0,
+          "dc_power_kw": 80.0,
+          "motor_torque_nm": 100.0
+        },
+        "assumptions": {
+          "drivetrain": "single_equivalent_motor",
+          "electrical_architecture": "custom_dc_bus",
+          "thermal_model": "not_modelled",
+          "initial_soc": 0.8,
+          "friction_coefficient": 0.9,
+          "grade_percent": 0.0,
+          "air_density_kg_m3": 1.225,
+          "regen_efficiency": 0.7
+        }
+      },
+      "specifications": {
+        "total_mass_kg": {
+          "value": 1750.0,
+          "unit": "kg",
+          "equation": "m_total = m_body_residual + \u03a3 m_listed_components",
+          "inputs": {
+            "body_and_unlisted_systems_kg": 1191.0,
+            "battery_kg": 420.0,
+            "motor_kg": 75.0,
+            "inverter_kg": 30.0,
+            "charging_kg": 12.0,
+            "dcdc_kg": 4.0,
+            "gearbox_kg": 18.0
+          },
+          "assumptions": [
+            "Residual body includes wheels, thermal plumbing, wiring, BMS and other unlisted systems; excludes each of the six explicit masses."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_energy_kwh": {
+          "value": 64.0,
+          "unit": "kWh",
+          "equation": "E_gross = declared gross energy",
+          "inputs": {
+            "gross_capacity_kwh": 64.0
+          },
+          "assumptions": [
+            "Declared illustrative input, not a capacity test."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_energy_kwh": {
+          "value": 60.0,
+          "unit": "kWh",
+          "equation": "E_usable = declared usable energy",
+          "inputs": {
+            "usable_capacity_kwh": 60.0
+          },
+          "assumptions": [
+            "No cycle/range or temperature adjustment."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_nominal_capacity_ah": {
+          "value": 160.0,
+          "unit": "Ah",
+          "equation": "Q_approx = E_gross[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "gross_capacity_kwh": 64.0,
+            "nominal_voltage_v": 400.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage, not coulomb-counted measured capacity."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_nominal_capacity_ah": {
+          "value": 150.0,
+          "unit": "Ah",
+          "equation": "Q_approx = E_usable[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "usable_capacity_kwh": 60.0,
+            "nominal_voltage_v": 400.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "peak_power_to_weight_kw_per_tonne": {
+          "value": 102.85714285714286,
+          "unit": "kW/t",
+          "equation": "P_specific = P_motor_peak[kW] / (m_total[kg]/1000)",
+          "inputs": {
+            "peak_power_kw": 180.0,
+            "mass_kg": 1750.0
+          },
+          "assumptions": [
+            "Motor nameplate ratio; not achieved acceleration or feasible continuous power."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "required_dc_current_a": {
+          "value": 200.0,
+          "unit": "A",
+          "equation": "I_DC = P_DC[kW] \u00d7 1000 / V_DC[V]",
+          "inputs": {
+            "dc_voltage_v": 400.0,
+            "dc_power_kw": 80.0,
+            "motor_torque_nm": 100.0
+          },
+          "assumptions": [
+            "Positive DC input power at this defined operating point; no battery sag or auxiliary-load estimate."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "wheel_torque_nm": {
+          "value": 873.0,
+          "unit": "N\u00b7m",
+          "equation": "T_wheel = T_motor \u00d7 reduction_ratio \u00d7 \u03b7_gear",
+          "inputs": {
+            "motor_torque_nm": 100.0,
+            "reduction_ratio": 9.0,
+            "mechanical_efficiency": 0.97
+          },
+          "assumptions": [
+            "Idealized combined driven-wheel torque before tyre traction limits; constant explicit mechanical efficiency."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "drag_area_m2": {
+          "value": 0.55,
+          "unit": "m\u00b2",
+          "equation": "CdA = Cd \u00d7 A",
+          "inputs": {
+            "drag_coefficient": 0.25,
+            "frontal_area_m2": 2.2
+          },
+          "assumptions": [
+            "Declared drag coefficient and frontal area; no coast-down/wind-tunnel validation."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        }
+      },
+      "compatibility_status": "insufficient_data",
+      "checks": [
+        {
+          "id": "catalogue_references",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Component IDs match their declared kinds and catalogue version; custom snapshots retain explicit resolved values."
+        },
+        {
+          "id": "battery_energy",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Usable energy must not exceed gross energy."
+        },
+        {
+          "id": "battery_voltage_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Battery minimum <= nominal <= maximum voltage is required."
+        },
+        {
+          "id": "battery_inverter_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter DC input envelope must contain the complete declared battery range."
+        },
+        {
+          "id": "motor_drive_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor drive DC envelope is a declared drive input range, not motor phase voltage."
+        },
+        {
+          "id": "motor_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor peak power/torque must be at least their rated values; these maxima need not coincide."
+        },
+        {
+          "id": "inverter_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter peak AC output rating must be at least its continuous AC output rating."
+        },
+        {
+          "id": "rated_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor mechanical rated power / assumed motor efficiency must fit inverter continuous AC output power."
+        },
+        {
+          "id": "peak_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Assumed motor electrical peak demand must fit inverter peak AC output rating; duty duration is assessed separately."
+        },
+        {
+          "id": "gearbox_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Gearbox input rating is compared with motor peak input torque, not multiplied wheel torque."
+        },
+        {
+          "id": "charging_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Declared charging DC envelope must contain battery range; connector/protocol/insulation compatibility is not established."
+        },
+        {
+          "id": "dcdc_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC/DC input range must contain the battery DC range."
+        },
+        {
+          "id": "operating_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "The defined DC operating-point voltage must lie within battery and inverter limits."
+        },
+        {
+          "id": "operating_discharge_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Required current at the explicitly defined positive-discharge DC operating point must fit the battery discharge limit."
+        },
+        {
+          "id": "inverter_dc_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC operating current is compared with inverter DC current rating; DC and phase current must not be equated."
+        },
+        {
+          "id": "operating_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At the defined inverter DC input point, assumed AC output power must not exceed its peak AC output rating; this does not establish continuous duty."
+        },
+        {
+          "id": "operating_motor_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Illustrative torque for the wheel-torque calculation must fit the motor torque envelope; no speed point is implied."
+        },
+        {
+          "id": "charging_acceptance",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At nominal voltage, declared DC peak charging power requires 250.000 A; acceptance is limited to min(battery, charger current), not evidence of attainable sustained charge power."
+        },
+        {
+          "id": "peak_duration",
+          "status": "insufficient_data",
+          "explanation": "Motor and inverter peak-rating durations are unknown. Continuous thermal/duty compatibility cannot be claimed."
+        },
+        {
+          "id": "phase_current",
+          "status": "insufficient_data",
+          "explanation": "Motor torque-current/back-EMF/control maps are unavailable; inverter phase current alone cannot establish motor phase compatibility."
+        },
+        {
+          "id": "physical_conditions",
+          "status": "warning",
+          "explanation": "Illustrative nameplate checks do not establish thermal, mechanical packaging, cell safety or production compatibility."
+        },
+        {
+          "id": "mass_accounting",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Body mass explicitly excludes the six listed component masses, which are each added exactly once. Unlisted systems are included in body/residual mass."
+        }
+      ],
+      "simulation_readiness": {
+        "status": "requires_acknowledgement",
+        "ready": false,
+        "missing_inputs": [],
+        "blocking_checks": [],
+        "required_acknowledgements": [
+          "illustrative_parameters",
+          "constant_efficiency",
+          "constant_ocv",
+          "longitudinal_only",
+          "unmodelled_thermal_charging"
+        ],
+        "scope": "Preparation for illustrative longitudinal mechanical dynamics plus a separate retained energy battery; no experiment is executed.",
+        "limitations": [
+          "No phase-current motor/inverter map, continuous/peak duty or thermal prediction.",
+          "A single fixed reduction is supplied explicitly; no default gear or vehicle substitution.",
+          "Battery maximum/minimum voltage labels do not replace EnergyBattery's fixed OCV and internal voltage-window assumptions.",
+          "The adapter does not couple battery/inverter power limits back into a mechanical experiment; a verified runner integration is still required.",
+          "Chemistry, technology, charging specifications, tariffs and safety assertions are not simulated."
+        ]
+      },
+      "limitations": [
+        "Original fictional VEUS vehicle; not manufacturer specifications or physical validation.",
+        "Motor output is declared peak shaft power; default Lab experiments use continuous ratings.",
+        "Packaging/body illustration is not CAD or derived from battery capacity."
+      ]
+    },
+    {
+      "id": "r1",
+      "name": "VEUS R1 \u2014 Performance EV",
+      "appearance": "performance",
+      "description": "Low, wide fictional performance EV with greater declared motor output. No downforce or top-speed claim.",
+      "classification": "illustrative",
+      "design": {
+        "schema_version": 2,
+        "name": "VEUS R1 \u2014 Performance EV",
+        "classification": "illustrative",
+        "appearance": "performance",
+        "catalogue_version": "representative-v1",
+        "component_ids": {
+          "battery": "battery-r1",
+          "motor": "motor-r1",
+          "inverter": "inverter-r1",
+          "body": "body-r1",
+          "charging": "charger-wide-22",
+          "dcdc": "dcdc-wide-2",
+          "gearbox": "gearbox-heavy-9"
+        },
+        "battery": {
+          "chemistry": "NMC",
+          "gross_capacity_kwh": 96.0,
+          "usable_capacity_kwh": 90.0,
+          "mass_kg": 560.0,
+          "minimum_voltage_v": 600.0,
+          "nominal_voltage_v": 800.0,
+          "maximum_voltage_v": 900.0,
+          "discharge_limit_a": 900.0,
+          "charge_limit_a": 400.0,
+          "resistance_ohm": 0.045
+        },
+        "motor": {
+          "topology": "PMSM",
+          "rated_power_kw": 300.0,
+          "peak_power_kw": 450.0,
+          "rated_torque_nm": 500.0,
+          "peak_torque_nm": 800.0,
+          "maximum_speed_rpm": 18000.0,
+          "mass_kg": 100.0,
+          "drive_dc_minimum_v": 500.0,
+          "drive_dc_maximum_v": 950.0,
+          "efficiency_assumption": 0.94,
+          "peak_duration_s": null
+        },
+        "inverter": {
+          "technology": "SiC",
+          "minimum_dc_voltage_v": 500.0,
+          "maximum_dc_voltage_v": 950.0,
+          "continuous_power_kw": 350.0,
+          "peak_power_kw": 520.0,
+          "maximum_dc_current_a": 1100.0,
+          "maximum_phase_current_a": null,
+          "mass_kg": 40.0,
+          "efficiency_assumption": 0.97,
+          "peak_duration_s": null
+        },
+        "body": {
+          "mass_excluding_components_kg": 1201.0,
+          "drag_coefficient": 0.3,
+          "frontal_area_m2": 2.1,
+          "rolling_resistance_coefficient": 0.012,
+          "wheel_radius_m": 0.335
+        },
+        "charging": {
+          "maximum_ac_kw": 22.0,
+          "maximum_dc_kw": 150.0,
+          "minimum_dc_voltage_v": 250.0,
+          "maximum_dc_voltage_v": 950.0,
+          "maximum_dc_current_a": 450.0,
+          "mass_kg": 20.0,
+          "efficiency_assumption": 0.93
+        },
+        "dcdc": {
+          "input_minimum_v": 250.0,
+          "input_maximum_v": 950.0,
+          "output_voltage_v": 12.0,
+          "rated_power_kw": 2.0,
+          "mass_kg": 4.0
+        },
+        "gearbox": {
+          "reduction_ratio": 9.0,
+          "mechanical_efficiency": 0.97,
+          "maximum_input_torque_nm": 900.0,
+          "mass_kg": 25.0
+        },
+        "operating_point": {
+          "dc_voltage_v": 800.0,
+          "dc_power_kw": 80.0,
+          "motor_torque_nm": 100.0
+        },
+        "assumptions": {
+          "drivetrain": "single_equivalent_motor",
+          "electrical_architecture": "custom_dc_bus",
+          "thermal_model": "not_modelled",
+          "initial_soc": 0.8,
+          "friction_coefficient": 0.9,
+          "grade_percent": 0.0,
+          "air_density_kg_m3": 1.225,
+          "regen_efficiency": 0.7
+        }
+      },
+      "specifications": {
+        "total_mass_kg": {
+          "value": 1950.0,
+          "unit": "kg",
+          "equation": "m_total = m_body_residual + \u03a3 m_listed_components",
+          "inputs": {
+            "body_and_unlisted_systems_kg": 1201.0,
+            "battery_kg": 560.0,
+            "motor_kg": 100.0,
+            "inverter_kg": 40.0,
+            "charging_kg": 20.0,
+            "dcdc_kg": 4.0,
+            "gearbox_kg": 25.0
+          },
+          "assumptions": [
+            "Residual body includes wheels, thermal plumbing, wiring, BMS and other unlisted systems; excludes each of the six explicit masses."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_energy_kwh": {
+          "value": 96.0,
+          "unit": "kWh",
+          "equation": "E_gross = declared gross energy",
+          "inputs": {
+            "gross_capacity_kwh": 96.0
+          },
+          "assumptions": [
+            "Declared illustrative input, not a capacity test."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_energy_kwh": {
+          "value": 90.0,
+          "unit": "kWh",
+          "equation": "E_usable = declared usable energy",
+          "inputs": {
+            "usable_capacity_kwh": 90.0
+          },
+          "assumptions": [
+            "No cycle/range or temperature adjustment."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_nominal_capacity_ah": {
+          "value": 120.0,
+          "unit": "Ah",
+          "equation": "Q_approx = E_gross[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "gross_capacity_kwh": 96.0,
+            "nominal_voltage_v": 800.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage, not coulomb-counted measured capacity."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_nominal_capacity_ah": {
+          "value": 112.5,
+          "unit": "Ah",
+          "equation": "Q_approx = E_usable[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "usable_capacity_kwh": 90.0,
+            "nominal_voltage_v": 800.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "peak_power_to_weight_kw_per_tonne": {
+          "value": 230.76923076923077,
+          "unit": "kW/t",
+          "equation": "P_specific = P_motor_peak[kW] / (m_total[kg]/1000)",
+          "inputs": {
+            "peak_power_kw": 450.0,
+            "mass_kg": 1950.0
+          },
+          "assumptions": [
+            "Motor nameplate ratio; not achieved acceleration or feasible continuous power."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "required_dc_current_a": {
+          "value": 100.0,
+          "unit": "A",
+          "equation": "I_DC = P_DC[kW] \u00d7 1000 / V_DC[V]",
+          "inputs": {
+            "dc_voltage_v": 800.0,
+            "dc_power_kw": 80.0,
+            "motor_torque_nm": 100.0
+          },
+          "assumptions": [
+            "Positive DC input power at this defined operating point; no battery sag or auxiliary-load estimate."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "wheel_torque_nm": {
+          "value": 873.0,
+          "unit": "N\u00b7m",
+          "equation": "T_wheel = T_motor \u00d7 reduction_ratio \u00d7 \u03b7_gear",
+          "inputs": {
+            "motor_torque_nm": 100.0,
+            "reduction_ratio": 9.0,
+            "mechanical_efficiency": 0.97
+          },
+          "assumptions": [
+            "Idealized combined driven-wheel torque before tyre traction limits; constant explicit mechanical efficiency."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "drag_area_m2": {
+          "value": 0.63,
+          "unit": "m\u00b2",
+          "equation": "CdA = Cd \u00d7 A",
+          "inputs": {
+            "drag_coefficient": 0.3,
+            "frontal_area_m2": 2.1
+          },
+          "assumptions": [
+            "Declared drag coefficient and frontal area; no coast-down/wind-tunnel validation."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        }
+      },
+      "compatibility_status": "insufficient_data",
+      "checks": [
+        {
+          "id": "catalogue_references",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Component IDs match their declared kinds and catalogue version; custom snapshots retain explicit resolved values."
+        },
+        {
+          "id": "battery_energy",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Usable energy must not exceed gross energy."
+        },
+        {
+          "id": "battery_voltage_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Battery minimum <= nominal <= maximum voltage is required."
+        },
+        {
+          "id": "battery_inverter_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter DC input envelope must contain the complete declared battery range."
+        },
+        {
+          "id": "motor_drive_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor drive DC envelope is a declared drive input range, not motor phase voltage."
+        },
+        {
+          "id": "motor_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor peak power/torque must be at least their rated values; these maxima need not coincide."
+        },
+        {
+          "id": "inverter_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter peak AC output rating must be at least its continuous AC output rating."
+        },
+        {
+          "id": "rated_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor mechanical rated power / assumed motor efficiency must fit inverter continuous AC output power."
+        },
+        {
+          "id": "peak_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Assumed motor electrical peak demand must fit inverter peak AC output rating; duty duration is assessed separately."
+        },
+        {
+          "id": "gearbox_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Gearbox input rating is compared with motor peak input torque, not multiplied wheel torque."
+        },
+        {
+          "id": "charging_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Declared charging DC envelope must contain battery range; connector/protocol/insulation compatibility is not established."
+        },
+        {
+          "id": "dcdc_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC/DC input range must contain the battery DC range."
+        },
+        {
+          "id": "operating_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "The defined DC operating-point voltage must lie within battery and inverter limits."
+        },
+        {
+          "id": "operating_discharge_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Required current at the explicitly defined positive-discharge DC operating point must fit the battery discharge limit."
+        },
+        {
+          "id": "inverter_dc_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC operating current is compared with inverter DC current rating; DC and phase current must not be equated."
+        },
+        {
+          "id": "operating_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At the defined inverter DC input point, assumed AC output power must not exceed its peak AC output rating; this does not establish continuous duty."
+        },
+        {
+          "id": "operating_motor_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Illustrative torque for the wheel-torque calculation must fit the motor torque envelope; no speed point is implied."
+        },
+        {
+          "id": "charging_acceptance",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At nominal voltage, declared DC peak charging power requires 187.500 A; acceptance is limited to min(battery, charger current), not evidence of attainable sustained charge power."
+        },
+        {
+          "id": "peak_duration",
+          "status": "insufficient_data",
+          "explanation": "Motor and inverter peak-rating durations are unknown. Continuous thermal/duty compatibility cannot be claimed."
+        },
+        {
+          "id": "phase_current",
+          "status": "insufficient_data",
+          "explanation": "Motor torque-current/back-EMF/control maps are unavailable; inverter phase current alone cannot establish motor phase compatibility."
+        },
+        {
+          "id": "physical_conditions",
+          "status": "warning",
+          "explanation": "Illustrative nameplate checks do not establish thermal, mechanical packaging, cell safety or production compatibility."
+        },
+        {
+          "id": "mass_accounting",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Body mass explicitly excludes the six listed component masses, which are each added exactly once. Unlisted systems are included in body/residual mass."
+        }
+      ],
+      "simulation_readiness": {
+        "status": "requires_acknowledgement",
+        "ready": false,
+        "missing_inputs": [],
+        "blocking_checks": [],
+        "required_acknowledgements": [
+          "illustrative_parameters",
+          "constant_efficiency",
+          "constant_ocv",
+          "longitudinal_only",
+          "unmodelled_thermal_charging"
+        ],
+        "scope": "Preparation for illustrative longitudinal mechanical dynamics plus a separate retained energy battery; no experiment is executed.",
+        "limitations": [
+          "No phase-current motor/inverter map, continuous/peak duty or thermal prediction.",
+          "A single fixed reduction is supplied explicitly; no default gear or vehicle substitution.",
+          "Battery maximum/minimum voltage labels do not replace EnergyBattery's fixed OCV and internal voltage-window assumptions.",
+          "The adapter does not couple battery/inverter power limits back into a mechanical experiment; a verified runner integration is still required.",
+          "Chemistry, technology, charging specifications, tariffs and safety assertions are not simulated."
+        ]
+      },
+      "limitations": [
+        "Original fictional VEUS vehicle; not manufacturer specifications or physical validation.",
+        "Motor output is declared peak shaft power; default Lab experiments use continuous ratings.",
+        "Packaging/body illustration is not CAD or derived from battery capacity."
+      ]
+    },
+    {
+      "id": "x1",
+      "name": "VEUS X1 \u2014 Family SUV",
+      "appearance": "suv",
+      "description": "Larger fictional utility EV: more usable battery energy and greater declared body and pack mass.",
+      "classification": "illustrative",
+      "design": {
+        "schema_version": 2,
+        "name": "VEUS X1 \u2014 Family SUV",
+        "classification": "illustrative",
+        "appearance": "suv",
+        "catalogue_version": "representative-v1",
+        "component_ids": {
+          "battery": "battery-x1",
+          "motor": "motor-x1",
+          "inverter": "inverter-x1",
+          "body": "body-x1",
+          "charging": "charger-wide-22",
+          "dcdc": "dcdc-wide-2",
+          "gearbox": "gearbox-heavy-9"
+        },
+        "battery": {
+          "chemistry": "LFP",
+          "gross_capacity_kwh": 108.0,
+          "usable_capacity_kwh": 100.0,
+          "mass_kg": 650.0,
+          "minimum_voltage_v": 350.0,
+          "nominal_voltage_v": 450.0,
+          "maximum_voltage_v": 510.0,
+          "discharge_limit_a": 900.0,
+          "charge_limit_a": 350.0,
+          "resistance_ohm": 0.05
+        },
+        "motor": {
+          "topology": "induction",
+          "rated_power_kw": 180.0,
+          "peak_power_kw": 250.0,
+          "rated_torque_nm": 350.0,
+          "peak_torque_nm": 500.0,
+          "maximum_speed_rpm": 14000.0,
+          "mass_kg": 95.0,
+          "drive_dc_minimum_v": 300.0,
+          "drive_dc_maximum_v": 650.0,
+          "efficiency_assumption": 0.94,
+          "peak_duration_s": null
+        },
+        "inverter": {
+          "technology": "silicon",
+          "minimum_dc_voltage_v": 300.0,
+          "maximum_dc_voltage_v": 650.0,
+          "continuous_power_kw": 230.0,
+          "peak_power_kw": 300.0,
+          "maximum_dc_current_a": 1000.0,
+          "maximum_phase_current_a": null,
+          "mass_kg": 35.0,
+          "efficiency_assumption": 0.97,
+          "peak_duration_s": null
+        },
+        "body": {
+          "mass_excluding_components_kg": 1621.0,
+          "drag_coefficient": 0.32,
+          "frontal_area_m2": 2.75,
+          "rolling_resistance_coefficient": 0.013,
+          "wheel_radius_m": 0.37
+        },
+        "charging": {
+          "maximum_ac_kw": 22.0,
+          "maximum_dc_kw": 150.0,
+          "minimum_dc_voltage_v": 250.0,
+          "maximum_dc_voltage_v": 950.0,
+          "maximum_dc_current_a": 450.0,
+          "mass_kg": 20.0,
+          "efficiency_assumption": 0.93
+        },
+        "dcdc": {
+          "input_minimum_v": 250.0,
+          "input_maximum_v": 950.0,
+          "output_voltage_v": 12.0,
+          "rated_power_kw": 2.0,
+          "mass_kg": 4.0
+        },
+        "gearbox": {
+          "reduction_ratio": 9.0,
+          "mechanical_efficiency": 0.97,
+          "maximum_input_torque_nm": 900.0,
+          "mass_kg": 25.0
+        },
+        "operating_point": {
+          "dc_voltage_v": 450.0,
+          "dc_power_kw": 80.0,
+          "motor_torque_nm": 100.0
+        },
+        "assumptions": {
+          "drivetrain": "single_equivalent_motor",
+          "electrical_architecture": "custom_dc_bus",
+          "thermal_model": "not_modelled",
+          "initial_soc": 0.8,
+          "friction_coefficient": 0.9,
+          "grade_percent": 0.0,
+          "air_density_kg_m3": 1.225,
+          "regen_efficiency": 0.7
+        }
+      },
+      "specifications": {
+        "total_mass_kg": {
+          "value": 2450.0,
+          "unit": "kg",
+          "equation": "m_total = m_body_residual + \u03a3 m_listed_components",
+          "inputs": {
+            "body_and_unlisted_systems_kg": 1621.0,
+            "battery_kg": 650.0,
+            "motor_kg": 95.0,
+            "inverter_kg": 35.0,
+            "charging_kg": 20.0,
+            "dcdc_kg": 4.0,
+            "gearbox_kg": 25.0
+          },
+          "assumptions": [
+            "Residual body includes wheels, thermal plumbing, wiring, BMS and other unlisted systems; excludes each of the six explicit masses."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_energy_kwh": {
+          "value": 108.0,
+          "unit": "kWh",
+          "equation": "E_gross = declared gross energy",
+          "inputs": {
+            "gross_capacity_kwh": 108.0
+          },
+          "assumptions": [
+            "Declared illustrative input, not a capacity test."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_energy_kwh": {
+          "value": 100.0,
+          "unit": "kWh",
+          "equation": "E_usable = declared usable energy",
+          "inputs": {
+            "usable_capacity_kwh": 100.0
+          },
+          "assumptions": [
+            "No cycle/range or temperature adjustment."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "gross_nominal_capacity_ah": {
+          "value": 240.0,
+          "unit": "Ah",
+          "equation": "Q_approx = E_gross[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "gross_capacity_kwh": 108.0,
+            "nominal_voltage_v": 450.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage, not coulomb-counted measured capacity."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "usable_nominal_capacity_ah": {
+          "value": 222.22222222222223,
+          "unit": "Ah",
+          "equation": "Q_approx = E_usable[kWh] \u00d7 1000 / V_nominal[V]",
+          "inputs": {
+            "usable_capacity_kwh": 100.0,
+            "nominal_voltage_v": 450.0
+          },
+          "assumptions": [
+            "Approximation at nominal voltage."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "peak_power_to_weight_kw_per_tonne": {
+          "value": 102.04081632653062,
+          "unit": "kW/t",
+          "equation": "P_specific = P_motor_peak[kW] / (m_total[kg]/1000)",
+          "inputs": {
+            "peak_power_kw": 250.0,
+            "mass_kg": 2450.0
+          },
+          "assumptions": [
+            "Motor nameplate ratio; not achieved acceleration or feasible continuous power."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "required_dc_current_a": {
+          "value": 177.77777777777777,
+          "unit": "A",
+          "equation": "I_DC = P_DC[kW] \u00d7 1000 / V_DC[V]",
+          "inputs": {
+            "dc_voltage_v": 450.0,
+            "dc_power_kw": 80.0,
+            "motor_torque_nm": 100.0
+          },
+          "assumptions": [
+            "Positive DC input power at this defined operating point; no battery sag or auxiliary-load estimate."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "wheel_torque_nm": {
+          "value": 873.0,
+          "unit": "N\u00b7m",
+          "equation": "T_wheel = T_motor \u00d7 reduction_ratio \u00d7 \u03b7_gear",
+          "inputs": {
+            "motor_torque_nm": 100.0,
+            "reduction_ratio": 9.0,
+            "mechanical_efficiency": 0.97
+          },
+          "assumptions": [
+            "Idealized combined driven-wheel torque before tyre traction limits; constant explicit mechanical efficiency."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        },
+        "drag_area_m2": {
+          "value": 0.88,
+          "unit": "m\u00b2",
+          "equation": "CdA = Cd \u00d7 A",
+          "inputs": {
+            "drag_coefficient": 0.32,
+            "frontal_area_m2": 2.75
+          },
+          "assumptions": [
+            "Declared drag coefficient and frontal area; no coast-down/wind-tunnel validation."
+          ],
+          "classification": "derived from illustrative parameters",
+          "unavailable_reason": null
+        }
+      },
+      "compatibility_status": "insufficient_data",
+      "checks": [
+        {
+          "id": "catalogue_references",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Component IDs match their declared kinds and catalogue version; custom snapshots retain explicit resolved values."
+        },
+        {
+          "id": "battery_energy",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Usable energy must not exceed gross energy."
+        },
+        {
+          "id": "battery_voltage_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Battery minimum <= nominal <= maximum voltage is required."
+        },
+        {
+          "id": "battery_inverter_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter DC input envelope must contain the complete declared battery range."
+        },
+        {
+          "id": "motor_drive_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor drive DC envelope is a declared drive input range, not motor phase voltage."
+        },
+        {
+          "id": "motor_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor peak power/torque must be at least their rated values; these maxima need not coincide."
+        },
+        {
+          "id": "inverter_peak_order",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Inverter peak AC output rating must be at least its continuous AC output rating."
+        },
+        {
+          "id": "rated_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Motor mechanical rated power / assumed motor efficiency must fit inverter continuous AC output power."
+        },
+        {
+          "id": "peak_motor_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Assumed motor electrical peak demand must fit inverter peak AC output rating; duty duration is assessed separately."
+        },
+        {
+          "id": "gearbox_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Gearbox input rating is compared with motor peak input torque, not multiplied wheel torque."
+        },
+        {
+          "id": "charging_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Declared charging DC envelope must contain battery range; connector/protocol/insulation compatibility is not established."
+        },
+        {
+          "id": "dcdc_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC/DC input range must contain the battery DC range."
+        },
+        {
+          "id": "operating_voltage",
+          "status": "compatible_within_checked_limits",
+          "explanation": "The defined DC operating-point voltage must lie within battery and inverter limits."
+        },
+        {
+          "id": "operating_discharge_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Required current at the explicitly defined positive-discharge DC operating point must fit the battery discharge limit."
+        },
+        {
+          "id": "inverter_dc_current",
+          "status": "compatible_within_checked_limits",
+          "explanation": "DC operating current is compared with inverter DC current rating; DC and phase current must not be equated."
+        },
+        {
+          "id": "operating_inverter_power",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At the defined inverter DC input point, assumed AC output power must not exceed its peak AC output rating; this does not establish continuous duty."
+        },
+        {
+          "id": "operating_motor_torque",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Illustrative torque for the wheel-torque calculation must fit the motor torque envelope; no speed point is implied."
+        },
+        {
+          "id": "charging_acceptance",
+          "status": "compatible_within_checked_limits",
+          "explanation": "At nominal voltage, declared DC peak charging power requires 333.333 A; acceptance is limited to min(battery, charger current), not evidence of attainable sustained charge power."
+        },
+        {
+          "id": "peak_duration",
+          "status": "insufficient_data",
+          "explanation": "Motor and inverter peak-rating durations are unknown. Continuous thermal/duty compatibility cannot be claimed."
+        },
+        {
+          "id": "phase_current",
+          "status": "insufficient_data",
+          "explanation": "Motor torque-current/back-EMF/control maps are unavailable; inverter phase current alone cannot establish motor phase compatibility."
+        },
+        {
+          "id": "physical_conditions",
+          "status": "warning",
+          "explanation": "Illustrative nameplate checks do not establish thermal, mechanical packaging, cell safety or production compatibility."
+        },
+        {
+          "id": "mass_accounting",
+          "status": "compatible_within_checked_limits",
+          "explanation": "Body mass explicitly excludes the six listed component masses, which are each added exactly once. Unlisted systems are included in body/residual mass."
+        }
+      ],
+      "simulation_readiness": {
+        "status": "requires_acknowledgement",
+        "ready": false,
+        "missing_inputs": [],
+        "blocking_checks": [],
+        "required_acknowledgements": [
+          "illustrative_parameters",
+          "constant_efficiency",
+          "constant_ocv",
+          "longitudinal_only",
+          "unmodelled_thermal_charging"
+        ],
+        "scope": "Preparation for illustrative longitudinal mechanical dynamics plus a separate retained energy battery; no experiment is executed.",
+        "limitations": [
+          "No phase-current motor/inverter map, continuous/peak duty or thermal prediction.",
+          "A single fixed reduction is supplied explicitly; no default gear or vehicle substitution.",
+          "Battery maximum/minimum voltage labels do not replace EnergyBattery's fixed OCV and internal voltage-window assumptions.",
+          "The adapter does not couple battery/inverter power limits back into a mechanical experiment; a verified runner integration is still required.",
+          "Chemistry, technology, charging specifications, tariffs and safety assertions are not simulated."
+        ]
+      },
+      "limitations": [
+        "Original fictional VEUS vehicle; not manufacturer specifications or physical validation.",
+        "Motor output is declared peak shaft power; default Lab experiments use continuous ratings.",
+        "Packaging/body illustration is not CAD or derived from battery capacity."
+      ]
+    }
+  ]
+}

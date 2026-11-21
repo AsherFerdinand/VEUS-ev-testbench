@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "classes": [
+    "sedan",
+    "performance",
+    "suv"
+  ],
+  "shared_identity": true,
+  "legacy_record_preserved": true,
+  "explicit_preset_drafts": true,
+  "customization_persistence_exports_imports": true,
+  "single_motor": true,
+  "distinct_body_geometry": true,
+  "runs": {
+    "s1": "685b586b94ce058b8cff5ac8f829883d457bfcc1f337470d53e366b5ddb1ebf0",
+    "r1": "698c80b680e21404a22a7a978d4fb94b46430f6102abcdc36e54a73c7c5b75fc",
+    "x1": "22a5837339873bb82fab7da0a758e7538df92249b96f32d32794a404a75d7b86"
+  },
+  "widths": [
+    1440,
+    1024,
+    820,
+    390
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "optimization_redirect": true,
+  "measurements_development_label": true,
+  "page_errors": []
+}

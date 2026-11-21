@@ -1,12 +1,13 @@
 # Current checkpoint
 
-- Milestone: **VEUS 2.3.1 cockpit redesign complete**, feature branch only; no main merge or stable release.
-- Branch: `feature/veus-2.0-engineering-workbench`; baseline `e6522a3` (2.3).
-- UI: five scenario cards, original lightweight VEUS Arrow SVG, achieved-distance road motion, configured-gradient mountains, explicitly illustrative overtaking reference and red-at-zero braking-light event.
-- Instrumentation: fitted speed arc/digital speed, SOC-fill battery with signed power/constraint colours and replay-driven energy flow; exactly three synchronized cached telemetry plots; Play/Pause, Stop and seek.
-- Configuration: existing vehicle/conditions/acknowledgements in collapsible settings; separate Profile/Route mode preserves sources, CSV imports, coverage safeguards and frozen exports. No default/physics-contract changes.
-- Integrity: all five golden experiment hashes match 2.3 exactly. `veus/lab/`, physics/model modules, dependency manifests, source datasets and numerical results are unchanged.
-- Verification: 267 Python tests and 9 clock tests pass. Browser regression results, comparable limited measurements and exactly three captures: `veus2/evidence-2.3.1/README.md`.
-- Workflow: one implementation agent (coordinator only), focused UI checks then one full Python checkpoint; no external research or new dependencies. Obsolete signal/rate controls, cutaway rendering and sidebar skin replaced.
-- Limits: original fictional body/scenery do not add lateral, overtaking-safety or traffic-light-control physics. Constant OCV/efficiencies, no auxiliaries/thermal/ageing/phase-current maps; Euler-position O(dt) and existing source limitations persist. Physical validation remains **INCONCLUSIVE**.
-- Stop after verified/pushed 2.3.1. Do not begin 2.4 without a new request.
+- Milestone: **VEUS 2.3.2 vehicle classes complete**, feature branch only; no main merge/release or 2.3.3/2.4 work.
+- Branch: `feature/veus-2.0-engineering-workbench`; baseline `0345540`.
+- Vehicles: fictional S1 sedan, R1 performance and X1 SUV; original distinct isometric bodies, shared Lab side identity, illustrative segmented packaging and one equivalent motor. Presets use 60/90/100 usable kWh, 180/450/250 peak kW and 1750/1950/2450 kg. Continuous ratings govern normal Lab runs.
+- Configuration: explicit preset previews and unsaved-draft application protect saved records; component edits, eight compact specifications, default-preset bars, saved comparisons, persistence and JSON workflows remain. Appearance-only changes preserve all numerical inputs.
+- Contracts: optional appearance persists if supplied, omitted when absent/null; old designs use documented R1/performance visual fallback. Catalogue adds14 illustrative records, retaining original13 unchanged. Preset API exposes complete snapshots and existing checks/readiness.
+- Navigation: five entries; old Optimization URLs migrate to Design Studio comparisons. Measurements is visibly under development; legacy `/engineering` and data safeguards remain.
+- Integrity: coupled models, equations, datasets and dependencies unchanged. Historical default evaluation/run/export fingerprints preserved; deterministic Lab runs accept all3 classes.
+- Verification: **275 Python tests, 9 clock tests, 7 browser suites pass**. Actual screenshots and limited comparable metrics: `veus2/evidence-2.3.2/README.md`.
+- Workflow: coordinator handled shared art/UI/navigation/integration; one independent scoped backend agent handled presets/schema/backward-compatibility tests, no nested delegation. One full Python checkpoint, focused UI iterations, no external research.
+- Limits: visual packaging is not CAD or inferred from kWh/kW; phase-current/duty/thermal evidence remains incomplete. No AWD/downforce, range, top-speed or charging-time prediction. Physical validation remains **INCONCLUSIVE**.
+- Stop after verified/pushed 2.3.2. Await a new request before further milestones.

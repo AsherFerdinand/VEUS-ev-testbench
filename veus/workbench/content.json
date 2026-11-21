@@ -203,7 +203,7 @@
       "physics": "Usable battery energy must supply road work, drivetrain losses and auxiliary demand. Drag grows with speed squared; aerodynamic power grows with speed cubed.",
       "technologies": "Reduce drag area or mass, improve useful efficiency, or add usable capacity. Added capacity also adds mass and cost.",
       "experiment": "Compare drag area at identical prescribed speed and conditions.",
-      "workspace": "optimization",
+      "workspace": "design",
       "sources": [
         "models",
         "doe-ev"
@@ -245,7 +245,7 @@
       "physics": "Materials, manufacturing process, yields, scale and integration contribute; pack capacity alone cannot determine vehicle cost.",
       "technologies": "Use dated, region-specific component estimates with uncertainty; keep component subtotal, production cost and retail price separate.",
       "experiment": "Define a cost study and document the missing supplier/estimate evidence.",
-      "workspace": "optimization",
+      "workspace": "design",
       "sources": [
         "doe-ev",
         "models"

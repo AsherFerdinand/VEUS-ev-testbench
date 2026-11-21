@@ -1,3 +1,4 @@
+import { appearances } from "./vehicle-appearance.js";
 // Original schematic geometry; conceptual placement, not a production-vehicle CAD model.
 const icons = {
   anatomy:
@@ -54,24 +55,24 @@ const circle = (x, y, z, r, cls) => {
   const [a, b] = p(x, y, z);
   return `<circle class="${cls}" cx="0" cy="0" r="${r}" transform="matrix(.86 -.39 0 -1 ${a} ${b})"/>`;
 };
-function wheel(x, y) {
+function wheel(x, y, radius = 34) {
   const inner = y < 0 ? y + 16 : y - 16;
   return `<g class="vehicle-wheel"><path class="tyre-wall" d="${polygon([
-    [x - 34, y, 34],
-    [x - 34, inner, 34],
-    [x + 34, inner, 34],
-    [x + 34, y, 34],
-  ])}"/>${circle(x, inner, 34, 34, "tyre-inner")}${circle(x, y, 34, 34, "tyre")}${circle(x, y, 34, 25, "rim")}${circle(x, y, 34, 20, "rim-inner")}${[
+    [x - radius, y, radius],
+    [x - radius, inner, radius],
+    [x + radius, inner, radius],
+    [x + radius, y, radius],
+  ])}"/>${circle(x, inner, radius, radius, "tyre-inner")}${circle(x, y, radius, radius, "tyre")}${circle(x, y, radius, 25, "rim")}${circle(x, y, radius, 20, "rim-inner")}${[
     0, 1, 2, 3, 4,
   ]
     .map((i) => {
       const a = (i * Math.PI * 2) / 5;
       return `<path class="rim-spoke" d="${line([
-        [x, y, 34],
-        [x + 21 * Math.cos(a), y, 34 + 21 * Math.sin(a)],
+        [x, y, radius],
+        [x + 21 * Math.cos(a), y, radius + 21 * Math.sin(a)],
       ])}"/>`;
     })
-    .join("")}${circle(x, y, 34, 5, "hub")}</g>`;
+    .join("")}${circle(x, y, radius, 5, "hub")}</g>`;
 }
 function cylinder(x, y, z, r, width) {
   const a = -2.308,
@@ -573,8 +574,108 @@ function cabin() {
     [120, 60, 66],
   ])}"/></g>`;
 }
+function classShell(key) {
+  const a = appearances[key],
+    w = a.width,
+    h = a.deck,
+    z = a.clearance;
+  const roof = [
+    [a.front, -w * 0.67, a.roof],
+    [a.rear, -w * 0.67, a.roof],
+    [a.rear, w * 0.67, a.roof],
+    [a.front, w * 0.67, a.roof],
+  ];
+  const belt = [
+    [-265, -w, h - 12],
+    [-115, -w, h],
+    [205, -w, h + 3],
+    [270, -w, h - 10],
+    [270, w, h - 10],
+    [205, w, h + 3],
+    [-115, w, h],
+    [-265, w, h - 12],
+  ];
+  const side = [
+    [-265, w, z],
+    [-265, w, h - 12],
+    [-115, w, h],
+    [a.front, w * 0.67, a.roof],
+    [a.rear, w * 0.67, a.roof],
+    [205, w, h + 3],
+    [270, w, h - 10],
+    [270, w, z],
+  ];
+  // Explicit original body meshes; geometry is visual packaging, not aerodynamic input.
+  return `<g class="vehicle-body class-body" data-class="${key}" aria-label="Original ${a.name} ${a.label}">
+  <path class="body-far" d="${polygon(belt)}"/>
+  <path class="body-near" d="${polygon(side)}"/>
+  <path class="body-bonnet" d="${polygon([
+    [-265, -w, h - 12],
+    [-115, -w, h],
+    [a.front, -w * 0.67, a.roof],
+    [a.front, w * 0.67, a.roof],
+    [-115, w, h],
+    [-265, w, h - 12],
+  ])}"/>
+  <path class="body-roof" d="${polygon(roof)}"/>
+  <path class="body-glass windscreen" d="${polygon([
+    [-115, -w * 0.9, h + 3],
+    [a.front, -w * 0.64, a.roof - 3],
+    [a.front, w * 0.64, a.roof - 3],
+    [-115, w * 0.9, h + 3],
+  ])}"/>
+  <path class="body-glass" d="${polygon([
+    [a.front + 8, w * 0.68, a.roof - 8],
+    [a.rear - 8, w * 0.68, a.roof - 8],
+    [190, w, h + 8],
+    [-100, w, h + 8],
+  ])}"/>
+  ${
+    key === "performance"
+      ? `<path class="body-intake" d="${polygon([
+          [-90, w + 1, 42],
+          [70, w + 1, 47],
+          [115, w + 1, 65],
+          [-65, w + 1, 65],
+        ])}"/><path class="body-wing" d="${polygon([
+          [214, -115, 104],
+          [235, -115, 104],
+          [235, 115, 104],
+          [214, 115, 104],
+        ])}"/>`
+      : `<path class="body-seam" d="${line([
+          [27, w, h + 3],
+          [27, w, z + 10],
+        ])} ${line([
+          [155, w, h + 3],
+          [155, w, z + 10],
+        ])}"/>`
+  }
+  <path class="body-led" d="${line([
+    [-267, -w + 12, h - 4],
+    [-267, w - 12, h - 4],
+  ])}"/>
+  <text class="drawing-note" x="${p(20, w + 2, h - 12)[0]}" y="${p(20, w + 2, h - 12)[1]}">${a.name}</text></g>`;
+}
+function packShape(opts) {
+  if (!opts.appearance) return shape.battery();
+  const a = appearances[opts.appearance],
+    base = a.pack;
+  // Only discrete illustrative component envelopes; capacity does not determine dimensions.
+  const alternate = opts.batteryId === "battery-80";
+  const [x, y, l0, w0] = base,
+    l = l0 + (alternate ? 12 : 0),
+    w = w0 + (alternate ? 8 : 0),
+    columns = alternate ? 10 : 8;
+  const split = opts.appearance === "performance";
+  const rows = split ? [y, y + w - 43] : [y + 5, y + w / 2 + 2];
+  return `<g class="pack-envelope" data-layout="${opts.appearance}${alternate ? "-alternate" : ""}" data-record="${escape(opts.batteryId || "custom")}">${box(x, y, 28, l, w, 14)}${rows.map((yy) => Array.from({ length: columns }, (_, i) => box(x + 5 + (i * (l - 10)) / columns, yy, 43, (l - 15) / columns, split ? 38 : w / 2 - 7, 7)).join("")).join("")}</g>`;
+}
 function normalizedOptions(options = {}) {
   return {
+    appearance: appearances[options.appearance] ? options.appearance : null,
+    batteryId: options.batteryId || null,
+    motorId: options.motorId || null,
     annotations: options.annotations !== false,
     body: ["cutaway", "transparent", "opaque"].includes(options.body)
       ? options.body
@@ -622,7 +723,7 @@ export function anatomySVG(components, interactive = true, options = {}) {
     id = `ev-${++drawingId}`,
     state = states(opts);
   const known = components.filter((c) => shape[c.id]);
-  return `<svg class="anatomy-svg vehicle-cutaway" data-body="${opts.body}" data-view="${opts.view}" data-annotations="${opts.annotations}" data-flow="${opts.flow || ""}" data-prefix="${id}" data-selected="${opts.selected || ""}" viewBox="${opts.annotations ? "0 0 900 520" : "145 102 610 400"}" role="group" aria-label="Original generic electric sedan cutaway. Conceptual front-drive architecture, not to scale or manufacturer-specific.">
+  return `<svg class="anatomy-svg vehicle-cutaway" data-appearance="${opts.appearance || "generic"}" data-body="${opts.body}" data-view="${opts.view}" data-annotations="${opts.annotations}" data-flow="${opts.flow || ""}" data-prefix="${id}" data-selected="${opts.selected || ""}" viewBox="${opts.annotations ? "0 0 900 520" : "145 102 610 400"}" role="group" aria-label="Original generic electric sedan cutaway. Conceptual front-drive architecture, not to scale or manufacturer-specific.">
  <defs><pattern id="${id}-grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="currentColor" stroke-width=".5"/></pattern><marker id="${id}-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="context-stroke"/></marker></defs>
  <rect class="vehicle-grid" x="26" y="20" width="848" height="475" fill="url(#${id}-grid)"/>
  <path class="vehicle-shadow" d="${polygon([
@@ -631,7 +732,7 @@ export function anatomySVG(components, interactive = true, options = {}) {
    [288, 114, -7],
    [-285, 114, -7],
  ])}"/>
- ${wheel(165, -105)}${wheel(-171, -105)}
+ ${wheel(165, -105, opts.appearance ? appearances[opts.appearance].wheel : 34)}${wheel(-171, -105, opts.appearance ? appearances[opts.appearance].wheel : 34)}
  <g class="vehicle-chassis"><path class="undertray" d="${polygon([
    [-270, -82, 28],
    [269, -82, 28],
@@ -647,9 +748,9 @@ export function anatomySVG(components, interactive = true, options = {}) {
    [165, -105, 34],
    [165, 105, 34],
  ])}"/></g>
- <g class="vehicle-systems">${known.map((c) => `<g class="anatomy-component c-${c.id} ${state.component(c.id)}" data-component="${c.id}" ${interactive ? `tabindex="0" role="button" aria-pressed="${opts.selected === c.id}" aria-describedby="anatomy-tooltip"` : ""} aria-label="${escape(c.number + " " + c.name)}"><title>${escape(c.name + ": " + c.function)}</title>${shape[c.id]()}</g>`).join("")}</g>
+ <g class="vehicle-systems">${known.map((c) => `<g class="anatomy-component c-${c.id} ${state.component(c.id)}" data-component="${c.id}" ${interactive ? `tabindex="0" role="button" aria-pressed="${opts.selected === c.id}" aria-describedby="anatomy-tooltip"` : ""} aria-label="${escape(c.number + " " + c.name)}"><title>${escape(c.name + ": " + c.function)}</title>${c.id === "battery" ? packShape(opts) : c.id === "motor" && opts.appearance ? cylinder(-170, -32, 53, { "motor-150": 21, "motor-220": 26, "motor-s1": 23, "motor-r1": 31, "motor-x1": 26 }[opts.motorId] || 24, 48) : shape[c.id]()}</g>`).join("")}</g>
  <g class="vehicle-connections" aria-label="Conceptual high voltage, three-phase, low voltage, control, coolant and mechanical connections">${connections.map(([key, kind, connects, points, label]) => `<path class="vehicle-link link-${kind} ${state.link(key, kind, connects)}" data-link="${key}" data-kind="${kind}" data-connects="${connects}" d="${line(points)}" ${opts.flow && flowLinks[opts.flow]?.includes(key) ? `marker-${opts.flow === "regeneration" ? "start" : "end"}="url(#${id}-arrow)"` : ""}><title>${escape(label)}</title></path>`).join("")}</g>
- ${wheel(165, 107)}${wheel(-171, 107)}${cabin()}${shell()}
+ ${wheel(165, 107, opts.appearance ? appearances[opts.appearance].wheel : 34)}${wheel(-171, 107, opts.appearance ? appearances[opts.appearance].wheel : 34)}${cabin()}${opts.appearance ? classShell(opts.appearance) : shell()}
  <g class="vehicle-annotations">${known
    .map((c) => {
      const [mx, my, label] = labels[c.id],

@@ -200,3 +200,56 @@ timers/requests are cancelled. Component catalogue data is cached once per sessi
 no periodic reevaluation, continuous rendering, background WebSocket or simulation
 executes in Anatomy/Design. Compare returns actual parameter/specification differences
 from the same backend equations; it is not a simulated outcome or efficiency ranking.
+
+## 2.3.2 vehicle classes and appearance
+
+Design Studio now offers three explicitly fictional presets. Selecting a card only
+previews the default; **Customize preset as a new design** creates an unsaved draft
+with no saved ID. Existing records remain unchanged. Saving a draft creates a new
+record; existing rename/duplicate/import/export/delete and comparisons remain.
+Visual-body selection changes appearance metadata alone, never numerical parameters.
+
+| Preset | Usable / gross kWh | Continuous / peak motor kW | Total kg | Cd | Nominal V |
+|---|---:|---:|---:|---:|---:|
+| VEUS S1 sedan | 60 / 64 | 145 / 180 | 1750 | .25 | 400 |
+| VEUS R1 performance | 90 / 96 | 300 / 450 | 1950 | .30 | 800 |
+| VEUS X1 family SUV | 100 / 108 | 180 / 250 | 2450 | .32 | 450 |
+
+Default Lab policy uses continuous ratings; peak nameplates are not continuous
+capabilities. All use one equivalent drive unit and the same explicitly assumed
+constant conversion efficiencies. No AWD, downforce, range, top-speed, charging-time
+or hardware-safety inference follows from these names, visual bodies or ratings.
+
+`GET /api/workbench/v2/presets` returns complete resolved designs, existing calculated
+specifications, checks, readiness and limitations. The catalogue is additive:
+original 13 records unchanged plus 14 class/shared-envelope illustrative records,
+with two deduplicated original-assumption sources. Mass includes the separately
+listed subsystems. Electrical envelopes, torque bounds, readiness acknowledgements
+and the existing coupled equations remain authoritative. Checks can still report
+insufficient phase-current/duty/thermal evidence; passing the current blocking gates
+is not physical validation.
+
+The optional v2 `appearance` field is `sedan`, `performance` or `suv`. Missing/null
+metadata is omitted during normalized serialization, preserving historical design,
+run and export fingerprints. Older designs use the documented **performance/R1
+fallback**, preserving the previous Lab Arrow family identity without altering any
+parameter. Unknown supplied appearance strings are rejected. Saved/imported designs
+retain explicit appearance; the frozen Lab vehicle determines its replay body even
+when the active selection subsequently changes.
+
+`vehicle-appearance.js` supplies shared identity profiles and original side artwork;
+`schematic.js` reuses the existing axonometric component/connection renderer for
+three distinct original body meshes. Sedan four-door proportions, low/wide R1 with
+illustrative channels/wing, and tall/angular SUV envelopes have different roof,
+clearance, wheel and underfloor-pack layouts. Segmented packs use explicit class
+and representative component envelopes, not capacity-to-size calculations. Motor
+envelopes are illustrative component-ID choices; exactly one drive unit is shown.
+Custom values do not establish CAD dimensions, energy density or packaging fit.
+Mechanical/electrical/coolant paths remain conceptual, not additional physical models.
+
+Five navigation entries remain. `?workspace=optimization` safely migrates to Design
+Studio, where saved-design comparisons remain available; the obsolete standalone
+prototype renderer was removed. Measurement navigation is visibly under development,
+with the original `/engineering` measurement tools and safeguards retained.
+
+[Verification, measured footprint and three actual captures](evidence-2.3.2/README.md).

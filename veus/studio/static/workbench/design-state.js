@@ -15,6 +15,8 @@ function shape(d) {
   return (
     d &&
     d.schema_version === 2 &&
+    (d.appearance == null ||
+      ["sedan", "performance", "suv"].includes(d.appearance)) &&
     d.classification === "illustrative" &&
     typeof d.name === "string" &&
     d.name.length <= 100 &&

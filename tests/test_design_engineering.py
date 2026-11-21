@@ -38,7 +38,43 @@ def client():
 def test_representative_catalogue_types_units_and_consolidated_source():
     c = catalogue()
     assert c["version"] == "representative-v1"
-    assert len(c["components"]) == 13 and len(c["sources"]) == 1
+    original_ids = {
+        "battery-64",
+        "battery-80",
+        "motor-150",
+        "motor-220",
+        "inverter-180",
+        "inverter-260",
+        "charger-11",
+        "charger-22",
+        "dcdc-2",
+        "gearbox-9",
+        "gearbox-11",
+        "body-sedan",
+        "body-compact",
+    }
+    class_ids = {
+        "battery-s1",
+        "motor-s1",
+        "body-s1",
+        "battery-r1",
+        "motor-r1",
+        "inverter-r1",
+        "body-r1",
+        "battery-x1",
+        "motor-x1",
+        "inverter-x1",
+        "body-x1",
+        "charger-wide-22",
+        "dcdc-wide-2",
+        "gearbox-heavy-9",
+    }
+    assert {record["id"] for record in c["components"]} == original_ids | class_ids
+    assert len(c["components"]) == 27 and len(c["sources"]) == 2
+    assert {source["id"] for source in c["sources"]} == {
+        "veus-representative",
+        "veus-classes-2.3.2",
+    }
     assert {r["kind"] for r in c["components"]} == {
         "battery",
         "motor",
@@ -55,7 +91,11 @@ def test_representative_catalogue_types_units_and_consolidated_source():
         assert record["parameter_metadata"].keys() == record["parameters"].keys()
         for key, meta in record["parameter_metadata"].items():
             assert meta["classification"] == "illustrative"
-            assert meta["source_id"] == c["sources"][0]["id"]
+            assert meta["source_id"] == (
+                "veus-representative"
+                if record["id"] in original_ids
+                else "veus-classes-2.3.2"
+            )
             assert meta["unit"] and meta["uncertainty"] and meta["operating_conditions"]
         if record["kind"] == "motor":
             assert record["parameters"]["peak_duration_s"] is None

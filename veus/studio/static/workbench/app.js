@@ -14,7 +14,6 @@ const workspaces = [
   ["challenges", "EV Challenges", "ASK BETTER QUESTIONS"],
   ["design", "Design Studio", "DEFINE THE SYSTEM"],
   ["simulation", "Simulation Lab", "REPEAT THE EXPERIMENT"],
-  ["optimization", "Optimization", "COMPARE TRADE-OFFS"],
   ["measurements", "Measurements", "FOLLOW THE EVIDENCE"],
 ];
 let content,
@@ -23,7 +22,6 @@ let content,
   anatomyMode = "placement",
   flowMode = "propulsion",
   challenge = "range",
-  study = "mass",
   active = "anatomy";
 let studioCleanup = null;
 const vehicleOptions = {
@@ -94,10 +92,11 @@ for (const button of document.querySelectorAll(".workspace-tab")) {
   button.onkeydown = (e) => {
     const i = workspaces.findIndex((w) => w[0] === button.dataset.key);
     let n;
-    if (e.key === "ArrowRight") n = (i + 1) % 6;
-    else if (e.key === "ArrowLeft") n = (i + 5) % 6;
+    if (e.key === "ArrowRight") n = (i + 1) % workspaces.length;
+    else if (e.key === "ArrowLeft")
+      n = (i + workspaces.length - 1) % workspaces.length;
     else if (e.key === "Home") n = 0;
-    else if (e.key === "End") n = 5;
+    else if (e.key === "End") n = workspaces.length - 1;
     else return;
     e.preventDefault();
     navigate(workspaces[n][0]);
@@ -106,6 +105,11 @@ for (const button of document.querySelectorAll(".workspace-tab")) {
 }
 function navigate(key, update = true) {
   if (!content) return;
+  if (key === "optimization") {
+    key = "design";
+    history.replaceState({}, "", "/?workspace=design");
+    notice("Design comparisons are now in Design Studio.");
+  }
   if (!workspaces.some((w) => w[0] === key)) key = "anatomy";
   studioCleanup?.();
   studioCleanup = null;
@@ -124,7 +128,6 @@ function navigate(key, update = true) {
     challenges: renderChallenges,
     design: renderDesign,
     simulation: renderSimulation,
-    optimization: renderOptimization,
     measurements: renderMeasurements,
   })[key]();
   scrollTo(0, 0);
@@ -308,7 +311,7 @@ function renderChallenges() {
     ]
       .map(
         ([n, t, body]) =>
-          `<section class="challenge-stage"><span>${n} / ${t.split(" ")[0].toUpperCase()}</span><div><h3>${t}</h3><p>${esc(body)}</p>${n === "04" ? `<a href="/?workspace=${c.workspace}" id="challenge-experiment">Open ${workspaces.find((w) => w[0] === c.workspace)[1]} →</a>` : ""}</div></section>`,
+          `<section class="challenge-stage"><span>${n} / ${t.split(" ")[0].toUpperCase()}</span><div><h3>${t}</h3><p>${esc(body)}</p>${n === "04" ? `<a href="/?workspace=${c.workspace}" id="challenge-experiment">Open ${workspaces.find((w) => w[0] === c.workspace)?.[1] || "Design Studio"} →</a>` : ""}</div></section>`,
       )
       .join(
         "",
@@ -359,80 +362,6 @@ async function renderSimulation() {
   }
 }
 
-const studies = {
-  mass: {
-    title: "Mass sensitivity",
-    question: "What changes when the same vehicle carries more mass?",
-    equation: "F = m a + F_aero + F_roll + F_grade",
-    changes:
-      "Change vehicle mass only. Hold speed profile, grade, tyre assumptions and all powertrain settings fixed.",
-    limits:
-      "Mass affects inertia, rolling and gradient resistance. A range improvement is not calculated by this prototype.",
-  },
-  aero: {
-    title: "Aerodynamic sensitivity",
-    question: "How much does drag area matter at motorway speed?",
-    equation: "F_aero = ½ ρ Cd A v²",
-    changes:
-      "Change Cd or frontal area. Keep speed, air density, grade and the remaining vehicle configuration identical.",
-    limits:
-      "The relationship is model-based; no wind-tunnel or measured coast-down fit is implied.",
-  },
-  capacity: {
-    title: "Capacity versus range",
-    question: "How does more usable energy trade against pack mass?",
-    equation: "Range requires usable energy and cycle demand",
-    changes:
-      "Pair each capacity alternative with an explicit mass assumption; use the same cycle and initial conditions.",
-    limits:
-      "Capacity is not a resistance, voltage or power-limit model. No range estimate is generated here.",
-  },
-  regen: {
-    title: "Regeneration effectiveness",
-    question: "How much braking energy can be accepted by the battery?",
-    equation: "Recovery is limited by braking demand and acceptance",
-    changes:
-      "Use identical initial speed, SOC and braking demand; change regen availability only.",
-    limits:
-      "Recovery requires electrical limits and an explicit sign convention. Scenario energy must be calculated by the backend.",
-  },
-  cost: {
-    title: "Cost & charging trade-offs",
-    question: "What is the objective, and which costs can we defend?",
-    equation: "Objective + constraints + evidence → feasible study",
-    changes:
-      "Separate component estimates from whole-vehicle cost. Compare the same SOC interval and tariff assumptions.",
-    limits:
-      "No supplier pricing, charging curve, Pareto solver or cost estimate is implemented.",
-  },
-};
-function renderOptimization() {
-  const s = studies[study];
-  $("workspace-panel").innerHTML =
-    header(
-      "05 / CONTROLLED COMPARISONS",
-      "Change one assumption. Learn from the difference.",
-      "Define an objective and feasible alternatives before choosing an optimization method.",
-      "STUDY PROTOTYPE",
-    ) +
-    `<div class="study-layout"><aside class="study-select">${Object.entries(
-      studies,
-    )
-      .map(
-        ([id, s]) =>
-          `<button data-study="${id}" aria-pressed="${id === study}">${s.title}</button>`,
-      )
-      .join(
-        "",
-      )}<p class="quiet">No optimization has been executed. These are study definitions, not ranked designs.</p></aside><article class="study-visual"><div class="eyebrow">BASELINE → MODIFIED / IDENTICAL CONDITIONS</div><h2>${s.question}</h2><div class="equation">${s.equation}</div><h3>Controlled experiment</h3><p>${s.changes}</p><table><thead><tr><th>Study state</th><th>Baseline</th><th>Modified</th></tr></thead><tbody><tr><td>Configuration</td><td>${esc(state.design?.name || "No active vehicle design")} · illustrative</td><td>Not defined</td></tr><tr><td>Simulation result</td><td>Unavailable</td><td>Unavailable</td></tr><tr><td>Objective improvement</td><td colspan="2">Not calculated</td></tr></tbody></table><p class="prototype-note">${s.limits}</p><button id="optimization-design">Review the illustrative design →</button><details><summary>Next: reproducible sweeps, sensitivity and feasibility</summary><p>Persist baseline/variant configurations, constraints, objective units and scenario hashes. Execute both with the same backend runner; retain failed and inconclusive outcomes. Add Pareto methods only when validated objectives and feasible designs exist.</p></details></article></div>`;
-  for (const b of document.querySelectorAll("[data-study]"))
-    b.onclick = () => {
-      study = b.dataset.study;
-      renderOptimization();
-      document.querySelector(`[data-study="${study}"]`).focus();
-    };
-  $("optimization-design").onclick = () => navigate("design");
-}
 async function renderMeasurements() {
   if (!catalogue) {
     $("workspace-panel").innerHTML =
@@ -448,12 +377,12 @@ async function renderMeasurements() {
   }
   $("workspace-panel").innerHTML =
     header(
-      "06 / RECORDED MEASUREMENTS",
+      "05 / RECORDED MEASUREMENTS",
       "Let the evidence set the limits.",
       "A focused entry to genuine vehicle data. Existing ingestion, readiness, event investigation and reporting remain available.",
-      "CATALOGUE + MIGRATION",
+      "2.X UNDER DEVELOPMENT",
     ) +
-    `<div class="steps"><b>01 Select recording</b><span>→ 02 Choose a question</span><span>→ 03 Inspect signals</span><span>→ 04 Review evidence</span><span>→ 05 Export report</span></div><div class="measurement-layout"><aside class="selection-fields"><label>Genuine recording<select id="measurement-recording">${catalogue.map((c) => `<option value="${c.id}" ${c.id === "ved-10-1561-full" ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></label><label>Engineering question<select id="measurement-question"><option value="speed">What supports an acceleration event?</option><option value="power">What do voltage and signed current show?</option><option value="quality">Where are the evidence gaps?</option></select></label><div class="prototype-note">The catalogue is connected to real importer metadata. New question-driven signal views are prototypes. Use the existing measurement tools for actual investigation and exports.</div><a class="primary" href="/engineering?workspace=analyse">Open existing measurement tools →</a><p class="quiet">Select the matching recording in that view. CSV import, Data Readiness, investigation, comparison and report exports are preserved.</p></aside><article id="measurement-summary" class="recording-summary"></article></div>`;
+    `<div class="steps"><b>01 Select recording</b><span>→ 02 Choose a question</span><span>→ 03 Inspect signals</span><span>→ 04 Review evidence</span><span>→ 05 Export report</span></div><div class="measurement-layout"><aside class="selection-fields"><label>Genuine recording<select id="measurement-recording">${catalogue.map((c) => `<option value="${c.id}" ${c.id === "ved-10-1561-full" ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></label><label>Engineering question<select id="measurement-question"><option value="speed">What supports an acceleration event?</option><option value="power">What do voltage and signed current show?</option><option value="quality">Where are the evidence gaps?</option></select></label><div class="prototype-note">The catalogue is connected to real importer metadata. The new 2.x measurement experience is under development. Use the existing measurement tools for actual investigation and exports.</div><a class="primary" href="/engineering?workspace=analyse">Open existing measurement tools →</a><p class="quiet">Select the matching recording in that view. CSV import, Data Readiness, investigation, comparison and report exports are preserved.</p></aside><article id="measurement-summary" class="recording-summary"></article></div>`;
   const show = () => {
     const c = catalogue.find((c) => c.id === $("measurement-recording").value);
     const question = $("measurement-question").value;

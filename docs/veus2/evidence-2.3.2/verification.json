@@ -1,0 +1,26 @@
+{
+  "baseline": "0345540d4214db33d0636fdfc26d80f2405ac51d",
+  "python_tests_passed": 275,
+  "python_elapsed_s": 24.93,
+  "clock_tests_passed": 9,
+  "browser_suites_passed": [
+    "workbench",
+    "vehicle-classes",
+    "lab",
+    "drive",
+    "replay",
+    "guidance",
+    "investigation"
+  ],
+  "old_evaluation_run_and_export_fingerprints_preserved": true,
+  "physical_equations_dependencies_datasets_unchanged": true,
+  "screenshots": 3,
+  "physical_validation": "INCONCLUSIVE",
+  "source_sha256": {
+    "veus/workbench/design.py": "75b6c0681fcd9ffb20ea51cb77b0b13560a50a28b8987999d777586cf520450f",
+    "veus/workbench/presets.py": "642cbbff2ba5545cefa124007a422faf7637a5a249a9440567611ae30479abcc",
+    "veus/studio/static/workbench/vehicle-appearance.js": "587034e780d3f4f3ec4bf8c0652451c4f54bd68798fc600a7d74e7eb71d95b49",
+    "veus/studio/static/workbench/schematic.js": "b456b41a0d0d2c5c92658a7ac0183af2ebf6de072cdf316468eae6f6bd0f662b",
+    "veus/studio/static/workbench/design-studio.js": "86a6fdfb3c783c69650fd9b2d0c66c6c9c53d6e7156a6887f7bf2fde68dab426"
+  }
+}

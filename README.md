@@ -5,14 +5,15 @@
 An EV engineering workbench for understanding vehicle systems, making explicit
 design assumptions and investigating reproducible experiments and measured evidence.
 
-**VEUS 2.3 Simulation Lab** adds coupled EV experiments, reproducible driving profiles,
-route telemetry and frozen engineering exports. Design Studio and the shared cutaway
-remain available; Optimization is still a prototype. This development branch is not
-a stable release. Physical validation remains **INCONCLUSIVE**.
+**VEUS 2.3.2 Vehicle Configurator** adds three fictional vehicle classes, explicit
+engineering presets and responsive component cutaways. The verified Simulation Lab,
+driving profiles, route telemetry and engineering exports remain available. Saved-design
+comparisons are in Design Studio; the new Measurements experience is under development.
+This feature branch is not a stable release. Physical validation remains **INCONCLUSIVE**.
 
 ![Original interactive EV cutaway](docs/veus2/evidence-2.1/complete-cutaway-light.png)
 
-## Six engineering workspaces
+## Five engineering workspaces
 
 Designs persist in this browser (16 designs / 180 KB). Export JSON for backup and transfer.
 Version 1 files need manual reconstruction because their mass boundary differs; the import
@@ -25,7 +26,6 @@ not manufacturer specifications. No range, charging-time or simulated outcome is
 | **EV Challenges**  | Eight source-referenced engineering questions, underlying physics, technology trade-offs and proposed experiments.                                                               |
 | **Design Studio**  | Functional illustrative configuration, typed version 2 designs, representative catalogue, compatibility/specifications, local save/duplicate/compare and explicit model adapter. |
 | **Simulation Lab** | Five coupled experiments, predictive/prescribed profiles, explicit constraints, route coverage, shared replay and JSON/CSV/HTML exports.                          |
-| **Optimization**   | Controlled study definitions and explicit objectives/constraints; no executed optimizer, improvement scores or cost estimates.                                                   |
 | **Measurements**   | Genuine VED catalogue metadata and question selection; existing import/readiness/investigation/report workflows are linked during migration.                                     |
 
 Manual keyboard driving, landscapes and ADAS interfaces are retired from the new

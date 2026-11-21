@@ -26,7 +26,11 @@ const assert = require("node:assert/strict"),
   );
   const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus-guidance-screens";
   fs.mkdirSync(out, { recursive: true });
-  await page.screenshot({ path: out + "/welcome-laptop.png", fullPage: true });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/welcome-laptop.png",
+      fullPage: true,
+    });
   await page.click("#welcomeDrive");
   await page.locator("#vehicleDialog").waitFor({ state: "visible" });
   await page.click('[data-vehicle="hatch"]');
@@ -81,10 +85,11 @@ const assert = require("node:assert/strict"),
   assert.equal(ved.metadata.source.kind, "measured");
   assert.equal(ved.recording_duration_s > 72, true);
   await page.evaluate(() => scrollTo(0, 0));
-  await page.screenshot({
-    path: out + "/readiness-laptop.png",
-    fullPage: true,
-  });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/readiness-laptop.png",
+      fullPage: true,
+    });
   const [download] = await Promise.all([
     page.waitForEvent("download"),
     page.click("#readinessExport"),
@@ -216,15 +221,17 @@ const assert = require("node:assert/strict"),
       false,
     );
     if (width === 390) {
-      await page.screenshot({
-        path: out + "/readiness-mobile.png",
-        fullPage: true,
-      });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({
+          path: out + "/readiness-mobile.png",
+          fullPage: true,
+        });
       await page.click('[data-workspace="welcome"]');
-      await page.screenshot({
-        path: out + "/welcome-mobile.png",
-        fullPage: true,
-      });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({
+          path: out + "/welcome-mobile.png",
+          fullPage: true,
+        });
     }
   }
   await page.setViewportSize({ width: 1366, height: 768 });

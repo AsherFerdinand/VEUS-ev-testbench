@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "experiments": {
+    "constant_speed": "8725fa371cd86776942d6599de7adce564612ad3de9c5c08fe69344194b86fde",
+    "acceleration": "f31b6948ccc22de5b9456821fba900a5890016fa5b1127818b79e6f8a9db9e3b",
+    "braking": "db7edf0dcfed221f099185eb6be938b705661af37b4eecb4fee861e9f0d85f6a",
+    "gradient": "fd4185fce681616b8a9db42c042a40cc337d415a417ca1e49403efee8c1e821a",
+    "coast": "b6ca9bb27d6394dcedcc9fee11396915c21f0dd22621b52b106d4fb127b91b2d"
+  },
+  "scenario_cards": true,
+  "exactly_three_synchronized_plots": true,
+  "battery_soc_and_regen": true,
+  "stop_resets_scene": true,
+  "gauge_boundaries": true,
+  "shared_cursor": true,
+  "replay_without_recalculation": true,
+  "frozen_vehicle_identity": true,
+  "lifecycle_cleanup": true,
+  "formats": [
+    "json",
+    "csv",
+    "html"
+  ],
+  "profile_source_duration": true,
+  "no_time_profile_map": true,
+  "validated_csv_imports": [
+    "profile",
+    "route"
+  ],
+  "paused_background_requests": 0,
+  "paused_owned_animation_frames": 0,
+  "lab_resources": [
+    {
+      "name": "/static/workbench/lab.js",
+      "body_bytes": 58448
+    },
+    {
+      "name": "/static/workbench/lab-scene.js",
+      "body_bytes": 6522
+    },
+    {
+      "name": "/static/workbench/lab.css",
+      "body_bytes": 13530
+    },
+    {
+      "name": "/static/replay-controller.js",
+      "body_bytes": 3363
+    }
+  ],
+  "js_heap_bytes_chromium": 5087359,
+  "seek_frame_callback_ms": [
+    3.099999997764826,
+    10.899999998509884,
+    15,
+    15.399999998509884,
+    13.400000002235174
+  ],
+  "timing_scope": "Five warm seek-input handlers to the next requestAnimationFrame callback; cloud Chromium, not display latency or a real-time guarantee.",
+  "widths": [
+    1366,
+    1024,
+    820,
+    390
+  ],
+  "page_errors": []
+}

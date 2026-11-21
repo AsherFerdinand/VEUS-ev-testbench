@@ -1,0 +1,23 @@
+{
+  "baseline": "e6522a3949c85967a23486a013a943b281fa78df",
+  "python_tests_passed": 267,
+  "python_elapsed_s": 25.8,
+  "clock_tests_passed": 9,
+  "browser_suites_passed": [
+    "workbench",
+    "lab",
+    "drive",
+    "replay",
+    "guidance",
+    "investigation"
+  ],
+  "golden_2_3_run_hashes_unchanged": true,
+  "models_contracts_dependencies_and_datasets_unchanged": true,
+  "screenshots": 3,
+  "physical_validation": "INCONCLUSIVE",
+  "frontend_sha256": {
+    "veus/studio/static/workbench/lab.js": "4c5a9dc0a956ca8ad54640602fb90d9c3684999daa392f0f05b93353d0d47788",
+    "veus/studio/static/workbench/lab.css": "d3f789ae07ee15d8644c89ce0fb196c38c1da635f8a03da0d042cc87d223831c",
+    "veus/studio/static/workbench/lab-scene.js": "fb841c5c8d0b2db61f75205525928d742a7582706bf77760e2afe730f577cd97"
+  }
+}

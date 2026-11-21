@@ -32,6 +32,7 @@ const fs = require("node:fs"),
   const second = structuredClone(design);
   second.name = "Different active design";
   second.body.mass_excluding_components_kg = 1400;
+  second.battery.discharge_limit_a = 5;
   await page.addInitScript(
     ({ design, second }) =>
       localStorage.setItem(
@@ -54,11 +55,13 @@ const fs = require("node:fs"),
     if (r.url().endsWith("/api/lab/run")) runs.push(r.postDataJSON());
   });
   await page.goto(base + "/?workspace=simulation");
-  await page.locator("#lab-kind").waitFor();
+  await page.locator("#lab-scenarios-mode").waitFor();
+  await page.locator("#lab-config summary").first().click();
   await page.locator("#lab-assumptions summary").click();
   for (const c of await page.locator(".lab-ack").all()) await c.check();
   async function run(kind) {
-    await page.selectOption("#lab-kind", kind);
+    await page.click(`[data-kind="${kind}"]`);
+    await page.locator("#lab-config").evaluate((e) => (e.open = true));
     await page.fill("#lab-duration", "3");
     await page.fill("#lab-dt", ".05");
     await page.fill("#lab-initial", kind === "acceleration" ? "0" : "36");
@@ -100,8 +103,119 @@ const fs = require("node:fs"),
     "braking",
     "gradient",
     "coast",
-  ])
-    results[kind] = (await run(kind)).run_sha256;
+  ]) {
+    const result = await run(kind);
+    results[kind] = result.run_sha256;
+    assert.equal(result.experiment.kind, kind);
+    await page.locator("#lab-seek").evaluate((e) => {
+      e.value = 1;
+      e.dispatchEvent(new Event("input"));
+    });
+    const row = result.trace.find((r) => Math.abs(r.time_s - 1) < 1e-8);
+    const fill = Number(
+      await page.locator("#lab-battery-fill").getAttribute("width"),
+    );
+    assert(
+      Math.abs(fill - 116 * row.soc) < 1e-8,
+      "Battery fill represents actual SOC",
+    );
+    assert(
+      Math.abs(
+        Number(
+          await page.locator("#lab-battery").getAttribute("data-power-w"),
+        ) - row.battery_power_w,
+      ) < 1e-6,
+    );
+    if (kind === "braking") {
+      assert(row.battery_power_w < 0);
+      assert.equal(
+        await page.locator("#lab-battery").getAttribute("data-state"),
+        "regen",
+      );
+      assert.equal(
+        await page.locator("#lab-energy-flow").getAttribute("data-direction"),
+        "in",
+      );
+    }
+    if (kind === "coast")
+      assert.equal(
+        await page.locator("#lab-battery").getAttribute("data-state"),
+        "idle",
+      );
+    for (const id of ["lab-plot", "lab-power-plot", "lab-soc-plot"])
+      assert.equal(
+        await page.locator("#" + id).getAttribute("data-cursor-time"),
+        "1.000000",
+      );
+    const arc = await page
+      .locator("#lab-speed-arc")
+      .evaluate((e) => getComputedStyle(e).strokeDasharray);
+    if (row.speed_ms > 0)
+      assert(
+        parseFloat(arc) > 0,
+        "Computed gauge arc follows nonzero achieved speed",
+      );
+    const gauge = await page.locator("#lab-speedometer").boundingBox(),
+      panel = await page.locator(".lab-speed-panel").boundingBox();
+    assert(
+      gauge.x >= panel.x - 1 &&
+        gauge.x + gauge.width <= panel.x + panel.width + 1,
+    );
+    if (
+      ["constant_speed", "braking", "gradient"].includes(kind) &&
+      process.env.VEUS_CAPTURE !== "0"
+    ) {
+      // Representative captures use unchanged scenario defaults, not the short golden-test window.
+      await page.click(`[data-kind="${kind}"]`);
+      const previous = await page.evaluate(() => VEUSLab.result.run_sha256);
+      const [captureRun] = await Promise.all([
+        page.waitForResponse(
+          (r) =>
+            r.url().endsWith("/api/lab/run") && r.request().method() === "POST",
+        ),
+        page.click("#lab-run"),
+      ]);
+      assert.equal(captureRun.status(), 200, await captureRun.text());
+      await page.waitForFunction(
+        (hash) => VEUSLab.result.run_sha256 !== hash,
+        previous,
+      );
+      await page.locator("#lab-seek").evaluate((e) => {
+        e.value = 2;
+        e.dispatchEvent(new Event("input"));
+      });
+      if (kind === "braking") await page.click("#theme-toggle");
+      await page.locator("#lab-config").evaluate((e) => (e.open = false));
+      await page.evaluate(() => {
+        document.activeElement?.blur();
+        scrollTo(0, 0);
+      });
+      await page.setViewportSize({ width: 1366, height: 1200 });
+      await page.screenshot({
+        path:
+          out +
+          "/" +
+          {
+            constant_speed: "highway-cruising",
+            braking: "traffic-light-braking",
+            gradient: "mountain-climb",
+          }[kind] +
+          ".png",
+        fullPage: false,
+      });
+    }
+  }
+  assert.deepEqual(
+    results,
+    JSON.parse(
+      fs.readFileSync(
+        __dirname + "/../../docs/veus2/evidence-2.3/lab-browser.json",
+        "utf8",
+      ),
+    ).experiments,
+    "Frozen five-experiment outputs equal VEUS 2.3 baseline",
+  );
+  await page.setViewportSize({ width: 1366, height: 768 });
   const calls = runs.length;
   await page.locator("#lab-seek").evaluate((e) => {
     e.value = 1.25;
@@ -111,13 +225,53 @@ const fs = require("node:fs"),
     await page.locator("#lab-plot").getAttribute("data-cursor-time"),
     "1.250000",
   );
+  for (const id of ["lab-power-plot", "lab-soc-plot"])
+    assert.equal(
+      await page.locator("#" + id).getAttribute("data-cursor-time"),
+      "1.250000",
+    );
   assert.equal(await page.evaluate(() => VEUSLab.time), 1.25);
-  await page.selectOption("#lab-rate", "2");
+
   await page.click("#lab-play");
   await page.waitForTimeout(220);
   await page.click("#lab-play");
   assert((await page.evaluate(() => VEUSLab.time)) > 1.4);
   assert.equal(runs.length, calls, "Replay never recalculates a simulation");
+  await page.click("#lab-stop");
+  assert.equal(await page.evaluate(() => VEUSLab.time), 0);
+  assert.equal(await page.evaluate(() => VEUSLab.playing), false);
+  assert.equal(
+    await page.locator("#lab-scene-svg").getAttribute("data-position-m"),
+    "0",
+  );
+  await page.locator("#lab-seek").evaluate((e) => {
+    e.value = 3;
+    e.dispatchEvent(new Event("input"));
+  });
+  const endScene = await page
+    .locator("#lab-scene-svg")
+    .getAttribute("data-position-m");
+  await page.waitForTimeout(100);
+  assert.equal(
+    await page.locator("#lab-scene-svg").getAttribute("data-position-m"),
+    endScene,
+  );
+  await page.locator("#lab-seek").evaluate((e) => {
+    e.value = 2.95;
+    e.dispatchEvent(new Event("input"));
+  });
+  await page.click("#lab-play");
+  await page.waitForFunction(
+    () => VEUSLab.time === 3 && !VEUSLab.playing && !VEUSLab.framePending,
+  );
+  const completedScene = await page
+    .locator("#lab-scene-svg")
+    .getAttribute("data-position-m");
+  await page.waitForTimeout(120);
+  assert.equal(
+    await page.locator("#lab-scene-svg").getAttribute("data-position-m"),
+    completedScene,
+  );
   const seekTiming = [];
   for (let i = 0; i < 6; i++) {
     const elapsed = await page.evaluate(
@@ -161,7 +315,8 @@ const fs = require("node:fs"),
   assert.equal(await page.evaluate(() => VEUSLab.framePending), false);
   assert(Math.abs((await page.evaluate(() => VEUSLab.time)) - paused) < 0.02);
   // Restore the saved non-default vehicle without relabelling frozen prior results.
-  await page.locator("#lab-assumptions summary").click();
+  await page.locator("#lab-config").evaluate((e) => (e.open = true));
+  await page.locator("#lab-assumptions").evaluate((e) => (e.open = true));
   for (const c of await page.locator(".lab-ack").all()) await c.check();
   await page.selectOption("#lab-vehicle", "lab-source");
   for (const [id, file] of [
@@ -189,9 +344,8 @@ const fs = require("node:fs"),
     document.activeElement?.blur();
     scrollTo(0, 0);
   });
-  await page.screenshot({ path: out + "/lab-light.png" });
   // Profiles are loaded only in Lab. Official source duration is not silently shortened.
-  await page.selectOption("#lab-kind", "profile");
+  await page.click("#lab-profile-mode");
   await page.waitForFunction(() =>
     document.querySelector('#lab-profile option[value="udds"]'),
   );
@@ -258,7 +412,6 @@ const fs = require("node:fs"),
     document.activeElement?.blur();
     scrollTo(0, 0);
   });
-  await page.screenshot({ path: out + "/lab-profile.png" });
   // Explicit CSV import mapping: time-only profile and distance-indexed geometry are separate contracts.
   const profileCSV = out + "/custom-profile.csv";
   fs.writeFileSync(profileCSV, "time_s,speed_ms\n0,0\n1,5\n2,0\n");
@@ -344,6 +497,42 @@ const fs = require("node:fs"),
     "true",
   );
 
+  // A real run with a tight battery-current limit must show the recorded electrical constraint.
+  await page.click('[data-key="simulation"]');
+  await page.locator("#lab-scenarios-mode").waitFor();
+  await page.click('[data-kind="acceleration"]');
+  await page.locator("#lab-config").evaluate((e) => (e.open = true));
+  await page.selectOption("#lab-vehicle", "lab-second");
+  await page.locator("#lab-assumptions").evaluate((e) => (e.open = true));
+  for (const c of await page.locator(".lab-ack").all()) await c.check();
+  await page
+    .getByText("Numerical and braking settings", { exact: true })
+    .click();
+  await page.fill("#lab-duration", "3");
+  await page.fill("#lab-dt", ".05");
+  const [limitedResponse] = await Promise.all([
+    page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/api/lab/run") && r.request().method() === "POST",
+    ),
+    page.click("#lab-run"),
+  ]);
+  assert.equal(limitedResponse.status(), 200, await limitedResponse.text());
+  await page.waitForFunction(
+    () => VEUSLab.result?.vehicle?.battery?.discharge_limit_a === 5,
+  );
+  await page.locator("#lab-seek").evaluate((e) => {
+    e.value = 1;
+    e.dispatchEvent(new Event("input"));
+  });
+  assert.equal(
+    await page.locator("#lab-battery").getAttribute("data-state"),
+    "limited",
+  );
+  assert.equal(
+    await page.locator("#lab-energy-flow").getAttribute("data-direction"),
+    "out",
+  );
   await page.click("#theme-toggle");
   await page.locator("#lab-seek").evaluate((e) => {
     e.value = 1;
@@ -353,7 +542,8 @@ const fs = require("node:fs"),
     document.activeElement?.blur();
     scrollTo(0, 0);
   });
-  await page.screenshot({ path: out + "/lab-dark.png" });
+  await page.click("#lab-scenarios-mode");
+  await page.locator("#lab-config").evaluate((e) => (e.open = false));
   for (const width of [1024, 820, 390]) {
     await page.setViewportSize({ width, height: 844 });
     assert.equal(
@@ -363,17 +553,24 @@ const fs = require("node:fs"),
       false,
       "Lab horizontal overflow " + width,
     );
+    const g = await page.locator("#lab-speedometer").boundingBox(),
+      p = await page.locator(".lab-speed-panel").boundingBox();
+    assert(g.x >= p.x - 1 && g.x + g.width <= p.x + p.width + 1);
   }
   await page.evaluate(() => {
     document.activeElement?.blur();
     scrollTo(0, 0);
   });
-  await page.screenshot({ path: out + "/lab-mobile.png" });
   assert.equal(sockets.length, 0);
   assert.deepEqual(errors, []);
   const summary = {
     status: "PASS",
     experiments: results,
+    scenario_cards: true,
+    exactly_three_synchronized_plots: true,
+    battery_soc_and_regen: true,
+    stop_resets_scene: true,
+    gauge_boundaries: true,
     shared_cursor: true,
     replay_without_recalculation: true,
     frozen_vehicle_identity: true,
@@ -384,6 +581,19 @@ const fs = require("node:fs"),
     validated_csv_imports: ["profile", "route"],
     paused_background_requests: 0,
     paused_owned_animation_frames: 0,
+    lab_resources: await page.evaluate(() =>
+      performance
+        .getEntriesByType("resource")
+        .filter((r) =>
+          /\/(lab(?:-scene)?\.js|lab\.css|replay-controller\.js)$/.test(
+            new URL(r.name).pathname,
+          ),
+        )
+        .map((r) => ({
+          name: new URL(r.name).pathname,
+          body_bytes: r.decodedBodySize,
+        })),
+    ),
     js_heap_bytes_chromium: jsHeap,
     seek_frame_callback_ms: seekTiming,
     timing_scope:

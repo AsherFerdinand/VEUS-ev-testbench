@@ -174,3 +174,46 @@ recovery findings never infer a real-world causal mechanism. HTML exports includ
 requested/achieved speed lines and those findings, with complete JSON/CSV retaining
 every simulation tick and source snapshot. Source import/research scope belongs in
 the coordinator's profile documentation and pinned dataset records, not duplicated here.
+
+## 2.3.1 cockpit UI
+
+The numerical Lab is unchanged. Five scenario cards map directly to the existing
+experiments: Highway Cruising → `constant_speed`, Highway Overtaking →
+`acceleration`, Traffic Light Braking → `braking`, Mountain Climb → `gradient`,
+Free Rolling → `coast`. Existing defaults, configuration/acknowledgements,
+Profile/Route mode, provenance and full exports remain accessible. Configuration
+changes apply to the next run; the visible result identity stays frozen.
+
+`lab-scene.js` is lazy-loaded with the Lab and contains the original fictional
+VEUS Arrow SVG. It is a visual body for any active design, not a manufacturer
+preset or calibrated vehicle. Scenery transforms are deterministic functions of
+achieved recorded distance; slope uses the selected recorded gradient. The other
+vehicle is an illustrative reference, with no lateral or collision model. The
+traffic light has a declared red event at t=0, exactly when the existing braking
+experiment starts; it is not an autonomous controller or stopping-line guarantee.
+
+One existing replay clock drives the scene, instruments, three cached plots and
+cursor findings. Linear interpolation between adjacent computed samples smooths
+visual readouts only; original traces/exports are unchanged. No solver execution,
+requests, CSS animations or owned animation frames continue while paused or after
+leaving the Lab. Stop pauses and seeks to zero; reaching the end stops the scene.
+
+The gauge scale is the configured maximum-motor-rpm kinematic speed equivalent
+for the selected wheel radius/fixed ratio; if unavailable it uses the recorded
+maximum and labels that basis. Orange starts at 75% of that display scale; red at
+95% is used only when the configured rpm limit exists. These are display bands,
+not safe-driving thresholds or a top-speed prediction.
+
+Battery fill is SOC. Near-zero power is neutral; ordinary discharge green,
+regeneration cyan. Orange indicates at least 75% of the lower declared continuous
+motor/inverter DC-equivalent rating (using the existing constant-efficiency
+assumptions). Red uses actual recorded battery/inverter constraint flags. Current
+constraint flags are retained at the preceding sample during visual interpolation.
+These colours do not describe temperature or hardware safety. Flow-dash direction
+uses power sign; dash position is assigned from replay time, so it freezes on pause.
+
+The primary plots are exactly achieved speed (km/h), battery DC power (kW, positive
+discharge/negative charge) and SOC (%), with one shared cursor and a power zero
+line. The detailed numerical summary remains expandable. Requested demand, other signals,
+raw findings and complete reproduction snapshots remain in frozen JSON/CSV/HTML exports.
+See [2.3.1 verification and three actual captures](evidence-2.3.1/README.md).

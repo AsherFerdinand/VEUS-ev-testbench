@@ -24,7 +24,9 @@ const fs = require("node:fs");
       if (d.type !== "error") latest = d;
     });
   });
-  const entry = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770/engineering");
+  const entry = new URL(
+    process.env.VEUS_URL || "http://127.0.0.1:8770/engineering",
+  );
   entry.searchParams.set("workspace", "drive");
   await page.goto(entry.href);
   await page.locator('[data-vehicle="hatch"]').waitFor();
@@ -178,7 +180,8 @@ const fs = require("node:fs");
   );
   const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus-drive-screens";
   fs.mkdirSync(out, { recursive: true });
-  await page.screenshot({ path: out + "/drive-laptop.png", fullPage: true });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({ path: out + "/drive-laptop.png", fullPage: true });
   const performance = await page.evaluate(() => VEUS.debug());
   for (const [width, height] of [
     [1920, 1080],
@@ -208,18 +211,20 @@ const fs = require("node:fs");
       assert.equal(await page.locator("#brake").inputValue(), "100");
       await page.mouse.up();
       assert.equal(await page.locator("#brake").inputValue(), "0");
-      await page.screenshot({
-        path: out + "/drive-mobile.png",
-        fullPage: true,
-      });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({
+          path: out + "/drive-mobile.png",
+          fullPage: true,
+        });
     }
   }
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.click("#chooseVehicle");
-  await page.screenshot({
-    path: out + "/vehicle-selection.png",
-    fullPage: true,
-  });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/vehicle-selection.png",
+      fullPage: true,
+    });
   await page.keyboard.press("Escape");
   await page.evaluate(() => send({ action: "reset", config: { mass_kg: 1 } }));
   await page.waitForFunction(() =>

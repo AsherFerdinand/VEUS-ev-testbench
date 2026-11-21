@@ -274,7 +274,7 @@ const assert = require("node:assert/strict"),
   await page.waitForTimeout(400);
   assert.equal(await page.locator("#component-inspector h2").count(), 1);
   await page.click("#tab-simulation");
-  await page.locator("#lab-kind").waitFor();
+  await page.locator("#lab-scenarios-mode").waitFor();
   await page.click("#lab-run");
   assert(
     (await page.locator("#lab-status").innerText())
@@ -337,11 +337,13 @@ const assert = require("node:assert/strict"),
       );
       const dock = await page.locator(".workspace-dock").boundingBox();
       assert(dock.y >= 0 && dock.y + dock.height <= 769);
-      await page.screenshot({ path: `${out}/${key}-${theme}.png` });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({ path: `${out}/${key}-${theme}.png` });
       if (key === "anatomy") {
         await page.click("#flow-view");
         await page.click('[data-flow="ac_charging"]');
-        await page.screenshot({ path: `${out}/energy-paths-${theme}.png` });
+        if (process.env.VEUS_CAPTURE !== "0")
+          await page.screenshot({ path: `${out}/energy-paths-${theme}.png` });
         await page.click("#placement-view");
       }
     }
@@ -370,7 +372,8 @@ const assert = require("node:assert/strict"),
     }
   }
   await page.click("#tab-anatomy");
-  await page.screenshot({ path: out + "/anatomy-mobile.png" });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({ path: out + "/anatomy-mobile.png" });
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto(base + "/engineering?workspace=analyse");
   await page.locator("#replayPanel").waitFor({ state: "attached" });

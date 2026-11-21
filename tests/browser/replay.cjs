@@ -24,7 +24,9 @@ const assert = require("node:assert/strict"),
       if (d.type !== "error") latest = d;
     });
   });
-  const entry = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770/engineering");
+  const entry = new URL(
+    process.env.VEUS_URL || "http://127.0.0.1:8770/engineering",
+  );
   entry.searchParams.set("workspace", "drive");
   await page.goto(entry.href);
   await page.locator('[data-vehicle="hatch"]').waitFor();
@@ -149,7 +151,8 @@ const assert = require("node:assert/strict"),
   await page.fill("#replayJump", "35");
   await page.click("#replayJumpButton");
   await page.evaluate(() => scrollTo(0, 0));
-  await page.screenshot({ path: out + "/replay-laptop.png", fullPage: true });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({ path: out + "/replay-laptop.png", fullPage: true });
   for (const [width, height] of [
     [1920, 1080],
     [1366, 768],
@@ -171,10 +174,11 @@ const assert = require("node:assert/strict"),
       `Playback visible ${width}`,
     );
     if (width === 390)
-      await page.screenshot({
-        path: out + "/replay-mobile.png",
-        fullPage: true,
-      });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({
+          path: out + "/replay-mobile.png",
+          fullPage: true,
+        });
   }
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.locator("#replayAdvanced").evaluate((d) => (d.open = true));

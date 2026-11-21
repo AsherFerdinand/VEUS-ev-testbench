@@ -14,7 +14,9 @@ const assert = require("node:assert/strict"),
     }),
     errors = [];
   page.on("pageerror", (e) => errors.push(e.stack));
-  const base = new URL(process.env.VEUS_URL || "http://127.0.0.1:8770/engineering");
+  const base = new URL(
+    process.env.VEUS_URL || "http://127.0.0.1:8770/engineering",
+  );
   base.searchParams.set("workspace", "analyse");
   await page.goto(base.href);
   await page.click('[data-analyse="investigate"]');
@@ -80,10 +82,11 @@ const assert = require("node:assert/strict"),
   const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus-investigation-screens";
   fs.mkdirSync(out, { recursive: true });
   await page.evaluate(() => scrollTo(0, 0));
-  await page.screenshot({
-    path: out + "/investigation-laptop.png",
-    fullPage: true,
-  });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/investigation-laptop.png",
+      fullPage: true,
+    });
   await page.click('[data-analyse="compare"]');
   await page.click("#comparisonRun");
   await page.waitForFunction(
@@ -112,10 +115,11 @@ const assert = require("node:assert/strict"),
     await page.locator("#comparisonPlotA").getAttribute("data-cursor-time"),
     "230.200000",
   );
-  await page.screenshot({
-    path: out + "/comparison-laptop.png",
-    fullPage: true,
-  });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/comparison-laptop.png",
+      fullPage: true,
+    });
   await page.click('[data-analyse="reports"]');
   for (const [id, name] of [
     ["caseHtml", "report.html"],
@@ -148,7 +152,11 @@ const assert = require("node:assert/strict"),
       .readFileSync(out + "/report.html", "utf8")
       .includes("No physical vehicle validation"),
   );
-  await page.screenshot({ path: out + "/reports-laptop.png", fullPage: true });
+  if (process.env.VEUS_CAPTURE !== "0")
+    await page.screenshot({
+      path: out + "/reports-laptop.png",
+      fullPage: true,
+    });
   await page.click('[data-analyse="compare"]');
   await page.selectOption("#comparisonDataset", "imported");
   await page
@@ -202,10 +210,11 @@ const assert = require("node:assert/strict"),
       "No overflow " + width,
     );
     if (width === 390)
-      await page.screenshot({
-        path: out + "/investigation-mobile.png",
-        fullPage: true,
-      });
+      if (process.env.VEUS_CAPTURE !== "0")
+        await page.screenshot({
+          path: out + "/investigation-mobile.png",
+          fullPage: true,
+        });
   }
   await page.click('[data-analyse="replay"]');
   assert(await page.locator("#replayPanel .replay-transport").isVisible());

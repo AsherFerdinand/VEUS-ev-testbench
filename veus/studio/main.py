@@ -43,6 +43,18 @@ from veus.lab.profiles import router as lab_profiles_router
 app.include_router(lab_router)
 app.include_router(lab_profiles_router)
 
+from veus.workbench.insights import router as insights_router
+
+app.include_router(insights_router)
+
+from veus.workbench.design_analysis import router as analysis_router
+
+app.include_router(analysis_router)
+
+from veus.workbench.measurements import router as measurement_workbench_router
+
+app.include_router(measurement_workbench_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

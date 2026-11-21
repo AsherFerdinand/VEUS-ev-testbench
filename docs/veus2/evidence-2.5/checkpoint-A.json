@@ -1,0 +1,29 @@
+{
+  "phase": "2.3.3",
+  "status": "PASS",
+  "independent_checks": [
+    "range60kWh/15kWh100km=400km",
+    "daily20kWh100km*40km/.8*.4EUR=4EUR",
+    "SOC0/1 invalidation",
+    "same request exact repeatability",
+    "continuous145kW vspeak180kW",
+    "unknown charging efficiency leaves grid energy unavailable"
+  ],
+  "browser": {
+    "status": "PASS",
+    "vehicle": "s1",
+    "snapshot_hash": "fdb0bfd079f856700e0ee7ad91d7eca259e4471076b0ba9c2cd8f477cb446af0",
+    "cost_reference": true,
+    "three_default_charts": true,
+    "saved_design_stale": true,
+    "export": true,
+    "widths": [
+      1440,
+      1024,
+      390
+    ],
+    "page_errors": []
+  },
+  "source_sha256": "3a48e42dda2212cbfee9e823a3517596ff5a6126202d6e5dad0908961b90b2cc",
+  "backend_tests_passed": 16
+}

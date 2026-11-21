@@ -253,3 +253,9 @@ prototype renderer was removed. Measurement navigation is visibly under developm
 with the original `/engineering` measurement tools and safeguards retained.
 
 [Verification, measured footprint and three actual captures](evidence-2.3.2/README.md).
+
+## Engineering Insights and controlled studies
+
+The 2.3.3/2.4 extension reuses the coupled Lab for complete-cycle energy/range,
+explicit daily tariff assumptions, bounded continuous-power performance and matched
+design/sensitivity/battery-mass studies. [Contracts, equations and gates](engineering-analysis.md).

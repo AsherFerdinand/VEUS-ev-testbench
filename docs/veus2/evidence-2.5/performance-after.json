@@ -1,0 +1,113 @@
+{
+  "scope": "Warm-up excluded, three repeated Linux samples; 10 ms startup polling, 1 s server idle sample. Server CPU/RSS are not browser memory. Baseline validate and new complete evaluation do different work; their latency is not a speedup comparison. No laptop guarantee.",
+  "inventory": {
+    "application_file_bytes": 911410,
+    "python_bytes": 426320,
+    "python_physical_lines": 11158,
+    "python_nonblank_noncomment_lines": 10340,
+    "python_ast_statements": 4562,
+    "workbench_bytes_by_suffix": {
+      ".html": 1890,
+      ".js": 193376,
+      ".css": 64188,
+      ".svg": 203
+    },
+    "installed_distributions": 36,
+    "freeze": [
+      "annotated-doc==0.0.5",
+      "annotated-types==0.8.0",
+      "anyio==4.15.1",
+      "certifi==2026.10.19",
+      "click==8.5.0",
+      "contourpy==1.4.0",
+      "coverage==7.17.0",
+      "cycler==0.12.1",
+      "fastapi==0.159.1",
+      "fonttools==4.67.0",
+      "h11==0.16.0",
+      "httpcore==1.0.9",
+      "httpx==0.28.1",
+      "idna==3.20",
+      "iniconfig==2.3.1",
+      "kiwisolver==1.5.1",
+      "matplotlib==3.10.7",
+      "numpy==2.5.4",
+      "opentelemetry-api==1.45.1",
+      "packaging==26.3",
+      "pillow==13.0.0",
+      "pluggy==1.7.0",
+      "pydantic==2.14.1",
+      "pydantic_core==2.50.1",
+      "Pygments==2.21.0",
+      "pyparsing==3.3.3",
+      "pytest==8.4.2",
+      "pytest-cov==7.0.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "starlette==1.9.0",
+      "typing-inspection==0.4.4",
+      "typing_extensions==4.16.0",
+      "tzdata==2026.5",
+      "uvicorn==0.54.0",
+      "websockets==17.3"
+    ],
+    "installed_environment_file_bytes": 297534332
+  },
+  "samples": [
+    {
+      "warmup": true,
+      "startup_s": 0.45239287300000797,
+      "startup_rss_kib": 44160,
+      "operation_rss_kib": 50612,
+      "idle_server_cpu_percent": 0.0,
+      "operation_ms_median": 1.7013659999065567,
+      "operation_scope": "v2 complete evaluate",
+      "insights_ms": 129.74564999990434,
+      "insights_payload_bytes": 134204,
+      "insights_rss_kib": 50612
+    },
+    {
+      "warmup": false,
+      "startup_s": 0.390853911000022,
+      "startup_rss_kib": 44164,
+      "operation_rss_kib": 49664,
+      "idle_server_cpu_percent": 0.998929980168889,
+      "operation_ms_median": 4.065673499894729,
+      "operation_scope": "v2 complete evaluate",
+      "insights_ms": 247.57354300004408,
+      "insights_payload_bytes": 134204,
+      "insights_rss_kib": 49664
+    },
+    {
+      "warmup": false,
+      "startup_s": 0.7807556589998512,
+      "startup_rss_kib": 44172,
+      "operation_rss_kib": 49648,
+      "idle_server_cpu_percent": 0.0,
+      "operation_ms_median": 2.191431499909413,
+      "operation_scope": "v2 complete evaluate",
+      "insights_ms": 156.11849799984157,
+      "insights_payload_bytes": 134204,
+      "insights_rss_kib": 49648
+    },
+    {
+      "warmup": false,
+      "startup_s": 0.463823573000127,
+      "startup_rss_kib": 44180,
+      "operation_rss_kib": 49648,
+      "idle_server_cpu_percent": 0.0,
+      "operation_ms_median": 4.003511499945489,
+      "operation_scope": "v2 complete evaluate",
+      "insights_ms": 155.20375100004458,
+      "insights_payload_bytes": 134204,
+      "insights_rss_kib": 49648
+    }
+  ],
+  "median": {
+    "startup_s": 0.463823573000127,
+    "startup_rss_kib": 44172,
+    "operation_rss_kib": 49648,
+    "idle_server_cpu_percent": 0.0,
+    "operation_ms_median": 4.003511499945489
+  }
+}

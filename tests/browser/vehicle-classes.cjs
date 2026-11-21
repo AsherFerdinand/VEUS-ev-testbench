@@ -230,7 +230,7 @@ const fs = require("node:fs"),
   await page.waitForFunction(() =>
     document
       .getElementById("workspace-panel")
-      .textContent.includes("under development"),
+      .textContent.includes("Check readiness"),
   );
   assert.deepEqual(errors, []);
   const result = {
@@ -246,7 +246,7 @@ const fs = require("node:fs"),
     widths: [1440, 1024, 820, 390],
     themes: ["light", "dark"],
     optimization_redirect: true,
-    measurements_development_label: true,
+    measurements_functional: true,
     page_errors: errors,
   };
   fs.writeFileSync(

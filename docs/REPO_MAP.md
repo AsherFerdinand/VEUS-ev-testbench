@@ -10,6 +10,8 @@
 | Design editor and bounded local library | `static/workbench/design-studio.js`; `tests/browser/vehicle-classes.cjs` | Workbench browser persistence/comparison/import tests |
 | Coupled Simulation Lab | `veus/lab/{schema,kernel,runner,api,report}.py`; `static/workbench/lab.js/css`, lazy `lab-scene.js` | `test_lab_kernel.py`, `tests/browser/lab.cjs`; `veus2/simulation-lab.md` |
 | Profiles / routes / engineering studies | `veus/lab/profiles.py`, `datasets/cycles/`, `examples/lab/`, `scripts/lab_studies.py` | `test_lab_profiles.py`; `veus2/profiles-routes.md` |
+| Engineering Insights / controlled studies | `veus/workbench/insights.py`, `design_analysis.py`; lazy `engineering-insights.js`, `design-analysis.js` | `test_insights.py`, `test_controlled_analysis.py`; `veus2/engineering-analysis.md` |
+| Modern Measurements / legacy parity | `veus/workbench/measurements.py`; lazy `measurements.js/css`; retained investigation/replay/readiness services | `test_measurement_migration.py`, `tests/browser/engineering-workflow.cjs`; `veus2/measurement-migration.md` |
 | Longitudinal dynamics / battery | `veus/sim/dynamics.py`, `session.py`; `veus/model/` | `test_physics.py`, `test_energy.py`, `test_session.py`; `engineering.md` |
 | Reproducible offline scenarios | `veus/testing/__main__.py`, `runner.py`, `schema.py`; `scenarios/` | `test_scenarios.py`, `test_validation.py`; `validation.md` |
 | Measurement import / calibration | `veus/validation/` | `test_measurements.py`, `test_experiments.py`; `vehicle-validation.md` |

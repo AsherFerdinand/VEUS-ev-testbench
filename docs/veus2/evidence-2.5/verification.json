@@ -1,0 +1,42 @@
+{
+  "baseline": "c039fb883d4e76702f662cabf86937955a45a8fc",
+  "checkpoints": [
+    "A",
+    "B",
+    "C"
+  ],
+  "python_tests": 301,
+  "python_elapsed_s": 30.24,
+  "clock_tests": 9,
+  "browser_suites": [
+    "workbench",
+    "vehicle-classes",
+    "lab",
+    "drive",
+    "replay",
+    "guidance",
+    "investigation",
+    "engineering-workflow"
+  ],
+  "measurement_parity": "Exact legacy/new JSON CSV HTML and selected event outputs for identical inputs",
+  "physical_validation": "INCONCLUSIVE",
+  "model_measurement_residuals": "Unavailable: missing verified vehicle/measurement mapping, inputs and polarity",
+  "historical_models_datasets_dependencies_unchanged": true,
+  "sourced_profile_smoke": {
+    "udds": {
+      "samples_simulated": 6846,
+      "eligibility": "available",
+      "stored_kwh_100km": 11.073481430958205
+    },
+    "hwfet": {
+      "samples_simulated": 3826,
+      "eligibility": "available",
+      "stored_kwh_100km": 12.08913637840877
+    }
+  },
+  "source_sha256": {
+    "veus/workbench/insights.py": "3a48e42dda2212cbfee9e823a3517596ff5a6126202d6e5dad0908961b90b2cc",
+    "veus/workbench/design_analysis.py": "cb643579b63ecc040baa646edafae4dd0c9b0eaa33572a0d0177ef807a0e6e14",
+    "veus/workbench/measurements.py": "6159c86640c4f31f638440353e521166d200226e8eeccea06d84733fef6866d1"
+  }
+}

@@ -183,6 +183,11 @@ const assert = require("node:assert/strict"),
     .setInputFiles(out + "/illustrative-design.json");
   await page.waitForFunction(() =>
     document
+      .getElementById("notice")
+      .textContent.includes("Valid design imported"),
+  );
+  await page.waitForFunction(() =>
+    document
       .getElementById("configuration-status")
       .textContent.startsWith("Checked"),
   );
@@ -288,6 +293,9 @@ const assert = require("node:assert/strict"),
   assert.equal(new URL(page.url()).searchParams.get("workspace"), "design");
   await page.click("#tab-measurements");
   await page.selectOption("#measurement-recording", "ved-10-1567-full");
+  await page.waitForFunction(() =>
+    document.getElementById("measurement-summary").textContent.includes("367"),
+  );
   assert(
     (await page.locator("#measurement-summary").innerText()).includes("367"),
   );

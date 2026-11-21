@@ -31,7 +31,7 @@ def cpu(pid):
     return (int(fields[13]) + int(fields[14])) / os.sysconf("SC_CLK_TCK")
 
 
-def measure(root, port, operations, lab=False):
+def measure(root, port, operations, lab=False, insights=False):
     rows = []
     for trial in range(4):
         log = open("/tmp/veus-performance-server.log", "w")
@@ -107,6 +107,27 @@ def measure(root, port, operations, lab=False):
                         json.dumps(result, separators=(",", ":")).encode()
                     ),
                     lab_operation_rss_kib=rss(p.pid),
+                )
+            if insights:
+                from veus.workbench.adapter import ACKNOWLEDGEMENTS
+
+                begin = time.perf_counter()
+                result = call(
+                    base,
+                    "/api/workbench/v2/insights",
+                    dict(
+                        vehicle=design,
+                        acknowledgements=ACKNOWLEDGEMENTS,
+                        profile_id="urban",
+                        dt_s=0.2,
+                    ),
+                )
+                lab_metrics.update(
+                    insights_ms=(time.perf_counter() - begin) * 1000,
+                    insights_payload_bytes=len(
+                        json.dumps(result, separators=(",", ":")).encode()
+                    ),
+                    insights_rss_kib=rss(p.pid),
                 )
             rows.append(
                 dict(
@@ -186,12 +207,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8785)
     parser.add_argument("--v2", action="store_true")
     parser.add_argument("--lab", action="store_true")
+    parser.add_argument("--insights", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = {
         "scope": "Warm-up excluded, three repeated Linux samples; 10 ms startup polling, 1 s server idle sample. Server CPU/RSS are not browser memory. Baseline validate and new complete evaluation do different work; their latency is not a speedup comparison. No laptop guarantee.",
         "inventory": inventory(args.root),
-        **measure(args.root, args.port, args.v2, args.lab),
+        **measure(args.root, args.port, args.v2, args.lab, args.insights),
     }
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(result["median"])

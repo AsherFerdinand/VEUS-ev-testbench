@@ -5,11 +5,11 @@
 An EV engineering workbench for understanding vehicle systems, making explicit
 design assumptions and investigating reproducible experiments and measured evidence.
 
-**VEUS 2.3.2 Vehicle Configurator** adds three fictional vehicle classes, explicit
-engineering presets and responsive component cutaways. The verified Simulation Lab,
-driving profiles, route telemetry and engineering exports remain available. Saved-design
-comparisons are in Design Studio; the new Measurements experience is under development.
-This feature branch is not a stable release. Physical validation remains **INCONCLUSIVE**.
+**VEUS 2.5 Engineering Workbench** combines three fictional vehicle classes with
+coupled-cycle insights, controlled design studies and a functional recorded-data
+investigation workspace. Numerical range/cost results have explicit assumptions;
+measurement readiness gates preserve unknown signals and polarity. This feature
+branch is not a stable release. Physical validation remains **INCONCLUSIVE**.
 
 ![Original interactive EV cutaway](docs/veus2/evidence-2.1/complete-cutaway-light.png)
 
@@ -26,7 +26,7 @@ not manufacturer specifications. No range, charging-time or simulated outcome is
 | **EV Challenges**  | Eight source-referenced engineering questions, underlying physics, technology trade-offs and proposed experiments.                                                               |
 | **Design Studio**  | Functional illustrative configuration, typed version 2 designs, representative catalogue, compatibility/specifications, local save/duplicate/compare and explicit model adapter. |
 | **Simulation Lab** | Five coupled experiments, predictive/prescribed profiles, explicit constraints, route coverage, shared replay and JSON/CSV/HTML exports.                          |
-| **Measurements**   | Genuine VED catalogue metadata and question selection; existing import/readiness/investigation/report workflows are linked during migration.                                     |
+| **Measurements**   | Real CSV/JSON import, VED source/readiness gates, synchronized signals/events, descriptive comparison and reproducible reports; model residuals gated by evidence.                                     |
 
 Manual keyboard driving, landscapes and ADAS interfaces are retired from the new
 primary navigation. They remain isolated in the migration toolset because the

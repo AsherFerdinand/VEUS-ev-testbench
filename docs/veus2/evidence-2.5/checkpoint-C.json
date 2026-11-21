@@ -1,0 +1,27 @@
+{
+  "phase": "2.5",
+  "status": "PASS",
+  "focused_measurement_tests_passed": 4,
+  "parity": "Exact new/legacy JSON, CSV, HTML for identical inputs; original event indices, selected intervals and provenance preserved",
+  "browser": {
+    "status": "PASS",
+    "real_ved_import": true,
+    "provenance_preserved": true,
+    "unknown_polarity_gate": true,
+    "source_samples": [
+      534,
+      367
+    ],
+    "event_indices": true,
+    "shared_cursor": true,
+    "formats": [
+      "json",
+      "csv",
+      "html"
+    ],
+    "gated_model_comparison": true,
+    "inactive_cleanup": true
+  },
+  "measured_vs_model": "Readiness-gated INCONCLUSIVE; no quantitative residual fabricated for unmatched illustrative vehicle and unknown polarity",
+  "source_sha256": "6159c86640c4f31f638440353e521166d200226e8eeccea06d84733fef6866d1"
+}

@@ -1,6 +1,6 @@
 # VEUS 2.0 redevelopment roadmap
 
-Current milestone: **VEUS 2.3 Simulation Lab and profiles**, still not a stable release. Foundation evidence remains historical.
+Current milestone: **VEUS 2.5 Engineering Insights, controlled analysis and Measurements**, still not a stable release. Foundation evidence remains historical.
 The order below follows engineering dependencies rather than the number of tabs.
 
 | Milestone                           | Concrete result                                                                                                                                                          | Evidence required before advancing                                                                                                                  |
@@ -46,4 +46,9 @@ before advancing to a new engineering phase.
 
 Milestones 2 and 3 now have coupled experiment/profile execution, frozen exports,
 source/coverage policies and verification evidence. See [Simulation Lab](simulation-lab.md)
-and [profiles/routes](profiles-routes.md). This task stops after 2.3.
+and [profiles/routes](profiles-routes.md). This task stops after 2.5.
+
+2.3.3 Insights,2.4 controlled studies and2.5 measurement migration now have sequential
+acceptance checkpoints. [Analysis contracts](engineering-analysis.md),
+[measurement parity and limits](measurement-migration.md), [evidence](evidence-2.5/README.md).
+Quantitative model/measurement residuals remain gated; no new physical validation.

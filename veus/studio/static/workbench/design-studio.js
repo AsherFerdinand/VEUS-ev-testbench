@@ -1,3 +1,5 @@
+import { mountAnalysis } from "./design-analysis.js";
+import { mountInsights } from "./engineering-insights.js";
 import {
   appearanceOf,
   appearances,
@@ -172,6 +174,8 @@ export async function mountStudio(root, { content, header, notice }) {
     document.head.append(css);
   }
   loadLibrary();
+  let insightCleanup = null,
+    analysisCleanup = null;
   let alive = true,
     timer = null,
     generation = 0,
@@ -191,6 +195,8 @@ export async function mountStudio(root, { content, header, notice }) {
     window.dispatchEvent(new Event("veus:design"));
   }
   function shell() {
+    insightCleanup?.();
+    analysisCleanup?.();
     root.innerHTML =
       header(
         "03 / CONFIGURATION → EVIDENCE → MODEL",
@@ -211,7 +217,7 @@ export async function mountStudio(root, { content, header, notice }) {
    )
    .join(
      "",
-   )}</select></label><label>Layers<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, drawingOptions())}</div><p id="anatomy-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>${state.design.appearance ? "Selected visual class" : "Legacy appearance fallback: R1"} · illustrative packaging, not CAD</span><span>Single equivalent drive unit · no AWD or downforce model</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><div class="studio-evidence"><details id="compatibility-details"><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
+   )}</select></label><label>Layers<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, drawingOptions())}</div><p id="anatomy-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>${state.design.appearance ? "Selected visual class" : "Legacy appearance fallback: R1"} · illustrative packaging, not CAD</span><span>Single equivalent drive unit · no AWD or downforce model</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><section id="engineering-insights"></section><section id="controlled-analysis"></section><div class="studio-evidence"><details id="compatibility-details"><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
  <aside class="design-form studio-editor"><label>Subsystem<select id="design-group">${Object.entries(
    names,
  )
@@ -225,6 +231,8 @@ export async function mountStudio(root, { content, header, notice }) {
     editor();
     bind();
     presetControls();
+    insightCleanup = mountInsights(find("engineering-insights"));
+    analysisCleanup = mountAnalysis(find("controlled-analysis"));
     updateSchematic(root.querySelector(".anatomy-svg"), {
       selected: componentId[group],
       body: "cutaway",
@@ -693,6 +701,8 @@ export async function mountStudio(root, { content, header, notice }) {
   shell();
   syncLabel();
   return () => {
+    insightCleanup?.();
+    analysisCleanup?.();
     alive = false;
     clearTimeout(timer);
     controller?.abort();

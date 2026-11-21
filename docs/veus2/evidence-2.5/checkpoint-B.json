@@ -1,0 +1,19 @@
+{
+  "phase": "2.4",
+  "status": "PASS",
+  "focused_tests_passed": 22,
+  "scope": "16 insights +6 controlled analysis tests",
+  "browser": {
+    "status": "PASS",
+    "matched_comparison": true,
+    "sensitivity": true,
+    "exports": [
+      "json",
+      "csv",
+      "html"
+    ],
+    "saved_designs_intact": true,
+    "study_sha256": "04a38218b7b57257f797f811c65ac08d5be10225bb4da8a483984c81550b39fa"
+  },
+  "source_sha256": "cb643579b63ecc040baa646edafae4dd0c9b0eaa33572a0d0177ef807a0e6e14"
+}

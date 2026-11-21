@@ -17,7 +17,6 @@ const workspaces = [
   ["measurements", "Measurements", "FOLLOW THE EVIDENCE"],
 ];
 let content,
-  catalogue,
   selectedComponent = "battery",
   anatomyMode = "placement",
   flowMode = "propulsion",
@@ -363,53 +362,20 @@ async function renderSimulation() {
 }
 
 async function renderMeasurements() {
-  if (!catalogue) {
-    $("workspace-panel").innerHTML =
-      '<p class="quiet">Loading genuine recording catalogue…</p>';
-    try {
-      catalogue = await get("/api/investigation/catalogue");
-    } catch (e) {
-      if (active === "measurements")
-        $("workspace-panel").textContent = e.message;
-      return;
-    }
-    if (active !== "measurements") return;
+  const panel = $("workspace-panel");
+  panel.innerHTML = "<p>Loading measurement investigation…</p>";
+  try {
+    const module = await import("./measurements.js");
+    if (active !== "measurements" || !panel.isConnected) return;
+    const cleanup = await module.mountMeasurements(panel, { header });
+    if (active !== "measurements" || !panel.isConnected) cleanup();
+    else studioCleanup = cleanup;
+  } catch (e) {
+    if (panel.isConnected)
+      panel.textContent = "Measurements unavailable: " + e.message;
   }
-  $("workspace-panel").innerHTML =
-    header(
-      "05 / RECORDED MEASUREMENTS",
-      "Let the evidence set the limits.",
-      "A focused entry to genuine vehicle data. Existing ingestion, readiness, event investigation and reporting remain available.",
-      "2.X UNDER DEVELOPMENT",
-    ) +
-    `<div class="steps"><b>01 Select recording</b><span>→ 02 Choose a question</span><span>→ 03 Inspect signals</span><span>→ 04 Review evidence</span><span>→ 05 Export report</span></div><div class="measurement-layout"><aside class="selection-fields"><label>Genuine recording<select id="measurement-recording">${catalogue.map((c) => `<option value="${c.id}" ${c.id === "ved-10-1561-full" ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></label><label>Engineering question<select id="measurement-question"><option value="speed">What supports an acceleration event?</option><option value="power">What do voltage and signed current show?</option><option value="quality">Where are the evidence gaps?</option></select></label><div class="prototype-note">The catalogue is connected to real importer metadata. The new 2.x measurement experience is under development. Use the existing measurement tools for actual investigation and exports.</div><a class="primary" href="/engineering?workspace=analyse">Open existing measurement tools →</a><p class="quiet">Select the matching recording in that view. CSV import, Data Readiness, investigation, comparison and report exports are preserved.</p></aside><article id="measurement-summary" class="recording-summary"></article></div>`;
-  const show = () => {
-    const c = catalogue.find((c) => c.id === $("measurement-recording").value);
-    const question = $("measurement-question").value;
-    const hint = {
-      speed:
-        "Inspect recorded speed and speed-derived acceleration at the same sample indices. Detection does not explain the cause.",
-      power:
-        "Inspect voltage, raw current and signed V × I. Unverified polarity prevents charging/discharging or regeneration claims.",
-      quality:
-        "Inspect timestamp gaps, missing channels and coverage. Unknown travel is not filled by interpolation.",
-    }[question];
-    $("measurement-summary").innerHTML =
-      `<div class="eyebrow">${esc(c.kind)} / UNIVERSITY OF MICHIGAN VED</div><h2>${esc(c.label)}</h2><div class="recording-numbers"><div><span>ACTUAL SAMPLES</span><strong>${c.sample_count}</strong></div><div><span>RECORDING SPAN · s</span><strong>${c.duration_s.toFixed(1)}</strong></div><div><span>TIMESTAMP GAPS</span><strong>${c.timestamp_gaps.length}</strong></div></div><p>${esc(hint)}</p><h3>Available source channels</h3>${Object.entries(
-        c.signals,
-      )
-        .map(
-          ([s, u]) => `<span class="signal-chip">${esc(s)} · ${esc(u)}</span>`,
-        )
-        .join(
-          "",
-        )}<p class="prototype-note">Current polarity remains unverified. Measurement gaps remain unknown. Replay is not physical model validation: the assessment remains INCONCLUSIVE.</p><details><summary>Source identity, licence & checksum</summary><p>${esc(c.licence)}</p><p>Vehicle: ${esc(c.vehicle_id)} · trip: ${esc(c.trip_id)}</p><pre>${esc(c.source_sha256)}</pre><a href="${esc(c.source.source_url)}" target="_blank" rel="noopener">Pinned dataset source ↗</a></details>`;
-  };
-  $("measurement-recording").onchange = show;
-  $("measurement-question").onchange = show;
-  show();
 }
-loadLibrary();
+
 function activeLabel() {
   const label = document.querySelector(".edition-note");
   if (label)

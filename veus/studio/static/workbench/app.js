@@ -113,6 +113,40 @@ function navigate(key, update = true) {
   studioCleanup?.();
   studioCleanup = null;
   active = key;
+  const guidance = {
+    anatomy: [
+      "Learn how the systems connect.",
+      "challenges",
+      "Explore engineering questions",
+    ],
+    challenges: [
+      "Turn a question into an explicit design assumption.",
+      "design",
+      "Open Design Studio",
+    ],
+    design: [
+      "Choose a preset, edit and evaluate; save a named snapshot for reuse.",
+      "simulation",
+      "Simulate the active design",
+    ],
+    simulation: [
+      "Run the active design, then replay its frozen result.",
+      "measurements",
+      "Investigate measured evidence",
+    ],
+    measurements: [
+      "Import → Check readiness → Inspect → Investigate → Compare → Export.",
+      "design",
+      "Return to Design Studio",
+    ],
+  }[key];
+  $("workflow-hint").innerHTML =
+    `${esc(guidance[0])} <a id="workflow-next" href="/?workspace=${guidance[1]}">${esc(guidance[2])} →</a>`;
+  $("workflow-next").onclick = (e) => {
+    e.preventDefault();
+    navigate(guidance[1]);
+    $("workspace-content").focus({ preventScroll: true });
+  };
   document.body.dataset.workspace = key;
   for (const b of document.querySelectorAll(".workspace-tab")) {
     const selected = b.dataset.key === key;
@@ -327,28 +361,28 @@ function renderChallenges() {
   };
 }
 async function renderDesign() {
-  $("workspace-panel").innerHTML =
-    '<p class="quiet">Loading Design Studio…</p>';
+  const panel = $("workspace-panel");
+  panel.innerHTML = '<p class="quiet" role="status">Loading Design Studio…</p>';
   try {
     const module = await import("./design-studio.js");
-    if (active !== "design") return;
-    const cleanup = await module.mountStudio($("workspace-panel"), {
+    if (active !== "design" || !panel.isConnected) return;
+    const cleanup = await module.mountStudio(panel, {
       content,
       header,
       notice,
       sourceLinks,
     });
-    if (active !== "design") cleanup();
+    if (active !== "design" || !panel.isConnected) cleanup();
     else studioCleanup = cleanup;
   } catch (e) {
-    if (active === "design")
-      $("workspace-panel").textContent =
-        "Design Studio could not load: " + e.message;
+    if (active === "design" && panel.isConnected)
+      panel.textContent = "Design Studio could not load: " + e.message;
   }
 }
 async function renderSimulation() {
   const panel = $("workspace-panel");
-  panel.innerHTML = '<p class="quiet">Loading Simulation Lab…</p>';
+  panel.innerHTML =
+    '<p class="quiet" role="status">Loading Simulation Lab…</p>';
   try {
     const module = await import("./lab.js");
     if (active !== "simulation" || !panel.isConnected) return;
@@ -363,7 +397,7 @@ async function renderSimulation() {
 
 async function renderMeasurements() {
   const panel = $("workspace-panel");
-  panel.innerHTML = "<p>Loading measurement investigation…</p>";
+  panel.innerHTML = '<p role="status">Loading measurement investigation…</p>';
   try {
     const module = await import("./measurements.js");
     if (active !== "measurements" || !panel.isConnected) return;
@@ -382,6 +416,11 @@ function activeLabel() {
     label.textContent = state.design
       ? "Active · " +
         state.design.name +
+        (state.dirty
+          ? " · unsaved edits"
+          : state.activeId
+            ? " · saved"
+            : " · unsaved draft") +
         (state.evaluation ? "" : " · unchecked")
       : "Understand · Design · Simulate · Optimize";
 }

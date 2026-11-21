@@ -11,7 +11,9 @@ from fastapi.responses import FileResponse
 
 from veus.sim.drive_cycle import DriveCycleSimulator
 
-app = FastAPI(title="VEUS Electric Vehicle Engineering Workbench")
+from veus import __version__
+
+app = FastAPI(title="VEUS Electric Vehicle Engineering Workbench", version=__version__)
 
 from veus.validation.api import router as validation_router
 

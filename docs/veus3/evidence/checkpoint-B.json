@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "focused_existing_python_tests": 5,
+  "browser": "release-B.json",
+  "proof_of_bug_and_fix": [
+    "race-before.json",
+    "race-after.json"
+  ],
+  "legacy_processing": "unchanged; exact parity focused and final regression"
+}

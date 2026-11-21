@@ -1,0 +1,45 @@
+{
+  "scope": "Single integration-run HTTP observations, not an isolated benchmark. Includes intentionally delayed evaluation/assessment probes and rejected retries; do not interpret these as representative service runtimes. Use performance-after.json for comparable numerical timing.",
+  "operations": [
+    {
+      "path": "/api/workbench/v2/evaluate",
+      "elapsed_ms": 3.633
+    },
+    {
+      "path": "/api/workbench/v2/evaluate",
+      "elapsed_ms": 3.81
+    },
+    {
+      "path": "/api/workbench/v2/evaluate",
+      "elapsed_ms": 21.665
+    },
+    {
+      "path": "/api/workbench/v2/evaluate",
+      "elapsed_ms": 3.355
+    },
+    {
+      "path": "/api/workbench/v2/evaluate",
+      "elapsed_ms": 2.992
+    },
+    {
+      "path": "/api/workbench/v2/insights",
+      "elapsed_ms": 104.177
+    },
+    {
+      "path": "/api/lab/run",
+      "elapsed_ms": 518.395
+    },
+    {
+      "path": "/api/workbench/v2/measurements/case-study",
+      "elapsed_ms": 34.369
+    },
+    {
+      "path": "/api/workbench/v2/measurements/validation-readiness",
+      "elapsed_ms": 25.154
+    },
+    {
+      "path": "/api/workbench/v2/measurements/validation-readiness",
+      "elapsed_ms": 22.661
+    }
+  ]
+}

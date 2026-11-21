@@ -1,0 +1,215 @@
+{
+  "rows": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "key": "anatomy",
+      "load_ms": 235,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "key": "challenges",
+      "load_ms": 83,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "key": "design",
+      "load_ms": 159,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "key": "simulation",
+      "load_ms": 142,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "key": "measurements",
+      "load_ms": 84,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 820,
+      "key": "anatomy",
+      "load_ms": 56,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 820,
+      "key": "challenges",
+      "load_ms": 46,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 820,
+      "key": "design",
+      "load_ms": 83,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 820,
+      "key": "simulation",
+      "load_ms": 65,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 820,
+      "key": "measurements",
+      "load_ms": 63,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "key": "anatomy",
+      "load_ms": 61,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "key": "challenges",
+      "load_ms": 57,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "key": "design",
+      "load_ms": 74,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "key": "simulation",
+      "load_ms": 63,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "key": "measurements",
+      "load_ms": 59,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "key": "anatomy",
+      "load_ms": 81,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "key": "challenges",
+      "load_ms": 55,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "key": "design",
+      "load_ms": 89,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "key": "simulation",
+      "load_ms": 77,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "key": "measurements",
+      "load_ms": 85,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 820,
+      "key": "anatomy",
+      "load_ms": 65,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 820,
+      "key": "challenges",
+      "load_ms": 49,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 820,
+      "key": "design",
+      "load_ms": 66,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 820,
+      "key": "simulation",
+      "load_ms": 61,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 820,
+      "key": "measurements",
+      "load_ms": 65,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "key": "anatomy",
+      "load_ms": 62,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "key": "challenges",
+      "load_ms": 46,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "key": "design",
+      "load_ms": 75,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "key": "simulation",
+      "load_ms": 71,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "key": "measurements",
+      "load_ms": 67,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

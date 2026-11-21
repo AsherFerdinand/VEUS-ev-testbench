@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "local_document_links": "PASS, including final verification and all six genuine image references",
+  "application_version": "3.0.0rc1",
+  "new_screenshots": 1,
+  "reused_screenshots": 5,
+  "windows_execution": "NOT VERIFIED",
+  "root_project_licence": "ABSENT; no licence added",
+  "release_published": false
+}

@@ -1,6 +1,6 @@
 # VEUS 2.0 redevelopment roadmap
 
-Current milestone: **VEUS 2.6 optional powertrain maps, validation readiness and driving scene**, still not a stable release. Foundation evidence remains historical.
+Current milestone: **VEUS 3.0.0rc1 final integration and release preparation**, not a stable release. Foundation evidence remains historical.
 The order below follows engineering dependencies rather than the number of tabs.
 
 | Milestone                           | Concrete result                                                                                                                                                          | Evidence required before advancing                                                                                                                  |
@@ -58,4 +58,15 @@ Quantitative model/measurement residuals remain gated; no new physical validatio
 compatibility, evidence-specific VED calibration readiness and deterministic illustrative
 driving animation. See [equations](powertrain2.6.md), [validation/driving limits](validation-driving2.6.md)
 and [verification/performance/captures](evidence-2.6/README.md).
-Physical validation remains INCONCLUSIVE. Stop after 2.6; no Phase 3.0, main merge or stable release.
+Physical validation remains INCONCLUSIVE. The 2.6 implementation checkpoint is retained as historical evidence.
+
+
+## VEUS 3.0 release candidate
+
+A–D cover demonstrated UX/accessibility issues, snapshot consistency and async guards,
+comparable performance/quality checks, then README/architecture/Windows/demo/release
+preparation. No new physics model or major feature. Historical numerical/export contracts,
+presets, source data and measurement safeguards remain. See [release readiness](../veus3/release-readiness.md)
+and [evidence](../veus3/evidence/README.md). Root project licensing, clean Windows and
+non-Chromium browser checks remain outstanding. No merge or release without explicit
+authorization. Stop after 3.0 release preparation.

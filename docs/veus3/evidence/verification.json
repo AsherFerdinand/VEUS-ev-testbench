@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "application_version": "3.0.0rc1",
+  "base_commit": "b3d98321391d798884711411410b503cf45cc384",
+  "python": {
+    "passed": 314,
+    "seconds": 30.99,
+    "full_runs": 1,
+    "warnings": [
+      "Existing Starlette testclient/httpx deprecation; no dependency change"
+    ],
+    "log_sha256": "62135036a24ee49a94f845b1b3570bd2809c795fbe8e0408d3c4ce6e5519141b"
+  },
+  "node": {
+    "clock_passed": 9,
+    "scene_passed": 8,
+    "failed": 0,
+    "log_sha256": "84087d2e01d7d843c64af1083e88e2a38695b0adef176548c58b21b8ff7ded53"
+  },
+  "browser_suites": {
+    "workbench": {
+      "status": "PASS",
+      "log_sha256": "8200e58452024bd97dac5d98c01f1a519924139ce88ba72a706cfc1ba29b1498"
+    },
+    "vehicle-classes": {
+      "status": "PASS",
+      "log_sha256": "ce39121a44a3fea2ee7ee47a91970f7bd255c8851ae79484bfa09b9945dbc27b"
+    },
+    "lab": {
+      "status": "PASS",
+      "log_sha256": "6760a093cd4b35ecfdd55feb93eb7de283b1d21ad14af05292573f7616448f0b"
+    },
+    "engineering-workflow": {
+      "status": "PASS",
+      "log_sha256": "62d3177459525037f2d59ed42ea2dfdf788b1cf0b05e482eb2529bac6b8b8e4c"
+    },
+    "advanced": {
+      "status": "PASS",
+      "log_sha256": "9ae19b539959ff677c1e10128be5692054f269f23e72bd00829f9237a05dcd63"
+    },
+    "drive": {
+      "status": "PASS",
+      "log_sha256": "3df202cb475001bab450caa2010f0fb599114dd2f9cc9b31e785bacbe8346a51"
+    },
+    "replay": {
+      "status": "PASS",
+      "log_sha256": "ce172c251becb63e56fc59f34f8abd1b29e3d64bfc381e1efee59440db08f40a"
+    },
+    "guidance": {
+      "status": "PASS",
+      "log_sha256": "78839228018ab136b4db5d990c8ee99eccf61c5152c70ad993a0d97ca98970d0"
+    },
+    "investigation": {
+      "status": "PASS",
+      "log_sha256": "cd62baaaba170bf080a7475b1ac2ad165134127df078dfbce43fa8400b441327"
+    },
+    "release": {
+      "status": "PASS",
+      "log_sha256": "08de782b3c3f3f0cedf93b43e5fbe6cea27d378e563fa231b4a00bfbaf51abda"
+    }
+  },
+  "focused_checks": {
+    "A": "30 workspace/theme/width views plus keyboard/draft/return checks",
+    "B": "new async/snapshot/export browser regression plus 5 existing measurement-parity/model-comparison Python checks",
+    "C": "one comparable before/after server and browser measurement, JS syntax/format and pip check",
+    "D": "local doc/image links and RC metadata"
+  },
+  "compatibility": {
+    "model_simulation_analysis_source": "unchanged from base",
+    "dependency_files": "unchanged",
+    "datasets": "unchanged",
+    "historical_tests": "unchanged; exact numerical/export/measurement parity gates pass",
+    "application_openapi_version": "intentionally 3.0.0rc1"
+  },
+  "physical_validation": "INCONCLUSIVE",
+  "platform_limits": [
+    "Linux/Python3.12/Chromium only",
+    "Windows installation not executed",
+    "No other browsers or physical mobile devices tested",
+    "No root project licence present"
+  ],
+  "notes": [
+    "No new major feature, physics model or runtime dependency",
+    "Full applicable regression once after A\u2013D; focused runs earlier",
+    "Driving suite run after other CPU-heavy work; all baseline assertions preserved"
+  ]
+}

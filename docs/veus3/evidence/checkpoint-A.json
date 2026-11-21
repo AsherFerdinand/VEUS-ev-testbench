@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "audit_combinations": 30,
+  "page_errors": 0,
+  "horizontal_overflow": 0,
+  "keyboard_and_draft_state": "release-A.json"
+}

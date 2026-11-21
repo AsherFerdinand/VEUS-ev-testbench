@@ -159,7 +159,7 @@ export async function mountLab(root, { header, notice }) {
       "04 / SIMULATION LAB",
       "Take the driver's view.",
       "Choose a scenario. Run your design. Explore its recorded response.",
-      "VEUS / 2.6",
+      "VEUS / 3.0 RC1",
     ) +
     `
 <section class="lab-workspace">
@@ -800,6 +800,7 @@ export async function mountLab(root, { header, notice }) {
       state.dirty = false;
       state.evaluation = null;
       persist(state.library, record.id);
+      window.dispatchEvent(new Event("veus:design"));
     } catch (e) {
       Object.assign(state, previous);
       notice(e.message);

@@ -192,6 +192,13 @@ export async function mountStudio(root, { content, header, notice }) {
   const find = (id) => root.querySelector("#" + id);
   const connected = () => alive && root.isConnected;
   function syncLabel() {
+    const status = root.querySelector("#design-draft-status");
+    if (status)
+      status.textContent = state.dirty
+        ? "Unsaved modifications · save to keep this configuration in the local library."
+        : state.activeId
+          ? "Saved custom design · calculations use this active snapshot."
+          : "Unsaved draft · presets are illustrative defaults; save your configuration for reuse.";
     window.dispatchEvent(new Event("veus:design"));
   }
   function shell() {
@@ -207,6 +214,7 @@ export async function mountStudio(root, { content, header, notice }) {
       `
  <section class="vehicle-preset-selection" aria-label="Illustrative vehicle presets"><div class="vehicle-preset-cards">${presetData.presets.map((p) => `<button data-preset="${p.id}" aria-pressed="${p.id === selectedPreset}" class="vehicle-preset-card">${vehicleThumbnail(appearanceOf(p.design))}<span><small>ILLUSTRATIVE / ${esc(p.id.toUpperCase())}</small><strong>${esc(p.name)}</strong><em>${esc(p.description)}</em></span></button>`).join("")}</div><div class="preset-action"><p id="preset-preview-label">Preview a default; your active and saved designs remain unchanged.</p><button id="preset-apply">Customize preset as a new design →</button></div><details id="preset-comparison"><summary>Compare the three default presets · not your customized values</summary><div id="preset-bars"></div></details></section>
  <div class="library-toolbar"><label>Local design library<select id="library-select"><option value="">Unsaved design</option>${state.library.map((r) => `<option value="${esc(r.id)}" ${r.id === state.activeId ? "selected" : ""}>${esc(r.design.name)}</option>`).join("")}</select></label><label class="design-title">Active design<input id="design-name" maxlength="100" value="${esc(state.design.name)}"></label><button id="design-save" class="primary">${state.activeId ? "Save design" : "Save as new design"}</button><button id="design-new">New</button><button id="design-duplicate">Duplicate</button><details class="library-more"><summary>Files & library</summary><div><button id="design-export">Export JSON</button><label>Import JSON<input id="design-import" type="file" accept=".json"></label><button id="design-delete">Delete saved design…</button><button id="library-reset">Reset library…</button></div></details></div>
+ <p class="design-draft-status" id="design-draft-status" role="status"></p>
  <p class="library-note" id="library-status">${state.storageError ? esc(state.storageError) : "Local browser storage · up to 16 designs / 180 KB · export JSON for a portable backup."}</p>
  <div class="design-layout studio-layout"><div><div class="drawing-panel"><div class="drawing-toolbar"><span class="drawing-id">ACTIVE VEHICLE / ${esc(state.design.catalogue_version)}</span><div class="studio-view-controls"><label>Visual body<select id="studio-appearance">${Object.entries(
    appearances,
@@ -245,6 +253,7 @@ export async function mountStudio(root, { content, header, notice }) {
       find("configuration-status").textContent =
         "Checked · " + statusText(state.evaluation.compatibility_status);
     } else evaluation();
+    syncLabel();
   }
   function drawingOptions() {
     return {
@@ -313,6 +322,8 @@ export async function mountStudio(root, { content, header, notice }) {
       .join("");
   }
   function invalidateComparison() {
+    state.evaluation = null;
+    syncLabel();
     comparison = null;
     const node = find("design-comparison");
     if (node)
@@ -399,8 +410,18 @@ export async function mountStudio(root, { content, header, notice }) {
     find("configuration-status").textContent =
       "Checking declared limits and supported calculations…";
     try {
-      const result = await request("evaluate", state.design, controller.signal);
+      const snapshot = JSON.stringify(state.design);
+      const result = await request(
+        "evaluate",
+        JSON.parse(snapshot),
+        controller.signal,
+      );
       if (!connected() || current !== generation) return;
+      if (JSON.stringify(state.design) !== snapshot) {
+        find("configuration-status").textContent =
+          "Design changed during evaluation; check the current edits again before saving.";
+        return;
+      }
       state.design = structuredClone(result.design);
       state.evaluation = result;
       find("design-save").disabled = false;

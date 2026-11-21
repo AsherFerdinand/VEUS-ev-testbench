@@ -1,71 +1,95 @@
 # VEUS workbench architecture
 
-The workbench separates explanatory knowledge, design intent, experiment execution,
-results and presentation. It deliberately does not connect technology labels to new
-physics. Read [the audit and retirement matrix](audit.md) before changing boundaries.
+Current application: **3.0.0rc1**. Configuration/schema/model versions are independent
+and remain compatible with historical results. Five workspaces share one active design;
+Python owns numerical calculations and the browser owns presentation and replay.
 
 ```mermaid
-flowchart LR
-    C[Source catalogue and explanatory content] --> W[New six-workspace shell]
-    V[Versioned illustrative vehicle design] --> A[Configuration envelope API]
-    A --> W
-    R[Existing measurement readiness and investigation APIs] --> W
-    W --> L[Explicit engineering migration entry]
-    L --> P[Retained models and deterministic runners]
-    L --> R
-    P --> O[Existing results and engineering reports]
+flowchart TD
+    UI[Five browser workspaces: Anatomy / Challenges / Design / Lab / Measurements]
+    CFG[Versioned complete design snapshot + bounded local library]
+    API[FastAPI workbench / Lab / measurement APIs]
+    CAT[Illustrative catalogue + compatibility + explicit model adapter]
+    LAB[Deterministic coupled longitudinal and battery engine]
+    PT[Legacy constants OR explicit illustrative motor map]
+    ANA[Insights + matched comparisons + bounded parameter studies]
+    DATA[Original recording + source provenance + mapping / units / polarity gates]
+    INV[Readiness + replay + investigation + calibration-readiness assessment]
+    OUT[Frozen results: versions / hashes / units / assumptions / status]
+    REP[JSON / CSV / HTML engineering exports]
+    UI <--> CFG
+    UI --> API
+    CFG --> CAT
+    API --> CAT
+    API --> LAB
+    API --> ANA
+    ANA --> LAB
+    CAT --> LAB
+    LAB <--> PT
+    API --> DATA
+    DATA --> INV
+    LAB --> OUT
+    ANA --> OUT
+    INV --> OUT
+    OUT --> REP
+    OUT --> UI
 ```
 
-The shell does not import the legacy frontend scripts, create a WebSocket,
-simulate a vehicle or generate charts from fabricated data. The Measurements page
-uses the existing catalogue's actual importer metadata and directs users to the
-working evidence tools. Placeholder Lab readouts use an em dash and unavailable
-labels, never zeros or simulated performance values. Optimization shows study
-definitions, not numerical improvements. Design inputs are illustrative configuration
-values, not results or manufacturer specifications.
+## Module and API boundaries
 
-## Current modules and routes
+| Responsibility | Implementation / route |
+| --- | --- |
+| Original content, system diagrams, navigation | `static/workbench/{app,schematic}.js`, shared SVG/appearance, `/api/workbench/content` |
+| Complete v2 designs, catalogue, checks, adapter | `workbench/{design,catalogue,engineering,adapter}.py`; `/api/workbench/v2/{design,presets,evaluate,adapter}` |
+| Experiment configuration / engine / execution / reports | `lab/{schema,kernel,runner,report}.py`; `/api/lab/{run,export}` |
+| Shared physical equations | `sim/{session,dynamics}.py`, battery/motor/transmission models in `model/` |
+| Explicit optional efficiency map | `model/efficiency_map.py`; selected by `efficiency_model`, frozen grids/region/hash in mapped results |
+| Engineering Insights and controlled studies | `workbench/{insights,design_analysis,powertrain_comparison}.py`; `/api/workbench/v2/{insights,design-analysis,powertrain-comparison}` |
+| Original data and preserved investigation | `readiness/`, `replay/`, `investigation/`, `validation/`; `/api/workbench/v2/measurements/...` delegates to retained services |
+| Evidence-specific validation audit / reports | `workbench/validation_readiness.py`; no matched VED residuals or fit when evidence is insufficient |
+| Shared clock / pure driving visualization | `static/replay-controller.js`, `workbench/lab-scene.js`, `workbench/driving-scene-state.mjs`; no lateral physics |
 
-| Layer                 | Responsibility                                                         | Foundation implementation                                                |
-| --------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Engineering models    | SI dynamics, battery energy, limits                                    | Existing `model/`, `sim/`; unchanged                                     |
-| Engineering knowledge | Sources, component roles, challenge mechanisms                         | `workbench/content.json` with explicit classifications and review status |
-| Component catalogue   | Future sourced products, conditions and uncertainty                    | 13 representative records; no commercial specifications                  |
-| Vehicle configuration | v1 preserved; v2 snapshots, checks, specifications and bounded library | `workbench/schema.py`, bounded validation API                            |
-| Experiments           | Scenario definitions, deterministic execution                          | Existing `testing/`; new design-to-runner adapter not yet implemented    |
-| Results               | Raw traces, metrics, acceptance, provenance                            | Existing testing/validation/investigation reports; unchanged             |
-| Optimization          | Study objectives/controlled conditions                                 | Frontend study prototype; no optimizer or performance score              |
-| Measurements          | Import, data readiness, polarity/coverage gates                        | Existing services and migration UI; real catalogue metadata in new shell |
-| Presentation          | Original SVG, accessible annotations, tabs, themes                     | `static/workbench/`; independent of old global UI state                  |
+The main entry is `/`; deep links use `?workspace=anatomy`, `challenges`, `design`,
+`simulation` or `measurements`. The former `optimization` link redirects to Design Studio.
+Browser Back and roving keyboard tabs preserve navigation. The retained toolset lives
+at `/engineering`; legacy APIs/WebSockets remain isolated from the modern shell.
+`/engineering-docs/` serves checked-in documentation; Markdown may download as text.
 
-- `/` serves the new foundation shell. `?workspace=anatomy` is the default;
-  `challenges`, `design`, `simulation`, `optimization`, `measurements` are deep links.
-- `/engineering` and `/engineering/` explicitly serve the previous toolset.
-  `?workspace=analyse` opens measured-data tools and model experiments;
-  `?workspace=validate` opens engineering settings and existing simulation tools.
-- `/static/index.html` is still the historical static entry point. It is not the
-  default page. Old scripts/styles/sprites remain loaded only by the migration UI.
-- `/api/workbench/content` provides explanatory content and its source catalogue.
-- `/api/workbench/design` provides labelled illustrative defaults;
-  `/design/schema` provides JSON Schema; `/design/validate` validates at most 64 KB.
-- Existing HTTP APIs and WebSockets are retained unchanged. `/engineering-docs/`
-  serves checked-in technical documents and evidence; Markdown may download as text.
+## State, snapshots and reproducibility
 
-## Versioned design engineering
+`design-state.js` owns one complete active design, its current evaluation and a bounded
+browser library (16 designs / 180 KB). Preset preview is separate from explicit apply.
+Unsaved edits are labelled; structural checks do not imply physical validation.
+An evaluation response is applied only while its workspace/generation and submitted
+snapshot still match. A newer edit is never overwritten by an older response.
 
-Version 2 is implemented in `workbench/design.py`, `catalogue.py`, `engineering.py`
-and `adapter.py`; v1 routes remain unchanged. The lazy-loaded `design-studio.js`
-uses shared `design-state.js` for one active design and a bounded local library.
-Only the active workspace is rendered. `schematic.js` and `vehicle.css` are shared;
-selection/body/view changes update existing SVG elements. The standalone duplicate
-flow renderer was removed. Measured recording metadata now loads only on entering
-Measurements; component records and editor styles load only on entering Design Studio.
+Insights and Lab send complete snapshots to Python. Comparisons preserve matched
+conditions; hashes identify configuration, run and source where supported. Results
+remain frozen after later design changes. Null/default map selection is omitted from
+legacy serialization, preserving numerical and export fingerprints. No existing model,
+source recording, catalogue assumption or schema version is changed by the 3.0 UX work.
+Application version comes from `veus.__version__` and FastAPI metadata; shell/Lab labels
+use its human-readable RC identifier.
 
-Current contracts, mass accounting, calculations, readiness and storage limits are
-authoritative in [design-engineering.md](design-engineering.md). Anatomy and design
-do not execute physics, poll, animate continuously or open WebSockets. The model
-adapter prepares separate retained dynamics and energy model objects; it does not
-claim a verified coupled experiment runner.
+Measurements preserve original samples, gaps, provenance and unknown-polarity gates.
+Validation has an explicit visible model selector. A retry clears the previous assessment
+and disables exports until successful; workspace cleanup aborts pending work. Exported
+readiness reports contain frozen inputs/hash and specific blockers. Paired-error arithmetic
+is not evidence authentication; current unmatched VED evidence remains INCONCLUSIVE.
+
+## Runtime and accessibility
+
+The modern shell uses native HTML/CSS/ES modules and original SVG; no build, framework,
+GPU or new runtime dependency. Design, Lab and measurement modules load on demand.
+Static workspaces do not poll or animate. Playback uses the existing clock and runs
+requestAnimationFrame only while active; seek reconstructs directly from stored samples.
+Reduced motion preserves controls/telemetry while suppressing decorative scene effects.
+
+Native labels, visible focus, status announcements, roving tabs, skip navigation and
+responsive light/dark theme tokens are preserved. Contextual links explain the workflow;
+mobile controls have 44 px minimum height. Reports and dense evidence can scroll without
+forcing page overflow. Chromium coverage is evidence for Chromium, not cross-browser
+certification. No Windows execution is claimed.
 
 ## Historical v1 design boundary (API preserved)
 
@@ -96,29 +120,15 @@ become the baseline when navigating. Refresh does not persist a design. That his
 specification comparisons and representative component selection. Commercial records
 remain unpopulated.
 
-## Frontend interaction and accessibility
+## Migration and engineering boundaries
 
-Native controls handle theme, component alternatives and forms. All ten SVG component
-groups have accessible names, keyboard focus, Enter/Space selection and a shared live
-description. Clicking selects the detailed inspector; hovering/focus previews function.
-The energy-path schematic distinguishes propulsion, conditional regeneration, AC
-charging and auxiliary supply. AC conversion bypasses the traction inverter; DC fast
-charging's offboard conversion is documented. Paths are qualitative, not simulated.
+The earlier foundation audit remains in [audit.md](audit.md); its placeholder/prototype
+findings are historical, not the current Lab/Measurements capability. Keep retained
+frontend dependencies until replacement workflows prove parity. No model code should
+move into the browser. No ADAS/manual driving or standalone Optimization workspace is
+restored. Independent physical validation requires matching inputs and reference data;
+software regression success does not establish physical validation.
 
-The compact bottom tablist has six icons, accents, active states, roving tab stops,
-Left/Right and Home/End navigation. Deep links and browser history restore workspace
-navigation; theme preference is browser-local with storage failure fallback. Light and
-dark styles use local CSS, system fonts and no new framework or external asset requests.
-A navy instrumentation surface is reserved for Lab. Media queries keep the complete
-anatomy drawing above the dock on the target laptop and wrap the dock on narrow screens.
-
-## Migration and removal gate
-
-Do not append new workbench state to dashboard.js or reproduce calculations in JS.
-Replace migration tools one verified workflow at a time: extract measurement service
-and replay state contracts first, add the deterministic experiment adapter separately,
-then prove equivalent results/exports before deleting corresponding DOM code. Keep
-historical feature refs and reports. ADAS and keyboard driving have no place in the
-new primary UX; their backend dependencies and regression scenarios are currently
-retained because session/testing import them. No file was proven safely isolated for
-physical deletion in this milestone, and none was deleted to inflate test success.
+See [design contracts](design-engineering.md), [Lab equations](simulation-lab.md),
+[analysis](engineering-analysis.md), [map boundaries](powertrain2.6.md),
+[measurement parity](measurement-migration.md) and [release readiness](../veus3/release-readiness.md).

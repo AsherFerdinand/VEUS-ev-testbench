@@ -1412,3 +1412,41 @@ pre {
 .brand {
   flex-shrink: 0;
 }
+
+/* Release-candidate polish: existing controls and theme tokens, no new panels. */
+.workflow-hint {
+  color: var(--muted);
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+}
+.workflow-hint a {
+  color: var(--accent);
+  margin-inline-start: 0.5rem;
+  text-underline-offset: 0.2em;
+}
+.design-draft-status {
+  border-inline-start: 3px solid var(--accent);
+  padding-inline-start: 0.75rem;
+  margin: 0.6rem 0;
+}
+#validation-result {
+  max-width: 100%;
+  overflow-x: auto;
+}
+#validation-result th,
+#validation-result td {
+  text-align: start;
+  padding: 0.65rem;
+  vertical-align: top;
+}
+@media (max-width: 760px) {
+  .workflow-hint a {
+    display: inline-block;
+    margin-inline-start: 0;
+  }
+  button,
+  select,
+  summary {
+    min-height: 44px;
+  }
+}

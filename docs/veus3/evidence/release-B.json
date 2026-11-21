@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "stale_evaluation_preserves_edits": true,
+  "saved_snapshot_to_insights_and_lab": true,
+  "lab_selection_updates_active_label": true,
+  "validation_uses_explicit_saved_design": true,
+  "failed_retry_clears_old_export": true,
+  "in_flight_cleanup": true,
+  "source_hash": "cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9"
+}

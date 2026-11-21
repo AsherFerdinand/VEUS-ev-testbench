@@ -27,5 +27,11 @@ Focused tests: `test_powertrain_maps.py`, `test_powertrain_comparison.py`,
 `test_validation_readiness_26.py`, `tests/browser/{advanced.cjs,driving-scene-state.test.mjs}`.
 References: `veus2/powertrain2.6.md`, `veus2/validation-driving2.6.md`, `veus2/evidence-2.6/README.md`.
 
+3.0 release preparation: `veus/__init__.py` / FastAPI application version3.0.0rc1;
+`tests/browser/release.cjs` covers saved/draft guidance and async snapshot/export guards.
+Current architecture: `veus2/architecture.md`; setup: `windows-installation.md`;
+release review: `veus3/release-readiness.md`; evidence: `veus3/evidence/README.md`.
+No model/schema/dependency version changes.
+
 Read `PROGRESS.md` next. The roadmap is `veus2/roadmap.md`; do not create another.
 Application changes must not overwrite historical evidence in phase-specific directories.

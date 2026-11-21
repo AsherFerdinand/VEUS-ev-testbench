@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "focused_tests": 7,
+  "scope": "3 readiness/error/split tests +4 exact measurement migration parity tests",
+  "browser": {
+    "status": "PASS",
+    "real_ved_readiness": true,
+    "calibration_blockers": true,
+    "no_fake_residuals": true,
+    "heldout_intervals": true,
+    "reports": [
+      "json",
+      "html"
+    ]
+  },
+  "physical_validation": "INCONCLUSIVE",
+  "calibration": "Blocked; no synthetic recovery labelled as real-world validation"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "pure_scene_tests": 8,
+  "browser": {
+    "status": "PASS",
+    "deterministic_seek": true,
+    "wheel_distance": true,
+    "traffic_own_speed": true,
+    "lane_change": true,
+    "playback_rate": true,
+    "stop_reset": true,
+    "reduced_motion": true,
+    "mobile": true,
+    "inactive_cleanup": true
+  },
+  "captures": [
+    "overtaking-lane-change.png",
+    "road-with-traffic.png"
+  ],
+  "classification": "Illustrative choreography driven by recorded longitudinal state; no lateral dynamics or safety validation"
+}

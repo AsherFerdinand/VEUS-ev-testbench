@@ -11,6 +11,7 @@ from veus.model.vehicle import HighPerformanceVehicle
 from veus.model.motor import ElectricMotor
 from veus.model.transmission import Transmission
 from veus.sim.dynamics import LongitudinalSimulator
+from veus.model.efficiency_map import IllustrativeMotorMap
 
 
 class BoundedBattery(EnergyBattery):
@@ -21,7 +22,10 @@ class BoundedBattery(EnergyBattery):
 class CoupledKernel(SimulationSession):
     """No legacy controller, sensor, WebSocket or automatic two-speed selection."""
 
-    def __init__(self, design, experiment, acknowledgements):
+    def __init__(self, design, experiment, acknowledgements, efficiency_model=None):
+        if efficiency_model not in [None, "illustrative_map"]:
+            raise ValueError("Unsupported powertrain efficiency model")
+        self.efficiency_map = None
         result = evaluate(design)
         checks = [c for c in result["checks"] if c["status"] == "incompatible"]
         # The separate design operating point does not describe the selected experiment.
@@ -62,6 +66,13 @@ class CoupledKernel(SimulationSession):
                 "Peak operation requires peak_envelope_without_thermal_model acknowledgement"
             )
         if experiment.power_policy == "acknowledged_peak":
+            if efficiency_model and (
+                design.motor.peak_duration_s is None
+                or design.inverter.peak_duration_s is None
+            ):
+                raise ValueError(
+                    "Mapped peak operation requires declared motor and inverter peak durations; select continuous policy"
+                )
             if design.inverter.peak_power_kw is None:
                 raise ValueError("Peak inverter power is required for peak policy")
             durations = [
@@ -91,7 +102,10 @@ class CoupledKernel(SimulationSession):
             if experiment.power_policy == "continuous"
             else design.inverter.peak_power_kw
         )
-        shaft_power = min(shaft_power, ac_power * design.motor.efficiency_assumption)
+        if efficiency_model is None:
+            shaft_power = min(
+                shaft_power, ac_power * design.motor.efficiency_assumption
+            )
         p["motor"]["max_power_kw"] = shaft_power
         p["motor"]["max_torque_nm"] = shaft_torque
         self.sim = LongitudinalSimulator(
@@ -100,6 +114,8 @@ class CoupledKernel(SimulationSession):
             transmission=Transmission(**p["transmission"]),
             **(p["road"] | {"gradient_rad": math.atan(experiment.grade_percent / 100)}),
         )
+        if efficiency_model:
+            self.efficiency_map = IllustrativeMotorMap(self.sim.motor)
         self.battery = BoundedBattery(**p["battery"])
         self.battery.envelope = dict(
             terminal_minimum_v=max(
@@ -117,6 +133,10 @@ class CoupledKernel(SimulationSession):
             * 1000
             * design.inverter.efficiency_assumption,
         )
+        if self.efficiency_map:
+            self.battery.envelope["discharge_power_limit_w"] = (
+                ac_power * 1000 / design.inverter.efficiency_assumption
+            )
         self.config = SimpleNamespace(
             drive_efficiency=eta,
             regen_efficiency=design.assumptions.regen_efficiency,
@@ -150,6 +170,19 @@ class CoupledKernel(SimulationSession):
         self.design = design
         self.experiment = experiment
         self.road_energy = dict(aerodynamic_j=0.0, rolling_j=0.0, gradient_j=0.0)
+        if self.efficiency_map:
+            initial_rpm = (
+                self.state.velocity_ms
+                / self.sim.vehicle.wheel_radius_m
+                * self.sim.transmission.active_ratio
+                * 30
+                / math.pi
+            )
+            self.efficiency_map.efficiency(initial_rpm, 0)
+            self.map_losses = {
+                key: 0.0
+                for key in ["motor_loss_j", "inverter_loss_j", "gearbox_loss_j"]
+            }
 
     def step_lab(self, torque, brake, grade_percent):
         self.sim.gradient_rad = math.atan(grade_percent / 100)
@@ -227,7 +260,7 @@ class CoupledKernel(SimulationSession):
             - self.energy["friction_heat_j"]
             - self.energy["road_work_j"]
         )
-        return dict(
+        row = dict(
             time_s=self.state.time_s,
             position_m=self.state.position_m,
             speed_ms=self.state.velocity_ms,
@@ -253,3 +286,113 @@ class CoupledKernel(SimulationSession):
             friction_energy_j=self.energy["friction_heat_j"],
             **self.road_energy,
         )
+
+        if self.efficiency_map:
+            regenerative = regen_j > 0
+            if motor_power == 0 and shaft_torque == 0:
+                # No conversion occurs; an overspeed coast needs no extrapolation.
+                eta_motor = None
+                ac_power = 0.0
+                if result.motor_rpm > self.sim.motor.max_rpm:
+                    row["limits"].append(
+                        "zero_power_outside_map_efficiency_unavailable"
+                    )
+            else:
+                eta_motor = self.efficiency_map.efficiency(
+                    result.motor_rpm, abs(shaft_torque), regenerative
+                )
+                ac_power = (
+                    motor_power * eta_motor if regenerative else motor_power / eta_motor
+                )
+            wheel_power = (result.drive_force_n * distance - regen_j) / self.dt_s
+            losses = dict(
+                motor_loss_w=max(0, ac_power - motor_power),
+                inverter_loss_w=max(0, self.electrical["terminal_power_w"] - ac_power),
+                gearbox_loss_w=max(0, motor_power - wheel_power),
+            )
+            for key, value in losses.items():
+                self.map_losses[key.replace("_w", "_j")] += value * self.dt_s
+            row.update(
+                motor_rpm=result.motor_rpm,
+                motor_efficiency=eta_motor,
+                inverter_efficiency=self.design.inverter.efficiency_assumption,
+                motor_ac_power_w=ac_power,
+                **losses,
+                **self.map_losses,
+            )
+        return row
+
+    def _drive_conversion_efficiency(self, result):
+        if not self.efficiency_map:
+            return super()._drive_conversion_efficiency(result)
+        if result.delivered_motor_torque_nm == 0:
+            # Neutral algebraic divisor for zero work, not an efficiency estimate.
+            return 1.0
+        eta = self.efficiency_map.efficiency(
+            result.motor_rpm, result.delivered_motor_torque_nm
+        )
+        return (
+            eta
+            * self.design.inverter.efficiency_assumption
+            * self.sim.transmission.mechanical_efficiency
+        )
+
+    def _drive_power_limit(self, result, discharge_w):
+        if not self.efficiency_map:
+            return super()._drive_power_limit(result, discharge_w)
+        if result.delivered_motor_torque_nm == 0:
+            return discharge_w
+        eta = self.efficiency_map.efficiency(
+            result.motor_rpm, result.delivered_motor_torque_nm
+        )
+        return min(
+            discharge_w,
+            self.sim.motor.max_power_kw
+            * 1000
+            / (eta * self.design.inverter.efficiency_assumption),
+        )
+
+    def _regenerative_recovery(self, result, distance, brake_j, charge_w):
+        if not self.efficiency_map:
+            return super()._regenerative_recovery(result, distance, brake_j, charge_w)
+        rpm = result.motor_rpm
+        tr = self.sim.transmission
+        radius = self.sim.vehicle.wheel_radius_m
+
+        def eta(joules):
+            torque = (
+                joules / distance * radius * tr.mechanical_efficiency / tr.active_ratio
+                if distance > 0
+                else 0
+            )
+            return (
+                self.efficiency_map.efficiency(rpm, torque, True)
+                * self.design.inverter.efficiency_assumption
+                * tr.mechanical_efficiency
+            )
+
+        if (
+            not self.config.regen_enabled
+            or distance <= 0
+            or rpm >= self.sim.motor.max_rpm
+        ):
+            return 0.0, 1.0
+        maximum = min(
+            brake_j,
+            self.efficiency_map.torque_limit(rpm, True)
+            * tr.active_ratio
+            / (tr.mechanical_efficiency * radius)
+            * distance,
+            self.sim.motor.max_power_kw * 1000 * self.dt_s / tr.mechanical_efficiency,
+        )
+        budget = charge_w * self.dt_s
+        if maximum * eta(maximum) <= budget:
+            return maximum, eta(maximum)
+        lo, hi = 0.0, maximum
+        for _ in range(40):
+            mid = (lo + hi) / 2
+            if mid * eta(mid) <= budget:
+                lo = mid
+            else:
+                hi = mid
+        return lo, eta(lo)

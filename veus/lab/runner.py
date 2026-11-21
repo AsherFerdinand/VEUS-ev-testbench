@@ -7,6 +7,7 @@ from veus.sim.dynamics import road_loads
 from .schema import LabRequest
 from .kernel import CoupledKernel
 from .profiles import sample_profile, sample_route, route_profile
+from veus.model.efficiency_map import UnsupportedOperatingPoint
 
 MODEL_VERSION = "veus-lab-coupled-v1"
 LIMITATIONS = [
@@ -78,13 +79,16 @@ def run(request: LabRequest):
         raise ValueError(
             "Experiment duration exceeds profile time coverage; no repeated or clamped samples"
         )
-    kernel = CoupledKernel(request.vehicle, e, request.acknowledgements)
+    kernel = CoupledKernel(
+        request.vehicle, e, request.acknowledgements, request.efficiency_model
+    )
     dt = e.dt_s
     n = round(e.duration_s / dt)
     trace = []
     requested_discharge = 0.0
     requested_received = 0.0
     requested_distance = 0.0
+    all_requested_power_supported = True
     first_profile = (
         sample_profile(request.profile, 0) if request.profile is not None else None
     )
@@ -147,6 +151,23 @@ def run(request: LabRequest):
             for k in ["elevation_m", "latitude", "longitude"]
         },
     )
+    if kernel.efficiency_map:
+        initial.update(
+            motor_rpm=kernel.state.velocity_ms
+            / kernel.sim.vehicle.wheel_radius_m
+            * kernel.sim.transmission.active_ratio
+            * 30
+            / math.pi,
+            motor_efficiency=None,
+            inverter_efficiency=request.vehicle.inverter.efficiency_assumption,
+            motor_ac_power_w=0.0,
+            motor_loss_w=0.0,
+            inverter_loss_w=0.0,
+            gearbox_loss_w=0.0,
+            motor_loss_j=0.0,
+            inverter_loss_j=0.0,
+            gearbox_loss_j=0.0,
+        )
     trace.append(initial)
     for tick in range(n):
         target = None
@@ -227,6 +248,39 @@ def run(request: LabRequest):
                 * kernel.sim.transmission.mechanical_efficiency
                 / kernel.sim.vehicle.wheel_radius_m
             )
+            if kernel.efficiency_map:
+                regenerative = wheel_power < 0 and e.regen_enabled
+                ratio = kernel.sim.transmission.active_ratio
+                gear_eta = kernel.sim.transmission.mechanical_efficiency
+                requested_torque = (
+                    abs(required_force)
+                    * kernel.sim.vehicle.wheel_radius_m
+                    * (gear_eta / ratio if regenerative else 1 / (ratio * gear_eta))
+                )
+                try:
+                    eta_motor = kernel.efficiency_map.efficiency(
+                        rpm, requested_torque, regenerative
+                    )
+                    required_dc = (
+                        wheel_power
+                        / (
+                            eta_motor
+                            * request.vehicle.inverter.efficiency_assumption
+                            * gear_eta
+                        )
+                        if wheel_power >= 0
+                        else (
+                            wheel_power
+                            * eta_motor
+                            * request.vehicle.inverter.efficiency_assumption
+                            * gear_eta
+                            if e.regen_enabled
+                            else 0.0
+                        )
+                    )
+                except UnsupportedOperatingPoint:
+                    required_dc = None
+                    all_requested_power_supported = False
             traction = (
                 kernel.sim.friction_coefficient
                 * kernel.mass
@@ -241,7 +295,11 @@ def run(request: LabRequest):
                 )
             )
             if required_force > 0:
-                motion_feasible = motion_feasible and required_dc <= dis + 1e-7
+                motion_feasible = (
+                    motion_feasible
+                    and required_dc is not None
+                    and required_dc <= dis + 1e-7
+                )
             recovery_limited = False
             if wheel_power < 0 and e.regen_enabled:
                 reverse_torque_force = (
@@ -252,8 +310,18 @@ def run(request: LabRequest):
                         * kernel.sim.vehicle.wheel_radius_m
                     )
                 )
+                if kernel.efficiency_map and rpm <= kernel.sim.motor.max_rpm:
+                    reverse_torque_force = (
+                        kernel.efficiency_map.torque_limit(rpm, True)
+                        * kernel.sim.transmission.active_ratio
+                        / (
+                            kernel.sim.transmission.mechanical_efficiency
+                            * kernel.sim.vehicle.wheel_radius_m
+                        )
+                    )
                 recovery_limited = (
-                    rpm >= kernel.sim.motor.max_rpm
+                    required_dc is None
+                    or rpm >= kernel.sim.motor.max_rpm
                     or -required_force > reverse_torque_force + 1e-7
                     or -wheel_power * kernel.sim.transmission.mechanical_efficiency
                     > kernel.sim.motor.max_power_kw * 1000 + 1e-7
@@ -261,12 +329,17 @@ def run(request: LabRequest):
                 )
             demand_feasible = motion_feasible and not recovery_limited
             unmet_dc = (
-                max(0.0, required_dc - dis)
-                if required_dc >= 0
-                else max(0.0, -required_dc - charge)
+                None
+                if required_dc is None
+                else (
+                    max(0.0, required_dc - dis)
+                    if required_dc >= 0
+                    else max(0.0, -required_dc - charge)
+                )
             )
-            requested_discharge += max(0, required_dc) * dt
-            requested_received += max(0, -required_dc) * dt
+            if required_dc is not None:
+                requested_discharge += max(0, required_dc) * dt
+                requested_received += max(0, -required_dc) * dt
             requested_distance += mean_target_speed * dt
         row = kernel.step_lab(torque, brake, grade)
         row["time_s"] = (tick + 1) * dt
@@ -313,6 +386,8 @@ def run(request: LabRequest):
             row["limits"].append("explicit_constant_grade_assumption")
         if route_sample and not route_sample["covered"]:
             row["limits"].append("route_coverage_unavailable")
+        if kernel.efficiency_map and target is not None and required_dc is None:
+            row["limits"].append("requested_map_point_unavailable_no_extrapolation")
         if demand_feasible is False:
             row["limits"].append("requested_demand_infeasible")
         if motion_feasible is False:
@@ -536,5 +611,37 @@ def run(request: LabRequest):
         ),
         limitations=LIMITATIONS,
     )
+    if kernel.efficiency_map:
+        result["provenance"]["powertrain_map"] = kernel.efficiency_map.metadata()
+        result["provenance"]["efficiency_model"] = "illustrative_map"
+        if not all_requested_power_supported:
+            for name in [
+                "requested_discharge_energy_kwh",
+                "requested_received_energy_kwh",
+                "requested_consumption_kwh_100km",
+            ]:
+                result["summary"][name] = None
+            result["provenance"]["requested_energy_unavailable_reason"] = (
+                "At least one requested operating point is outside the illustrative map/envelope; no efficiency or full requested-energy total was extrapolated."
+            )
+
+        result["limitations"] = [
+            *[
+                text.replace(
+                    "fixed OCV/resistance and constant conversion efficiencies",
+                    "fixed OCV/resistance, mapped motor efficiencies and constant inverter/gear efficiencies",
+                ).replace(
+                    "Regeneration efficiency is the explicit total reverse motor/inverter assumption, excluding gearbox; forward efficiencies are not applied again.",
+                    "Mapped regeneration applies motor map, declared inverter and gearbox efficiencies once each; the legacy combined reverse-efficiency assumption is not multiplied again.",
+                )
+                for text in LIMITATIONS
+            ],
+            "Mapped motor efficiencies replace the legacy forward motor and combined reverse-efficiency assumptions; inverter/gear losses are separate, once each.",
+            "The illustrative map is not manufacturer data or physical calibration; unknown/out-of-region operating points are not extrapolated.",
+        ]
+        for key, value in kernel.map_losses.items():
+            name = key.replace("_j", "_kwh")
+            result["summary"][name] = value / 3600000
+            result["summary_units"][name] = "kWh"
     result["run_sha256"] = hashlib.sha256(canonical(result)).hexdigest()
     return result

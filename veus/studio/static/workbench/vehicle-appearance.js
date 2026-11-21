@@ -64,7 +64,7 @@ export function sideVehicle(
     suv: "M169 147l43-75h156l29 28 16 47z",
   }[k];
   return `<g id="${id}" data-appearance="${k}" aria-label="Original ${appearances[k].name} illustrative body"><ellipse cx="290" cy="259" rx="239" ry="13" fill="#020711" opacity=".45"/>
- ${[154, 433].map((x) => `<g fill="#101d2b" stroke="#3b5164" stroke-width="3"><circle cx="${x}" cy="220" r="${r + 5}"/><circle cx="${x}" cy="220" r="${r - 10}" fill="#3c5267"/><path d="M${x} ${220 - r + 11}v${2 * r - 22}m${-r + 11} ${-r + 11}h${2 * r - 22}" stroke="#a9c2d3"/></g>`).join("")}
+ ${[154, 433].map((x) => `<g data-scene-wheel data-wheel-x="${x}" data-wheel-y="220" fill="#101d2b" stroke="#3b5164" stroke-width="3"><circle cx="${x}" cy="220" r="${r + 5}"/><circle cx="${x}" cy="220" r="${r - 10}" fill="#3c5267"/><path d="M${x} ${220 - r + 11}v${2 * r - 22}m${-r + 11} ${-r + 11}h${2 * r - 22}" stroke="#a9c2d3"/></g>`).join("")}
  <path d="${body}" fill="${color}" stroke="#bdd1de" stroke-width="2"/>
  <path d="${windows}" fill="#152d42" stroke="#7392a5" stroke-width="2"/>
  ${k === "performance" ? '<path d="M72 214h42l13-15m83 5l48-20h115l26 23M466 169h40v8h-40" fill="none" stroke="#344f64" stroke-width="7"/>' : '<path d="M277 115v97m-65-44v40m150-40v40" fill="none" stroke="#7c97a9" stroke-width="2"/>'}

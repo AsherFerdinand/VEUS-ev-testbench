@@ -65,7 +65,7 @@ export async function mountMeasurements(root, { header }) {
       )
       .join(
         "",
-      )}<label>Maximum valid gap · s<input id="measure-gap" type="number" min=".01" max="60" value="2" step="any"></label><label>Current sign<select id="measure-sign"><option value="unknown">Unknown polarity</option><option value="discharge_positive">Discharge positive (evidence required)</option><option value="charge_positive">Charge positive (evidence required)</option></select></label><label>Sign / provenance evidence<input id="measure-evidence" placeholder="Do not infer polarity from a plot"></label></div><p class="quiet">Review names and units explicitly; blank optional mappings stay unavailable. Original bytes, source time and gaps are preserved. Header recognition never confirms polarity or measurement validity.</p></details><label class="measure-confirm"><input id="measure-confirm" type="checkbox">I reviewed source, column mappings, units and the declared polarity evidence.</label><p id="measure-status" role="status">No investigation executed.</p><div id="measure-readiness"></div><section class="measure-dashboard"><p id="measure-frozen-name">No frozen recording loaded.</p><div class="measure-plots"><article><h3>Measured speed · km/h</h3><canvas id="measure-speed" role="img" aria-label="Original measured speed samples"></canvas></article><article><label>Electrical signal<select id="measure-signal"><option value="battery_voltage_v">Measured voltage · V</option><option value="battery_current_a">Measured current · A (source sign)</option><option value="electrical_power_w">Signed battery power · W (gated)</option></select></label><canvas id="measure-electrical" role="img" aria-label="Original measured electrical signal"></canvas></article></div><div class="measure-transport"><button id="measure-play" disabled>▶ Play</button><button id="measure-stop" disabled>Stop</button><input id="measure-seek" type="range" min="0" max="1" step=".001" value="0" aria-label="Measured time cursor" disabled><span id="measure-time">No cursor</span></div><p id="measure-sample"></p><div class="measure-controls"><label>Detected event<select id="measure-event"><option value="">Full recording</option></select></label><button id="measure-interval">Use selected event as interval</button></div><div id="measure-findings"></div></section><details id="measure-model"><summary>Measured versus simulated comparison readiness</summary><p>Presets are illustrative EVs, not the recorded Nissan Leaf. Independent boundary/vehicle inputs are required before model residuals are defensible.</p><div class="measure-controls"><label>Model design<select id="measure-model-design"><option value="active">Active design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><label>Interval start · elapsed s<input id="measure-start" type="number" value="0" min="0" step="any"></label><label>Interval end · elapsed s<input id="measure-end" type="number" min="0" step="any"></label><button id="measure-gate">Assess comparison inputs</button></div><div id="measure-model-result">No quantitative comparison executed.</div></details><details><summary>Readiness, provenance, interval evidence and descriptive recording comparison</summary><pre id="measure-details"></pre></details><div class="measure-export"><button data-measure-format="json" disabled>JSON evidence</button><button data-measure-format="csv" disabled>CSV original samples</button><button data-measure-format="html" disabled>HTML report</button></div><a href="/engineering?workspace=analyse">Retained engineering measurement tools ↗</a></section>`;
+      )}<label>Maximum valid gap · s<input id="measure-gap" type="number" min=".01" max="60" value="2" step="any"></label><label>Current sign<select id="measure-sign"><option value="unknown">Unknown polarity</option><option value="discharge_positive">Discharge positive (evidence required)</option><option value="charge_positive">Charge positive (evidence required)</option></select></label><label>Sign / provenance evidence<input id="measure-evidence" placeholder="Do not infer polarity from a plot"></label></div><p class="quiet">Review names and units explicitly; blank optional mappings stay unavailable. Original bytes, source time and gaps are preserved. Header recognition never confirms polarity or measurement validity.</p></details><label class="measure-confirm"><input id="measure-confirm" type="checkbox">I reviewed source, column mappings, units and the declared polarity evidence.</label><p id="measure-status" role="status">No investigation executed.</p><div id="measure-readiness"></div><section class="measure-dashboard"><p id="measure-frozen-name">No frozen recording loaded.</p><div class="measure-plots"><article><h3>Measured speed · km/h</h3><canvas id="measure-speed" role="img" aria-label="Original measured speed samples"></canvas></article><article><label>Electrical signal<select id="measure-signal"><option value="battery_voltage_v">Measured voltage · V</option><option value="battery_current_a">Measured current · A (source sign)</option><option value="electrical_power_w">Signed battery power · W (gated)</option></select></label><canvas id="measure-electrical" role="img" aria-label="Original measured electrical signal"></canvas></article></div><div class="measure-transport"><button id="measure-play" disabled>▶ Play</button><button id="measure-stop" disabled>Stop</button><input id="measure-seek" type="range" min="0" max="1" step=".001" value="0" aria-label="Measured time cursor" disabled><span id="measure-time">No cursor</span></div><p id="measure-sample"></p><div class="measure-controls"><label>Detected event<select id="measure-event"><option value="">Full recording</option></select></label><button id="measure-interval">Use selected event as interval</button></div><div id="measure-findings"></div></section><details id="measure-model"><summary>Measured versus simulated comparison readiness</summary><p>Presets are illustrative EVs, not the recorded Nissan Leaf. Independent boundary/vehicle inputs are required before model residuals are defensible.</p><div class="measure-controls"><label>Model design<select id="measure-model-design"><option value="active">Active design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><label>Interval start · elapsed s<input id="measure-start" type="number" value="0" min="0" step="any"></label><label>Interval end · elapsed s<input id="measure-end" type="number" min="0" step="any"></label><button id="measure-gate">Assess comparison inputs</button></div><div id="measure-model-result">No quantitative comparison executed.</div></details><details id="measure-validation"><summary>Validation & calibration readiness · evidence-specific assessment</summary><p>No fitting or residual is manufactured for insufficient data. Optional training/evaluation intervals must share no samples.</p><div class="measure-controls"><label>Assessed motor loss model<select id="validation-model"><option value="">Legacy constant</option><option value="illustrative_map">Illustrative efficiency map</option></select></label><label>Calibration interval · s, comma separated<input id="validation-calibration" placeholder="0,150"></label><label>Held-out evaluation interval · s<input id="validation-evaluation" placeholder="200,350"></label><button id="validation-assess">Audit validation / calibration evidence</button></div><div id="validation-result"></div><button id="validation-export" disabled>Export validation assessment JSON</button><button id="validation-html" disabled>HTML validation report</button><a href="/engineering?workspace=validate">Retained bounded calibration tools for appropriately documented data</a></details><details><summary>Readiness, provenance, interval evidence and descriptive recording comparison</summary><pre id="measure-details"></pre></details><div class="measure-export"><button data-measure-format="json" disabled>JSON evidence</button><button data-measure-format="csv" disabled>CSV original samples</button><button data-measure-format="html" disabled>HTML report</button></div><a href="/engineering?workspace=analyse">Retained engineering measurement tools ↗</a></section>`;
   async function api(path, body) {
     const r = await fetch(path, {
       method: "POST",
@@ -669,6 +669,58 @@ export async function mountMeasurements(root, { header }) {
     )
       $("measure-confirm").checked = false;
   });
+  let assessment = null;
+  on($("validation-assess"), "click", async () => {
+    try {
+      const calibration = $("validation-calibration").value.trim(),
+        evaluation = $("validation-evaluation").value.trim();
+      const model =
+        $("measure-model-design").value === "active"
+          ? state.design
+          : state.library.find((r) => r.id === $("measure-model-design").value)
+              ?.design;
+      const r = await api(
+        "/api/workbench/v2/measurements/validation-readiness",
+        {
+          recording: frozenCase?.first || prepared(),
+          vehicle: model,
+          efficiency_model: $("validation-model").value || null,
+          calibration_interval_s: calibration
+            ? calibration.split(",").map(Number)
+            : null,
+          evaluation_interval_s: evaluation
+            ? evaluation.split(",").map(Number)
+            : null,
+        },
+      );
+      assessment = r;
+      window.VEUSValidationAssessment = r;
+      $("validation-result").innerHTML =
+        `<strong>${esc(r.status)} · no calibration performed</strong><p>${esc(r.conclusion)}</p><table><tr><th>Signal / boundary</th><th>Evidence status</th><th>Missing evidence</th></tr>${r.checks.map((c) => `<tr><td>${esc(c.item)}</td><td>${esc(c.status)}</td><td>${esc(c.missing_evidence)}</td></tr>`).join("")}</table><details><summary>Parameter identifiability, split, provenance and exact model snapshot</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`;
+      $("validation-export").disabled = false;
+      $("validation-html").disabled = false;
+    } catch (e) {
+      $("validation-result").textContent =
+        "Assessment unavailable: " + e.message;
+    }
+  });
+  on($("validation-export"), "click", () =>
+    download(
+      "veus-validation-readiness.json",
+      JSON.stringify(assessment, null, 2),
+    ),
+  );
+  on($("validation-html"), "click", async () => {
+    try {
+      const r = await api(
+        "/api/workbench/v2/measurements/validation-readiness/export",
+        { result: assessment, format: "html" },
+      );
+      download(r.filename, r.content, r.media_type);
+    } catch (e) {
+      $("validation-result").textContent = e.message;
+    }
+  });
   $("measurement-recording").value = "ved-10-1561-full";
   await choose();
   return () => {
@@ -678,5 +730,6 @@ export async function mountMeasurements(root, { header }) {
     cache = {};
     delete window.VEUSMeasurements;
     delete window.VEUSMeasurementReplay;
+    delete window.VEUSValidationAssessment;
   };
 }

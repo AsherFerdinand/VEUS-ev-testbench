@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "focused_tests": 50,
+  "browser": {
+    "status": "PASS",
+    "legacy_hash_unchanged": true,
+    "optional_map": true,
+    "same_design_cycle": true,
+    "comparison_sha256": "2c2ee617f9c81810bd7feee516ba5fdf9fd18523f28eecf849ad0be3967dcb5d",
+    "page_errors": []
+  },
+  "boundary_fix": "Within-run zero-power overspeed coast has unavailable efficiency, no extrapolation; invalid initial region still rejected",
+  "legacy": "Exact run and JSON/CSV/HTML fingerprints preserved",
+  "source_sha256": {
+    "veus/lab/kernel.py": "93e600048bdd5a5c9385e2cbfa1ee79278e69350ae2fbbf17a1f11dd1ca7536b",
+    "veus/model/efficiency_map.py": "3078ac35d56a787dcdb70496b976cfa9f090be39e42043dce6b75931d1273b26",
+    "veus/sim/session.py": "688b16328ab9a8eb8869e43c7d34e2c4b58d5b40eff48f426515a20ad6a351f0"
+  }
+}

@@ -8,7 +8,13 @@ import math
 from html import escape
 from typing import Literal
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import Field, field_validator, model_validator, ValidationError
+from pydantic import (
+    Field,
+    field_validator,
+    model_validator,
+    model_serializer,
+    ValidationError,
+)
 from starlette.concurrency import run_in_threadpool
 from veus.contracts import StrictModel
 from veus.replay.analysis import canonical
@@ -46,6 +52,14 @@ class InsightsRequest(StrictModel):
     acceleration_target_ms: float = Field(default=27.7777777778, gt=0, le=60)
     acceleration_duration_s: float = Field(default=30, ge=1, le=120)
     dt_s: float = Field(default=0.2, ge=0.05, le=0.25)
+    efficiency_model: Literal["illustrative_map"] | None = None
+
+    @model_serializer(mode="wrap")
+    def omit_legacy_efficiency_option(self, handler):
+        values = handler(self)
+        if values.get("efficiency_model") is None:
+            values.pop("efficiency_model", None)
+        return values
 
     @field_validator("vehicle", mode="before")
     @classmethod
@@ -192,7 +206,18 @@ def compact_run(result):
         "limits",
         "energy_balance_error_j",
     ]
-    return dict(
+    mapped = result["provenance"].get("powertrain_map")
+    if mapped:
+        fields += [
+            "motor_rpm",
+            "motor_torque_nm",
+            "motor_efficiency",
+            "motor_ac_power_w",
+            "motor_loss_w",
+            "inverter_loss_w",
+            "gearbox_loss_w",
+        ]
+    compact = dict(
         run_sha256=result["run_sha256"],
         model_version=result["model_version"],
         scenario_sha256=hashlib.sha256(
@@ -224,6 +249,10 @@ def compact_run(result):
         preview_fields=fields,
     )
 
+    if mapped:
+        compact["powertrain_map"] = mapped
+    return compact
+
 
 def calculate(request: InsightsRequest):
     profile = builtin_profile(request.profile_id)
@@ -231,6 +260,7 @@ def calculate(request: InsightsRequest):
     cycle_request = LabRequest(
         vehicle=request.vehicle,
         acknowledgements=request.acknowledgements,
+        efficiency_model=request.efficiency_model,
         experiment=ExperimentConfig(
             kind="profile",
             mode="prescribed",
@@ -245,6 +275,7 @@ def calculate(request: InsightsRequest):
     acceleration_request = LabRequest(
         vehicle=request.vehicle,
         acknowledgements=request.acknowledgements,
+        efficiency_model=request.efficiency_model,
         experiment=ExperimentConfig(
             kind="acceleration",
             mode="predictive",

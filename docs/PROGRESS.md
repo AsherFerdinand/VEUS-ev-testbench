@@ -1,14 +1,29 @@
 # Current checkpoint
 
-- Milestones: **VEUS 2.3.3, 2.4 and 2.5 complete within documented evidence limits**, feature branch only; baseline `c039fb8`. No main merge/release or later-phase work.
-- Workflow: Design → Evaluate → Compare → Simulate → Investigate Measurements. Five workspaces, three original vehicle bodies and all retained Lab/replay/export functionality remain.
-- 2.3.3: click-driven coupled-cycle insights, chemical-depletion consumption including heat, explicitly gated cycle-equivalent range, daily/monthly energy and user-assumption cost, continuous-rating acceleration, three-default charts and frozen evidence exports. No certified range or sustainable-top-speed claim.
-- 2.4: matched snapshot/profile comparisons, changed inputs, valid absolute/percentage differences, bounded single-parameter studies and explicit battery-mass/capacity trade-off. Failed points remain inconclusive. JSON/CSV/HTML reports retain hashes/inputs; no optimizer.
-- 2.5: functional lazy measurement import/mapping/readiness/signals/events/cursor/descriptive comparison/report UI, using unchanged legacy processing. Exact JSON/CSV/HTML parity on identical inputs, real VED import and source/event/interval preservation verified. Unknown-polarity power/energy stay gated; gaps stay unfilled.
-- Quantitative measured-versus-model comparison is intentionally **not available** for current unmatched illustrative presets/VED inputs. Readiness view returns coverage, snapshots and missing evidence, with null residuals. Historical physical validation remains **INCONCLUSIVE**.
-- Gates A→B→C passed sequentially; checkpoints and representative examples/captures: `veus2/evidence-2.5/README.md`.
-- Integrated checks: **301 Python tests, 9 clock tests, 8 browser suites pass**. Historical numerical/export fingerprints preserved; model/Lab equations, original datasets and dependencies unchanged. No idle polling or inactive playback.
-- Performance: initial subresources101,569→98,233 B; startup RSS43,824→44,172 KiB; representative full urban+acceleration Insights156.1 ms/134,204 B result. Shared-cloud figures, no laptop guarantee.
-- Work ownership: one narrowly scoped independent PhaseA calculation-service task; coordinator owned UI, integration and all later phases. No nested delegation/external research; one full Python final checkpoint.
-- Limitations: constant OCV/efficiencies, no auxiliaries/thermal/ageing, same-cycle range extrapolation, explicit tariff/charging assumptions and illustrative pack-mass scaling. Unverified measurement boundaries/polarity prevent causal or physical validation claims.
-- Stop after verified/pushed2.5. No advanced charging, thermal, ageing or final-release work without a new request.
+- **VEUS 2.6 complete**, on `feature/veus-2.0-engineering-workbench`; baseline `ae636e4`.
+  Stop after 2.6. No main merge, stable release or Phase 3.0.
+- **A:** optional illustrative motor efficiency maps, explicit torque/RPM/regen envelope,
+  continuous/known-duty peak limits, separate conversion losses and frozen map provenance.
+  Same-design/full-cycle comparison UI and JSON export. Omitted/null map selection retains
+  exact legacy numerical and export fingerprints. Focused gate: 50 Python checks + browser.
+- **B:** VED evidence audit, candidate-specific calibration readiness, disjoint held-out
+  interval guards, compatible paired-error helper and provenance-rich JSON/HTML reports.
+  Missing independent vehicle inputs/polarity/synchronization keep fit values and residuals
+  null. **Physical validation INCONCLUSIVE**. Focused gate: 7 Python checks + browser;
+  exact old measurement JSON/CSV/HTML parity retained.
+- **C:** perspective SVG road, distance-based scenery/wheels, independently positioned
+  traffic, smooth deterministic illustrative overtaking, bounded pose/camera and secondary
+  playback rates. Seek reconstructs directly; reduced motion and inactive cleanup retained.
+  Original three bodies, speedometer, battery and synchronized plots preserved.
+- Final regression: **314 Python, 9 clock, 8 scene tests and 9 browser suites passed**.
+  One existing Starlette/httpx deprecation warning. Full Python run once after focused gates.
+- Essential performance: initial subresources 98,233→98,289 B; startup RSS44,172→44,408 KiB.
+  Separate same-server legacy/map Insights medians105.6/150.5 ms; map diagnostics enlarge
+  payload. Shared-cloud samples, not a laptop guarantee. No static background requests,
+  sockets or pending application timers/frames; short server idle samples have tick noise.
+- Evidence: [checkpoints, comparison, reports, performance and two actual captures](veus2/evidence-2.6/README.md).
+  Equations: [powertrain](veus2/powertrain2.6.md); [validation/driving contracts](veus2/validation-driving2.6.md).
+- Limits: illustrative maps and traffic, fixed OCV/resistance, constant inverter efficiency,
+  no auxiliaries/thermal/ageing/phase-current model. Finite-step RPM crossing has explicit
+  zero-power/unavailable-efficiency handling; no extrapolation. Unmatched VED inputs do
+  not support a defensible calibration. No physical safety or real-vehicle range claim.

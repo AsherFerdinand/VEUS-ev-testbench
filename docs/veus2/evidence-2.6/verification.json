@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "baseline": "ae636e43d8f0069438842b4f4fba0ae0976d54c8",
+  "python": {
+    "passed": 314,
+    "seconds": 31.75,
+    "warnings": [
+      "Existing Starlette testclient/httpx deprecation; no dependency changed"
+    ]
+  },
+  "node": {
+    "clock_passed": 9,
+    "scene_passed": 8
+  },
+  "browser_suites": {
+    "engineering-workflow": {
+      "status": "PASS",
+      "log_sha256": "62d3177459525037f2d59ed42ea2dfdf788b1cf0b05e482eb2529bac6b8b8e4c"
+    },
+    "vehicle-classes": {
+      "status": "PASS",
+      "log_sha256": "ce39121a44a3fea2ee7ee47a91970f7bd255c8851ae79484bfa09b9945dbc27b"
+    },
+    "workbench": {
+      "status": "PASS",
+      "log_sha256": "d9597f4d4adc8a714eb62a445bf9fecab16e349a5cc499331a8887f4b22678b9"
+    },
+    "drive": {
+      "status": "PASS",
+      "log_sha256": "ca451eef84d13a02bbd88f8151e67969bf9b72ea27970a0f22100d628438ce76"
+    },
+    "replay": {
+      "status": "PASS",
+      "log_sha256": "1ac002e0a424d96d7700efe5cfe26ee7bbf6f3d105e423df84c73f51a66d5b07"
+    },
+    "guidance": {
+      "status": "PASS",
+      "log_sha256": "1019bb3cc23b1d2dde6d669e11de8b6f81680e0f43ee6a68a2b306522bb6f6a9"
+    },
+    "investigation": {
+      "status": "PASS",
+      "log_sha256": "2cc627f338bf7fc49d7c76f0a9727ef38c58374e4b8ae5889d2ccce9f42f1823"
+    },
+    "lab": {
+      "status": "PASS",
+      "log_sha256": "6ae7107053ef6a5c50ab80d452415847a4f0c176139674597254a53e0725a383"
+    },
+    "advanced": {
+      "status": "PASS",
+      "log_sha256": "9ae19b539959ff677c1e10128be5692054f269f23e72bd00829f9237a05dcd63"
+    }
+  },
+  "compatibility": [
+    "Exact historical Lab/run/export fingerprints",
+    "Exact legacy measurement JSON/CSV/HTML parity",
+    "All three presets, saved designs, profiles/routes and shared replay retained"
+  ],
+  "notes": [
+    "Final full Python suite run once; focused gates earlier.",
+    "Legacy browser suites use /engineering; an initial replay invocation used the modern root and timed out waiting for retired DOM. Correct URL rerun passed; no product change or weakened assertion.",
+    "Post-regression ruff formatting changed whitespace only in two new readiness files; lint passed."
+  ]
+}

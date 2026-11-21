@@ -55,6 +55,14 @@ from veus.workbench.measurements import router as measurement_workbench_router
 
 app.include_router(measurement_workbench_router)
 
+from veus.workbench.powertrain_comparison import router as powertrain_router
+
+app.include_router(powertrain_router)
+
+from veus.workbench.validation_readiness import router as validation_readiness_router
+
+app.include_router(validation_readiness_router)
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

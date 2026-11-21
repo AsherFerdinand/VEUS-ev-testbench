@@ -737,3 +737,5 @@ body[data-workspace="simulation"] .page-heading h1 {
 .lab-scenario[aria-pressed="true"] {
   box-shadow: inset 0 -2px #63cbd0;
 }
+#lab-model-comparison>details{margin-top:18px;border-block:1px solid var(--line);padding:12px 0;font-size:12px}#lab-model-comparison label{font-size:11px}#lab-model-comparison select,#lab-model-comparison button{font-size:11px;margin:8px;padding:8px}#lab-model-comparison pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;font-size:10px}#lab-model-comparison table{width:100%;font-size:11px}#lab-model-comparison td,#lab-model-comparison th{padding:7px;text-align:left;border-bottom:1px solid var(--line)}#motor-operating-points svg{display:block;max-height:180px;width:100%}#motor-operating-points p{font-size:10px}
+.lab-replay-options{font-size:10px;color:#a6c6d6;margin-bottom:12px}.lab-replay-options label{display:flex;gap:8px;align-items:center;margin:8px 0}.lab-replay-options select{background:#1a3448;border:1px solid #4d7185;border-radius:4px;color:#d8ebef;font-size:10px;padding:5px}.lab-replay-options p{font-size:9px}.lab-driving-view #lab-scene-svg{border:1px solid #355367;border-radius:9px}

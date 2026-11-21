@@ -1,3 +1,4 @@
+import { drivingState, project } from "./driving-scene-state.mjs";
 import {
   appearanceOf,
   sideVehicle,
@@ -37,21 +38,18 @@ export const scenarios = {
   ],
 };
 export function sceneSVG() {
-  return `<svg id="lab-scene-svg" viewBox="0 0 1000 380" role="img" aria-label="Original VEUS electric sports car in an illustrative driving scene">
- <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0c192c"/><stop offset="1" stop-color="#294358"/></linearGradient><linearGradient id="pearl" x2=".1" y2="1"><stop stop-color="#f8fcff"/><stop offset=".45" stop-color="#c6d6e2"/><stop offset="1" stop-color="#7d95a9"/></linearGradient><linearGradient id="roadshade" x2="0" y2="1"><stop stop-color="#293745"/><stop offset="1" stop-color="#101d2b"/></linearGradient><pattern id="road-dashes" width="140" height="8" patternUnits="userSpaceOnUse"><path d="M0 4h70" stroke="#b3c8ce" stroke-width="3"/></pattern></defs>
- <rect width="1000" height="380" rx="12" fill="url(#sky)"/>
- <circle cx="815" cy="64" r="33" fill="#d5eff0" opacity=".1"/>
- <g id="lab-mountains" fill="#365467" opacity=".65"><path d="M0 210L130 65l105 125L410 25l170 174L740 65l260 155v100H0z"/><path d="M358 82l52-57 65 65-45-20-20 14-20-20z" fill="#809fae"/></g>
- <g id="lab-horizon" stroke="#547687" stroke-width="2" opacity=".45"><path d="M0 195h1000M0 213h1000"/><path d="M25 195v-55m210 55v-35m320 35v-55m210 55v-35"/></g>
- <g id="lab-road-slope"><path d="M-120 231H1120V470H-120z" fill="url(#roadshade)"/><path d="M-120 234H1120" stroke="#608698" stroke-width="2"/>
- <rect id="lab-road-motion" x="-160" y="311" width="1400" height="8" fill="url(#road-dashes)"/>
- <g id="lab-other-car" transform="translate(530 141) scale(.45)" opacity=".48">${sideVehicle("sedan", "lab-reference-car", "#5e788a")}</g>
- <g id="lab-light" transform="translate(850 104)"><path d="M0 20v128" stroke="#577384" stroke-width="6"/><rect x="-16" y="0" width="32" height="78" rx="10" fill="#101b28" stroke="#567081"/><circle id="lab-light-red" cy="20" r="8" fill="#4a3440"/><circle cy="40" r="7" fill="#4c4937"/><circle id="lab-light-green" cy="60" r="8" fill="#4ae3aa"/></g>
- <g id="lab-hero-car" transform="translate(185 94) scale(.78)">${sideVehicle("performance", "lab-arrow")}</g></g>
- <text id="lab-scene-label" x="24" y="31" fill="#c1e3e8" font-family="sans-serif" font-size="11" letter-spacing="2">VEUS ARROW / ILLUSTRATIVE BODY</text>
- <text id="lab-scene-state" x="24" y="355" fill="#94bdcb" font-family="sans-serif" font-size="11">Run a scenario to load its recorded motion.</text>
- </svg>`;
+  return `<svg id="lab-scene-svg" viewBox="0 0 1000 400" role="img" aria-label="Original VEUS driving scene"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0d1b30"/><stop offset="1" stop-color="#456276"/></linearGradient><linearGradient id="pearl" x2=".1" y2="1"><stop stop-color="#f8fcff"/><stop offset=".45" stop-color="#c6d6e2"/><stop offset="1" stop-color="#7d95a9"/></linearGradient><linearGradient id="roadshade" x2="0" y2="1"><stop stop-color="#304351"/><stop offset="1" stop-color="#111e2a"/></linearGradient><pattern id="far-land" width="360" height="220" patternUnits="userSpaceOnUse"><path d="M0 180L90 120L160 160L250 110L360 180V220H0Z" fill="#426473"/></pattern><clipPath id="scene-clip"><rect width="1000" height="400" rx="12"/></clipPath></defs>
+<g clip-path="url(#scene-clip)"><rect width="1000" height="400" fill="url(#sky)"/><circle cx="805" cy="65" r="34" fill="#d4e9e8" opacity=".18"/>
+<g id="lab-far-scenery" opacity=".6"><rect x="-360" width="1720" height="220" fill="url(#far-land)"/></g>
+<g id="lab-mountains" fill="#5a7786"><path d="M-250 220L-60 100l120 78L210 40l180 155L570 75l220 126 130-85 300 100v100H-250z"/><path d="M165 87l45-47 65 57-52-24-15 15-15-17z" fill="#b2c6ce" opacity=".5"/></g>
+<g id="lab-near-scenery" stroke="#537b85" stroke-width="2" opacity=".65"><path d="M-250 215H1300M-250 225H1300"/>${Array.from({ length: 14 }, (_, i) => `<path d="M${i * 110 - 200} 224v-37m-8 7l8-14 8 14"/>`).join("")}</g>
+<g id="lab-road-slope"><path id="lab-road-surface" fill="url(#roadshade)" stroke="#6c8b97" stroke-width="2"/><g id="lab-road-markings" fill="#ccdedf" opacity=".8"></g><path id="lab-road-edge" fill="none" stroke="#9cb8bc" stroke-width="2"/>
+<g id="lab-other-car">${sideVehicle("sedan", "lab-reference-car", "#6e8799")}</g>
+<g id="lab-light"><path d="M0 0v100" stroke="#688b96" stroke-width="5"/><rect x="-13" y="-65" width="26" height="70" rx="8" fill="#132233" stroke="#6c8a9b"/><circle id="lab-light-red" cy="-48" r="7" fill="#ff7667"/><circle cy="-29" r="6" fill="#625b3c"/><circle id="lab-light-green" cy="-12" r="6" fill="#234b41"/></g>
+<g id="lab-hero-car">${sideVehicle("performance", "lab-arrow")}</g></g>
+<text id="lab-scene-label" x="24" y="28" fill="#cee2eb" font-size="11" font-family="sans-serif" letter-spacing="2">VEUS / ILLUSTRATIVE DRIVING</text><text id="lab-scene-state" x="24" y="378" fill="#b4d1db" font-family="sans-serif" font-size="10">Replay a recorded run to inspect motion.</text></g></svg>`;
 }
+
 export function updateScene(root, sample, time, experiment, design) {
   const $ = (id) => root.querySelector("#" + id);
   if (!$("lab-scene-svg")) return;
@@ -61,44 +59,117 @@ export function updateScene(root, sample, time, experiment, design) {
     hero.innerHTML = sideVehicle(appearance, "lab-arrow");
     hero.dataset.appearance = appearance;
   }
-  $("lab-scene-svg").setAttribute(
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const v = drivingState({
+    time_s: time,
+    position_m: sample?.position_m ?? 0,
+    speed_ms: sample?.speed_ms ?? 0,
+    acceleration_ms2: sample?.acceleration_ms2 ?? 0,
+    wheel_radius_m: design?.body?.wheel_radius_m ?? 0.32,
+    kind: experiment?.kind ?? "constant_speed",
+    grade_percent: sample?.grade_percent ?? experiment?.grade_percent ?? 0,
+    reduced_motion: reduced,
+  });
+  const svg = $("lab-scene-svg");
+  svg.dataset.positionM = String(v.position_m);
+  svg.dataset.time = String(time);
+  svg.dataset.stage = v.stage;
+  svg.dataset.lateralM = String(v.lateral_m);
+  svg.dataset.trafficPositionM = String(v.traffic_position_m);
+  svg.dataset.wheelAngle = String(v.wheel_rotation_deg);
+  svg.dataset.reducedMotion = String(reduced);
+  svg.dataset.cameraPositionM = String(v.camera_position_m);
+  svg.setAttribute(
     "aria-label",
-    `${appearances[appearance].name} ${appearances[appearance].label} in an illustrative longitudinal scene`,
+    `${appearances[appearance].name}: ${v.stage}, illustrative driving choreography`,
   );
   $("lab-scene-label").textContent =
-    appearances[appearance].name + " / ILLUSTRATIVE BODY";
-  const kind = experiment?.kind || "constant_speed",
-    position = sample?.position_m ?? 0,
-    grade = sample?.grade_percent ?? experiment?.grade_percent ?? 0;
-  $("lab-road-motion").setAttribute(
+    appearances[appearance].name + " / RECORDED LONGITUDINAL MOTION";
+  $("lab-scene-state").textContent =
+    experiment?.kind === "acceleration"
+      ? `ILLUSTRATIVE ${v.stage.replaceAll("_", " ").toUpperCase()} · scene traffic 8 m/s; no steering, sensors or safe-overtake claim`
+      : experiment?.kind === "braking"
+        ? "RED AT t = 0 s · visual event; recorded braking supplies the deceleration"
+        : experiment?.kind === "gradient"
+          ? `SELECTED GRADE ${sample?.grade_percent ?? experiment.grade_percent}% · illustrative terrain`
+          : "Scene traffic and surroundings are illustrative; vehicle motion follows the frozen result";
+  if (reduced)
+    $("lab-scene-state").textContent += " · reduced decorative motion";
+  $("lab-far-scenery").setAttribute(
     "transform",
-    `translate(${-((position * 2) % 140)} 0)`,
+    `translate(${-v.far_parallax_m % 360} 0)`,
   );
-  // Exact selected slope angle; scenery is illustrative, not a geographic reconstruction.
-  const angle = (-Math.atan(grade / 100) * 180) / Math.PI;
-  $("lab-road-slope").setAttribute("transform", `rotate(${angle} 500 245)`);
-  $("lab-mountains").style.display = kind === "gradient" ? "" : "none";
-  $("lab-other-car").style.display = kind === "acceleration" ? "" : "none";
-  $("lab-other-car").setAttribute(
+  $("lab-near-scenery").setAttribute(
     "transform",
-    `translate(${530 - Math.min(650, position * 1.1)} 141) scale(.45)`,
+    `translate(${-v.near_parallax_m % 110} 0)`,
   );
-  $("lab-light").style.display = kind === "braking" ? "" : "none";
+  $("lab-mountains").style.display =
+    experiment?.kind === "gradient" ? "" : "none";
+  $("lab-road-slope").setAttribute(
+    "transform",
+    `rotate(${v.grade_angle_deg} 560 275)`,
+  );
+  const point = (s, l) => project(s, l),
+    coords = (p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+  const polygon = (points) => "M" + points.map(coords).join("L") + "Z";
+  $("lab-road-surface").setAttribute(
+    "d",
+    polygon([point(240, -2), point(240, 5.5), point(-34, 5.5), point(-34, -2)]),
+  );
+  $("lab-road-edge").setAttribute(
+    "d",
+    `M${coords(point(240, -1.8))}L${coords(point(-34, -1.8))}M${coords(point(240, 5.3))}L${coords(point(-34, 5.3))}`,
+  );
+  // World-space 18 m repeat /9 m dash. Phase comes from camera distance, never frame deltas.
+  const phase = reduced ? 0 : ((v.camera_position_m % 18) + 18) % 18;
+  const markings = [];
+  for (let i = -2; i < 15; i++) {
+    const s = i * 18 - phase;
+    if (s < -34 || s + 9 > 240) continue;
+    markings.push(
+      polygon([
+        point(s, 1.68),
+        point(s, 1.82),
+        point(s + 9, 1.82),
+        point(s + 9, 1.68),
+      ]),
+    );
+  }
+  const mark = $("lab-road-markings");
+  while (mark.children.length < markings.length)
+    mark.append(document.createElementNS("http://www.w3.org/2000/svg", "path"));
+  while (mark.children.length > markings.length) mark.lastChild.remove();
+  markings.forEach((d, i) => mark.children[i].setAttribute("d", d));
+  function actor(node, p, heading, pitch, heave) {
+    node.setAttribute(
+      "transform",
+      `translate(${p.x} ${p.y + heave}) rotate(${heading + pitch}) scale(${p.scale}) translate(-290 -260)`,
+    );
+    node.style.visibility = p.visible ? "visible" : "hidden";
+  }
+  actor(hero, v.hero, v.heading_deg, v.pitch_deg, v.body_heave_px);
+  actor($("lab-other-car"), v.traffic, 0, 0, 0);
+  // Paint far-lane hero behind near-lane traffic; z-order depends only on current state.
+  const road = $("lab-road-slope");
+  if (v.lateral_m > 1.75) {
+    if (hero.nextSibling !== $("lab-other-car"))
+      road.insertBefore(hero, $("lab-other-car"));
+  } else if (road.lastChild !== hero) road.append(hero);
+  const spin = (node, angle) => {
+    for (const w of node.querySelectorAll("[data-scene-wheel]"))
+      w.setAttribute(
+        "transform",
+        `rotate(${-angle % 360} ${w.dataset.wheelX} ${w.dataset.wheelY})`,
+      );
+  };
+  spin(hero, v.wheel_rotation_deg);
+  spin($("lab-other-car"), v.traffic_wheel_rotation_deg);
+  $("lab-light").style.display = experiment?.kind === "braking" ? "" : "none";
+  const light = point(70 - v.position_m, 5.6);
   $("lab-light").setAttribute(
     "transform",
-    `translate(${850 - Math.min(700, position * 2)} 104)`,
+    `translate(${light.x} ${light.y}) scale(${light.scale})`,
   );
-  // Predefined visual event: red at t=0, when the existing braking experiment starts.
-  $("lab-light-red").setAttribute("fill", sample ? "#ff685d" : "#4a3440");
-  $("lab-light-green").setAttribute("fill", sample ? "#23483b" : "#4ae3aa");
-  $("lab-scene-svg").dataset.positionM = String(position);
-  $("lab-scene-svg").dataset.time = String(time);
-  $("lab-scene-state").textContent =
-    kind === "braking"
-      ? "RED AT t = 0 s · visual trigger; braking comes from the recorded experiment"
-      : kind === "acceleration"
-        ? "Reference vehicle is illustrative · no lane change, collision model or safe-overtake claim"
-        : kind === "gradient"
-          ? `SELECTED GRADE ${grade.toFixed(1)}% · longitudinal model; illustrative terrain`
-          : "Scenery follows achieved distance · fictional body, not a validated vehicle";
+  $("lab-light-red").setAttribute("fill", sample ? "#ff7667" : "#453440");
+  $("lab-light-green").setAttribute("fill", sample ? "#234b41" : "#5bd0a2");
 }

@@ -5,11 +5,16 @@
 An EV engineering workbench for understanding vehicle systems, making explicit
 design assumptions and investigating reproducible experiments and measured evidence.
 
-**VEUS 2.5 Engineering Workbench** combines three fictional vehicle classes with
-coupled-cycle insights, controlled design studies and a functional recorded-data
-investigation workspace. Numerical range/cost results have explicit assumptions;
-measurement readiness gates preserve unknown signals and polarity. This feature
-branch is not a stable release. Physical validation remains **INCONCLUSIVE**.
+**VEUS 2.6 Engineering Workbench** combines three fictional vehicle classes with
+coupled-cycle insights, controlled studies, recorded-data investigation and an optional
+illustrative motor-efficiency map. The Lab adds distance-driven perspective scenery and
+deterministic traffic choreography. Validation/calibration readiness reports identify
+missing evidence; physical validation remains **INCONCLUSIVE**. This feature branch
+is not a stable release.
+
+[2.6 model equations](docs/veus2/powertrain2.6.md) ·
+[Validation and replay limits](docs/veus2/validation-driving2.6.md) ·
+[Results and actual browser captures](docs/veus2/evidence-2.6/README.md)
 
 ![Original interactive EV cutaway](docs/veus2/evidence-2.1/complete-cutaway-light.png)
 

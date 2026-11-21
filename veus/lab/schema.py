@@ -1,7 +1,7 @@
 """Versioned laboratory request contracts, SI units and explicit operating policy."""
 
 from typing import Literal
-from pydantic import Field, model_validator, field_validator
+from pydantic import Field, model_validator, field_validator, model_serializer
 from veus.contracts import StrictModel
 from veus.workbench.design import VehicleDesignV2
 from veus.workbench.engineering import explicit_snapshot
@@ -50,6 +50,14 @@ class LabRequest(StrictModel):
     acknowledgements: list[str] = Field(default_factory=list, max_length=8)
     profile: ProfileData | None = None
     route: RouteData | None = None
+    efficiency_model: Literal["illustrative_map"] | None = None
+
+    @model_serializer(mode="wrap")
+    def omit_legacy_efficiency_option(self, handler):
+        values = handler(self)
+        if values.get("efficiency_model") is None:
+            values.pop("efficiency_model", None)
+        return values
 
     @field_validator("vehicle", mode="before")
     @classmethod

@@ -1,6 +1,6 @@
 # VEUS 2.0 redevelopment roadmap
 
-Current milestone: **VEUS 2.5 Engineering Insights, controlled analysis and Measurements**, still not a stable release. Foundation evidence remains historical.
+Current milestone: **VEUS 2.6 optional powertrain maps, validation readiness and driving scene**, still not a stable release. Foundation evidence remains historical.
 The order below follows engineering dependencies rather than the number of tabs.
 
 | Milestone                           | Concrete result                                                                                                                                                          | Evidence required before advancing                                                                                                                  |
@@ -46,9 +46,16 @@ before advancing to a new engineering phase.
 
 Milestones 2 and 3 now have coupled experiment/profile execution, frozen exports,
 source/coverage policies and verification evidence. See [Simulation Lab](simulation-lab.md)
-and [profiles/routes](profiles-routes.md). This task stops after 2.5.
+and [profiles/routes](profiles-routes.md). The 2.5 checkpoint is retained as historical evidence.
 
 2.3.3 Insights,2.4 controlled studies and2.5 measurement migration now have sequential
 acceptance checkpoints. [Analysis contracts](engineering-analysis.md),
 [measurement parity and limits](measurement-migration.md), [evidence](evidence-2.5/README.md).
 Quantitative model/measurement residuals remain gated; no new physical validation.
+
+
+2.6 checkpoints A→B→C are complete: optional mapped powertrain with exact legacy
+compatibility, evidence-specific VED calibration readiness and deterministic illustrative
+driving animation. See [equations](powertrain2.6.md), [validation/driving limits](validation-driving2.6.md)
+and [verification/performance/captures](evidence-2.6/README.md).
+Physical validation remains INCONCLUSIVE. Stop after 2.6; no Phase 3.0, main merge or stable release.

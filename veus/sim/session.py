@@ -366,30 +366,38 @@ class SimulationSession:
             )
         return 0.5 * (self.state.velocity_ms + result.state.velocity_ms) * moving_dt
 
+    def _drive_conversion_efficiency(self, result):
+        return self.config.drive_efficiency * self.sim.transmission.mechanical_efficiency
+
+    def _drive_power_limit(self, result, discharge_w):
+        return discharge_w
+
+    def _regenerative_recovery(self, result, distance, brake_j, charge_w):
+        regen_efficiency = self.config.regen_efficiency * self.sim.transmission.mechanical_efficiency
+        regen_j = 0.0
+        if self.config.regen_enabled and distance > 0 and result.motor_rpm < self.sim.motor.max_rpm:
+            tr = self.sim.transmission
+            motor_force = (self.sim.motor.max_available_torque(result.motor_rpm) * tr.active_ratio
+                           / (tr.mechanical_efficiency * self.sim.vehicle.wheel_radius_m))
+            regen_j = min(brake_j, motor_force * distance,
+                          self.config.max_power_kw * 1000 * self.dt_s / tr.mechanical_efficiency,
+                          charge_w * self.dt_s / regen_efficiency)
+        return regen_j, regen_efficiency
+
     def _energy_step(self, torque: float, brake_n: float) -> None:
         discharge_w, charge_w = self.battery.power_limits(self.dt_s)
-        drive_efficiency = (
-            self.config.drive_efficiency * self.sim.transmission.mechanical_efficiency
-        )
-        regen_efficiency = (
-            self.config.regen_efficiency * self.sim.transmission.mechanical_efficiency
-        )
         result = self.sim.step(self.state, torque, brake_n, self.dt_s)
 
         def demand(r):
-            return (
-                r.drive_force_n
-                * self._work_distance(r)
-                / (drive_efficiency * self.dt_s)
-            )
+            return r.drive_force_n * self._work_distance(r) / (self._drive_conversion_efficiency(r) * self.dt_s)
 
-        self.battery_limited = demand(result) > discharge_w + 1e-7
+        self.battery_limited = demand(result) > self._drive_power_limit(result, discharge_w) + 1e-7
         if self.battery_limited:
             lo, hi = 0.0, torque
             for _ in range(40):
                 mid = (lo + hi) / 2
                 candidate = self.sim.step(self.state, mid, brake_n, self.dt_s)
-                if demand(candidate) <= discharge_w:
+                if demand(candidate) <= self._drive_power_limit(candidate, discharge_w):
                     lo = mid
                 else:
                     hi = mid
@@ -397,34 +405,15 @@ class SimulationSession:
         distance = self._work_distance(result)
         drive_j = result.drive_force_n * distance
         brake_j = result.brake_force_n * distance
-        regen_j = 0.0
-        self.regen_force_n = 0.0
-        if (
-            self.config.regen_enabled
-            and distance > 0
-            and result.motor_rpm < self.sim.motor.max_rpm
-        ):
-            tr = self.sim.transmission
-            motor_force = (
-                self.sim.motor.max_available_torque(result.motor_rpm)
-                * tr.active_ratio
-                / (tr.mechanical_efficiency * self.sim.vehicle.wheel_radius_m)
-            )
-            regen_j = min(
-                brake_j,
-                motor_force * distance,
-                self.config.max_power_kw * 1000 * self.dt_s / tr.mechanical_efficiency,
-                charge_w * self.dt_s / regen_efficiency,
-            )
-            self.regen_force_n = regen_j / distance
+        drive_efficiency = self._drive_conversion_efficiency(result)
+        regen_j, regen_efficiency = self._regenerative_recovery(result, distance, brake_j, charge_w)
+        self.regen_force_n = regen_j / distance if distance > 0 else 0.0
         terminal_j = drive_j / drive_efficiency - regen_j * regen_efficiency
         self.electrical = self.battery.exchange(terminal_j / self.dt_s, self.dt_s)
         self.energy["consumed_j"] += max(0, terminal_j)
         self.energy["recovered_j"] += max(0, -terminal_j)
         self.energy["battery_heat_j"] += self.electrical["heat_w"] * self.dt_s
-        self.energy["conversion_loss_j"] += drive_j * (
-            1 / drive_efficiency - 1
-        ) + regen_j * (1 - regen_efficiency)
+        self.energy["conversion_loss_j"] += drive_j * (1 / drive_efficiency - 1) + regen_j * (1 - regen_efficiency)
         self.energy["friction_heat_j"] += brake_j - regen_j
         self.energy["road_work_j"] += result.resistance_force_n * distance
         self.last = result

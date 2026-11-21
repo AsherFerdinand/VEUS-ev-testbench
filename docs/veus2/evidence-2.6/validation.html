@@ -1,0 +1,578 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Engineering validation and calibration readiness</title><style>body{font:16px system-ui;max-width:1200px;margin:32px auto;padding:0 20px;color:#172b3f}table{border-collapse:collapse;width:100%;margin:20px 0;display:block;overflow:auto}td,th{text-align:left;border:1px solid #ccd7df;padding:9px}img{width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5f8;padding:16px}.PASS{color:#126a41}.FAIL{color:#b42318}.INCONCLUSIVE{color:#875400}section{border-top:2px solid #ccd7df;margin-top:32px}small{color:#40556b}</style>
+<h1>Engineering validation and calibration readiness</h1><p><strong>Analytical verification and defined model scenarios. No real-world vehicle or production ADAS safety validation.</strong></p><h2>INCONCLUSIVE · no calibration performed</h2><p>Supported recorded-signal investigation is available. VED does not independently establish the inputs/measurement boundary needed for residuals or calibration against these illustrative vehicles. No parameters were fitted; no same-data evaluation leakage.</p><p>Assessment 39c40b6551939f41d4b70d48fc0314e097956f048088b01aa512371510287f93; model 043e4be73c948c66cdf5cf61fb7b3352eeb53b6a793c751192d17a32b1ed6b38</p><table><thead><tr><th>Signal / boundary</th><th>Status</th><th>Missing evidence</th></tr></thead><tbody><tr><td>vehicle_identity</td><td>CONDITIONAL</td><td>Published source identity does not establish an independent mapping to this illustrative design</td></tr><tr><td>speed_and_timestamps</td><td>AVAILABLE_FOR_INVESTIGATION</td><td>Independent clock accuracy and synchronization uncertainty remain unknown</td></tr><tr><td>battery_voltage_v</td><td>AVAILABLE_FOR_INVESTIGATION</td><td>Presence of a channel does not verify sensor calibration or measurement boundary</td></tr><tr><td>battery_current_a</td><td>AVAILABLE_FOR_INVESTIGATION</td><td>Presence of a channel does not verify sensor calibration or measurement boundary</td></tr><tr><td>current_polarity</td><td>UNAVAILABLE</td><td>Independent sign and discharge/charge boundary evidence required</td></tr><tr><td>battery_power</td><td>UNAVAILABLE</td><td>Verified polarity, synchronized V/I and electrical boundary needed; raw |V×I| is not validated discharge power</td></tr><tr><td>vehicle_mass</td><td>UNAVAILABLE</td><td>Fleet/binned weight is not measured loaded vehicle mass</td></tr><tr><td>tyres_and_aerodynamics</td><td>UNAVAILABLE</td><td>Verified wheel radius, rolling model, drag area, air density and wind/grade conditions required</td></tr><tr><td>drivetrain_and_forward_inputs</td><td>UNAVAILABLE</td><td>Verified drivetrain mapping plus measured propulsion/braking input and road gradient required</td></tr><tr><td>signal_synchronization</td><td>UNAVAILABLE</td><td>Independent channel delay/calibration/uncertainty evidence missing</td></tr><tr><td>coverage</td><td>AVAILABLE_FOR_INVESTIGATION</td><td>Gaps are retained, not extrapolated or filled</td></tr></tbody></table><h2>Provenance, model version, split, candidate parameters and uncertainty</h2><pre>{
+  &quot;aligned_traces&quot;: null,
+  &quot;assessment_sha256&quot;: &quot;39c40b6551939f41d4b70d48fc0314e097956f048088b01aa512371510287f93&quot;,
+  &quot;calibration&quot;: {
+    &quot;battery_resistance_ohm&quot;: {
+      &quot;bounds&quot;: null,
+      &quot;calibrated_value&quot;: null,
+      &quot;calibration_error&quot;: null,
+      &quot;heldout_error&quot;: null,
+      &quot;identifiability&quot;: &quot;Not established; correlated/missing inputs cannot identify this parameter&quot;,
+      &quot;initial_value&quot;: 0.05,
+      &quot;missing_evidence&quot;: [
+        &quot;Verified current sign, OCV/SOC/temperature boundary&quot;,
+        &quot;Synchronized load transients and voltage/current uncertainty&quot;,
+        &quot;Identifiable electrical-model structure&quot;
+      ],
+      &quot;objective&quot;: null,
+      &quot;remaining_residuals&quot;: null,
+      &quot;status&quot;: &quot;BLOCKED&quot;,
+      &quot;uncertainty&quot;: &quot;Unavailable; not inferred from residuals&quot;
+    },
+    &quot;drag_area_m2&quot;: {
+      &quot;bounds&quot;: null,
+      &quot;calibrated_value&quot;: null,
+      &quot;calibration_error&quot;: null,
+      &quot;heldout_error&quot;: null,
+      &quot;identifiability&quot;: &quot;Not established; correlated/missing inputs cannot identify this parameter&quot;,
+      &quot;initial_value&quot;: 0.55,
+      &quot;missing_evidence&quot;: [
+        &quot;Verified density/wind and grade&quot;,
+        &quot;Independent wheel-force/torque boundary&quot;,
+        &quot;Sufficient speed excitation separate from rolling resistance&quot;
+      ],
+      &quot;objective&quot;: null,
+      &quot;remaining_residuals&quot;: null,
+      &quot;status&quot;: &quot;BLOCKED&quot;,
+      &quot;uncertainty&quot;: &quot;Unavailable; not inferred from residuals&quot;
+    },
+    &quot;drive_efficiency&quot;: {
+      &quot;bounds&quot;: null,
+      &quot;calibrated_value&quot;: null,
+      &quot;calibration_error&quot;: null,
+      &quot;heldout_error&quot;: null,
+      &quot;identifiability&quot;: &quot;Not established; correlated/missing inputs cannot identify this parameter&quot;,
+      &quot;initial_value&quot;: 0.94,
+      &quot;missing_evidence&quot;: [
+        &quot;Verified signed DC power and auxiliaries boundary&quot;,
+        &quot;Independent shaft/wheel power&quot;,
+        &quot;Synchronized current/voltage/mechanical samples&quot;
+      ],
+      &quot;objective&quot;: null,
+      &quot;remaining_residuals&quot;: null,
+      &quot;status&quot;: &quot;BLOCKED&quot;,
+      &quot;uncertainty&quot;: &quot;Unavailable; not inferred from residuals&quot;
+    },
+    &quot;rolling_resistance&quot;: {
+      &quot;bounds&quot;: null,
+      &quot;calibrated_value&quot;: null,
+      &quot;calibration_error&quot;: null,
+      &quot;heldout_error&quot;: null,
+      &quot;identifiability&quot;: &quot;Not established; correlated/missing inputs cannot identify this parameter&quot;,
+      &quot;initial_value&quot;: 0.011,
+      &quot;missing_evidence&quot;: [
+        &quot;Verified loaded mass and grade&quot;,
+        &quot;Zero or independently measured propulsion/braking force&quot;,
+        &quot;Coast-down coverage across appropriate speeds&quot;
+      ],
+      &quot;objective&quot;: null,
+      &quot;remaining_residuals&quot;: null,
+      &quot;status&quot;: &quot;BLOCKED&quot;,
+      &quot;uncertainty&quot;: &quot;Unavailable; not inferred from residuals&quot;
+    }
+  },
+  &quot;checks&quot;: [
+    {
+      &quot;item&quot;: &quot;vehicle_identity&quot;,
+      &quot;missing_evidence&quot;: &quot;Published source identity does not establish an independent mapping to this illustrative design&quot;,
+      &quot;observed&quot;: &quot;VED-Veh10&quot;,
+      &quot;status&quot;: &quot;CONDITIONAL&quot;
+    },
+    {
+      &quot;item&quot;: &quot;speed_and_timestamps&quot;,
+      &quot;missing_evidence&quot;: &quot;Independent clock accuracy and synchronization uncertainty remain unknown&quot;,
+      &quot;observed&quot;: {
+        &quot;samples&quot;: 534,
+        &quot;source_time_origin_s&quot;: 0,
+        &quot;units&quot;: &quot;m/s&quot;
+      },
+      &quot;status&quot;: &quot;AVAILABLE_FOR_INVESTIGATION&quot;
+    },
+    {
+      &quot;item&quot;: &quot;battery_voltage_v&quot;,
+      &quot;missing_evidence&quot;: &quot;Presence of a channel does not verify sensor calibration or measurement boundary&quot;,
+      &quot;observed&quot;: {
+        &quot;unit&quot;: &quot;V&quot;,
+        &quot;valid_samples&quot;: 534
+      },
+      &quot;status&quot;: &quot;AVAILABLE_FOR_INVESTIGATION&quot;
+    },
+    {
+      &quot;item&quot;: &quot;battery_current_a&quot;,
+      &quot;missing_evidence&quot;: &quot;Presence of a channel does not verify sensor calibration or measurement boundary&quot;,
+      &quot;observed&quot;: {
+        &quot;unit&quot;: &quot;A&quot;,
+        &quot;valid_samples&quot;: 534
+      },
+      &quot;status&quot;: &quot;AVAILABLE_FOR_INVESTIGATION&quot;
+    },
+    {
+      &quot;item&quot;: &quot;current_polarity&quot;,
+      &quot;missing_evidence&quot;: &quot;Independent sign and discharge/charge boundary evidence required&quot;,
+      &quot;observed&quot;: &quot;unknown&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;battery_power&quot;,
+      &quot;missing_evidence&quot;: &quot;Verified polarity, synchronized V/I and electrical boundary needed; raw |V\u00d7I| is not validated discharge power&quot;,
+      &quot;observed&quot;: null,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;vehicle_mass&quot;,
+      &quot;missing_evidence&quot;: &quot;Fleet/binned weight is not measured loaded vehicle mass&quot;,
+      &quot;observed&quot;: &quot;Binned fleet weight; payload not measured&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;tyres_and_aerodynamics&quot;,
+      &quot;missing_evidence&quot;: &quot;Verified wheel radius, rolling model, drag area, air density and wind/grade conditions required&quot;,
+      &quot;observed&quot;: null,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;drivetrain_and_forward_inputs&quot;,
+      &quot;missing_evidence&quot;: &quot;Verified drivetrain mapping plus measured propulsion/braking input and road gradient required&quot;,
+      &quot;observed&quot;: &quot;Leaf&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;signal_synchronization&quot;,
+      &quot;missing_evidence&quot;: &quot;Independent channel delay/calibration/uncertainty evidence missing&quot;,
+      &quot;observed&quot;: null,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;
+    },
+    {
+      &quot;item&quot;: &quot;coverage&quot;,
+      &quot;missing_evidence&quot;: &quot;Gaps are retained, not extrapolated or filled&quot;,
+      &quot;observed&quot;: {
+        &quot;gaps&quot;: [
+          {
+            &quot;end_s&quot;: 76.7,
+            &quot;start_s&quot;: 72.10000000000001
+          },
+          {
+            &quot;end_s&quot;: 81.60000000000001,
+            &quot;start_s&quot;: 76.7
+          },
+          {
+            &quot;end_s&quot;: 86.8,
+            &quot;start_s&quot;: 81.8
+          },
+          {
+            &quot;end_s&quot;: 91.9,
+            &quot;start_s&quot;: 86.8
+          },
+          {
+            &quot;end_s&quot;: 100.8,
+            &quot;start_s&quot;: 91.9
+          },
+          {
+            &quot;end_s&quot;: 110.7,
+            &quot;start_s&quot;: 101.9
+          },
+          {
+            &quot;end_s&quot;: 206.4,
+            &quot;start_s&quot;: 201.4
+          },
+          {
+            &quot;end_s&quot;: 211.5,
+            &quot;start_s&quot;: 206.5
+          },
+          {
+            &quot;end_s&quot;: 216.4,
+            &quot;start_s&quot;: 211.5
+          },
+          {
+            &quot;end_s&quot;: 221.5,
+            &quot;start_s&quot;: 216.5
+          },
+          {
+            &quot;end_s&quot;: 226.6,
+            &quot;start_s&quot;: 221.5
+          },
+          {
+            &quot;end_s&quot;: 231.6,
+            &quot;start_s&quot;: 226.6
+          },
+          {
+            &quot;end_s&quot;: 236.70000000000002,
+            &quot;start_s&quot;: 231.6
+          },
+          {
+            &quot;end_s&quot;: 239.9,
+            &quot;start_s&quot;: 236.70000000000002
+          },
+          {
+            &quot;end_s&quot;: 272.4,
+            &quot;start_s&quot;: 269.8
+          },
+          {
+            &quot;end_s&quot;: 320.7,
+            &quot;start_s&quot;: 315.8
+          },
+          {
+            &quot;end_s&quot;: 325.8,
+            &quot;start_s&quot;: 320.8
+          },
+          {
+            &quot;end_s&quot;: 330.90000000000003,
+            &quot;start_s&quot;: 325.8
+          },
+          {
+            &quot;end_s&quot;: 335.90000000000003,
+            &quot;start_s&quot;: 330.90000000000003
+          },
+          {
+            &quot;end_s&quot;: 340.90000000000003,
+            &quot;start_s&quot;: 335.90000000000003
+          },
+          {
+            &quot;end_s&quot;: 379,
+            &quot;start_s&quot;: 374.3
+          },
+          {
+            &quot;end_s&quot;: 384.1,
+            &quot;start_s&quot;: 379.1
+          },
+          {
+            &quot;end_s&quot;: 389.1,
+            &quot;start_s&quot;: 384.1
+          }
+        ],
+        &quot;speed_interval_coverage&quot;: 0.7439183318853172
+      },
+      &quot;status&quot;: &quot;AVAILABLE_FOR_INVESTIGATION&quot;
+    }
+  ],
+  &quot;conclusion&quot;: &quot;Supported recorded-signal investigation is available. VED does not independently establish the inputs/measurement boundary needed for residuals or calibration against these illustrative vehicles. No parameters were fitted; no same-data evaluation leakage.&quot;,
+  &quot;dataset_provenance&quot;: {
+    &quot;dataset&quot;: &quot;University of Michigan VED&quot;,
+    &quot;expected_sha256&quot;: &quot;cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9&quot;,
+    &quot;inputs_verified&quot;: false,
+    &quot;kind&quot;: &quot;measured&quot;,
+    &quot;licence&quot;: &quot;Apache-2.0 (upstream VED)&quot;,
+    &quot;provenance_evidence&quot;: &quot;Complete vehicle/trip group from pinned weekly CSV; exact contiguous source rows and hashes in full-recordings-provenance.json. Source current sign retained, polarity unverified.&quot;,
+    &quot;role&quot;: &quot;exploration&quot;,
+    &quot;run_id&quot;: &quot;VED-Veh10-Trip1561&quot;,
+    &quot;source_url&quot;: &quot;https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data&quot;,
+    &quot;vehicle_id&quot;: &quot;VED-Veh10&quot;,
+    &quot;vehicle_specifications&quot;: {
+      &quot;advertised_capacity_kwh&quot;: 24,
+      &quot;battery_temperature&quot;: &quot;Not available&quot;,
+      &quot;current_sign&quot;: &quot;Discharge-positive inversion is an unconfirmed hypothesis&quot;,
+      &quot;generalized_weight_lb&quot;: 3500,
+      &quot;manufacturer&quot;: &quot;Nissan&quot;,
+      &quot;model&quot;: &quot;Leaf&quot;,
+      &quot;weight_note&quot;: &quot;Binned fleet weight; payload not measured&quot;,
+      &quot;year&quot;: 2013
+    }
+  },
+  &quot;limitations&quot;: [
+    &quot;Complete trip group in this weekly member; source timestamp gaps remain and unknown travel is not filled.&quot;,
+    &quot;Raw VED current polarity is unverified. Signed V\u00d7I is not labelled discharge or regeneration.&quot;,
+    &quot;No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.&quot;,
+    &quot;Battery temperature, instrument uncertainty and channel synchronization are unknown.&quot;,
+    &quot;Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.&quot;,
+    &quot;Generic EV silhouette and fictional landscape do not identify the vehicle or real location.&quot;,
+    &quot;Recorded rows and derived calculations do not establish road gradient, auxiliary load, motor efficiency or a causal explanation.&quot;,
+    &quot;Channel synchronization, instrument accuracy and calibration are not independently authenticated by this software.&quot;,
+    &quot;A generic replay illustration is not a GPS trajectory or a validated model prediction. Phase 8 physical validation remains INCONCLUSIVE.&quot;,
+    &quot;SOC changes are endpoint observations, not battery health, degradation or efficiency estimates.&quot;,
+    &quot;23 timestamp gaps exceed 2.0 s. Total distance and whole-window average are unknown where speed coverage is incomplete.&quot;,
+    &quot;Energy calculation unavailable: current polarity or measurement-quality requirements are unresolved. Full-window energy needs complete joint voltage/current samples and no excessive timestamp gaps. Select a complete window or obtain the missing measurements. Verify current polarity and document its source; no discharge or charging direction is inferred. Document channel synchronization and time alignment. Document measurement accuracy, calibration and signal-quality evidence.&quot;,
+    &quot;A user assertion or a synthetic recovery test is not real-world validation. Existing legacy calibration tools remain available for appropriately documented separate data.&quot;
+  ],
+  &quot;measurement_uncertainty&quot;: null,
+  &quot;metrics&quot;: null,
+  &quot;model_configuration_sha256&quot;: &quot;043e4be73c948c66cdf5cf61fb7b3352eeb53b6a793c751192d17a32b1ed6b38&quot;,
+  &quot;model_version&quot;: &quot;veus-evidence-readiness-v1&quot;,
+  &quot;physical_validation&quot;: &quot;INCONCLUSIVE&quot;,
+  &quot;powertrain_model_version&quot;: &quot;legacy-constant-efficiency / veus-lab-coupled-v1&quot;,
+  &quot;request&quot;: {
+    &quot;calibration_interval_s&quot;: [
+      0,
+      150
+    ],
+    &quot;efficiency_model&quot;: null,
+    &quot;evaluation_interval_s&quot;: [
+      200,
+      350
+    ],
+    &quot;recording&quot;: {
+      &quot;configuration&quot;: {
+        &quot;current_sign&quot;: &quot;unknown&quot;,
+        &quot;limitations&quot;: [
+          &quot;Complete trip group in this weekly member; source timestamp gaps remain and unknown travel is not filled.&quot;,
+          &quot;Raw VED current polarity is unverified. Signed V\u00d7I is not labelled discharge or regeneration.&quot;,
+          &quot;No measured propulsion torque, brake demand or road gradient; predictive speed comparison unavailable.&quot;,
+          &quot;Battery temperature, instrument uncertainty and channel synchronization are unknown.&quot;,
+          &quot;Speed-integrated displacement and differentiated acceleration are derived, not GPS measurements.&quot;,
+          &quot;Generic EV silhouette and fictional landscape do not identify the vehicle or real location.&quot;
+        ],
+        &quot;preprocessing&quot;: {
+          &quot;columns&quot;: {
+            &quot;ambient_temperature_c&quot;: {
+              &quot;column&quot;: &quot;OAT[DegC]&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;\u00b0C&quot;
+            },
+            &quot;battery_current_a&quot;: {
+              &quot;column&quot;: &quot;HV Battery Current[A]&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;A&quot;
+            },
+            &quot;battery_soc&quot;: {
+              &quot;column&quot;: &quot;HV Battery SOC[%]&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;%&quot;
+            },
+            &quot;battery_voltage_v&quot;: {
+              &quot;column&quot;: &quot;HV Battery Voltage[V]&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;V&quot;
+            },
+            &quot;time_s&quot;: {
+              &quot;column&quot;: &quot;Timestamp(ms)&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;ms&quot;
+            },
+            &quot;vehicle_speed_ms&quot;: {
+              &quot;column&quot;: &quot;Vehicle Speed[km/h]&quot;,
+              &quot;sign&quot;: 1,
+              &quot;unit&quot;: &quot;km/h&quot;
+            }
+          },
+          &quot;comparison_interpolation&quot;: &quot;linear&quot;,
+          &quot;input_interpolation&quot;: &quot;previous&quot;,
+          &quot;max_gap_s&quot;: 2,
+          &quot;zero_time&quot;: true
+        },
+        &quot;provenance&quot;: {
+          &quot;subset&quot;: {
+            &quot;bytes&quot;: 25037,
+            &quot;day_numbers&quot;: [
+              &quot;2.89390195371&quot;
+            ],
+            &quot;gaps_gt2_s&quot;: 23,
+            &quot;modification&quot;: &quot;Six columns projected; retained numeric strings, original timestamps and source current sign unchanged. GPS/unrelated signals omitted.&quot;,
+            &quot;original_time_end_ms&quot;: 460400,
+            &quot;original_time_start_ms&quot;: 0,
+            &quot;rows&quot;: 534,
+            &quot;source_line_range&quot;: [
+              70952,
+              71485
+            ],
+            &quot;subset_sha256&quot;: &quot;cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9&quot;,
+            &quot;trip&quot;: &quot;1561&quot;,
+            &quot;vehicle_id&quot;: 10
+          },
+          &quot;upstream&quot;: {
+            &quot;archive_bytes&quot;: 82723769,
+            &quot;archive_sha256&quot;: &quot;44d53754fd39e196171ec09f123604375d0248d5c06a97d6695ef0e22a948c61&quot;,
+            &quot;licence&quot;: &quot;Apache-2.0; see UPSTREAM-LICENSE.txt&quot;,
+            &quot;member&quot;: &quot;VED_171101_week.csv&quot;,
+            &quot;selection&quot;: &quot;First two chronological multi-minute vehicle-10 trips in the first weekly member; all rows retained, including gaps; no residual/event-based selection.&quot;,
+            &quot;upstream_commit&quot;: &quot;6baa4963782d515a67d32a5490bd5d11f5d9bf0d&quot;
+          }
+        },
+        &quot;sanity_limits&quot;: {
+          &quot;current_a&quot;: 5000,
+          &quot;measured_acceleration_ms2&quot;: 100,
+          &quot;speed_ms&quot;: 120,
+          &quot;voltage_v&quot;: 2000
+        },
+        &quot;schema_version&quot;: 1,
+        &quot;sign_evidence&quot;: null,
+        &quot;source&quot;: {
+          &quot;dataset&quot;: &quot;University of Michigan VED&quot;,
+          &quot;expected_sha256&quot;: &quot;cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9&quot;,
+          &quot;inputs_verified&quot;: false,
+          &quot;kind&quot;: &quot;measured&quot;,
+          &quot;licence&quot;: &quot;Apache-2.0 (upstream VED)&quot;,
+          &quot;provenance_evidence&quot;: &quot;Complete vehicle/trip group from pinned weekly CSV; exact contiguous source rows and hashes in full-recordings-provenance.json. Source current sign retained, polarity unverified.&quot;,
+          &quot;role&quot;: &quot;exploration&quot;,
+          &quot;run_id&quot;: &quot;VED-Veh10-Trip1561&quot;,
+          &quot;source_url&quot;: &quot;https://github.com/gsoh/VED/tree/6baa4963782d515a67d32a5490bd5d11f5d9bf0d/Data&quot;,
+          &quot;vehicle_id&quot;: &quot;VED-Veh10&quot;,
+          &quot;vehicle_specifications&quot;: {
+            &quot;advertised_capacity_kwh&quot;: 24,
+            &quot;battery_temperature&quot;: &quot;Not available&quot;,
+            &quot;current_sign&quot;: &quot;Discharge-positive inversion is an unconfirmed hypothesis&quot;,
+            &quot;generalized_weight_lb&quot;: 3500,
+            &quot;manufacturer&quot;: &quot;Nissan&quot;,
+            &quot;model&quot;: &quot;Leaf&quot;,
+            &quot;weight_note&quot;: &quot;Binned fleet weight; payload not measured&quot;,
+            &quot;year&quot;: 2013
+          }
+        },
+        &quot;thresholds&quot;: {
+          &quot;acceleration_ms2&quot;: 2,
+          &quot;deceleration_ms2&quot;: 2.5,
+          &quot;minimum_duration_s&quot;: 0.5,
+          &quot;power_magnitude_w&quot;: 50000,
+          &quot;regen_deceleration_ms2&quot;: 0.1,
+          &quot;regen_power_w&quot;: 1000,
+          &quot;standstill_ms&quot;: 0.1
+        }
+      },
+      &quot;csv_base64&quot;: &quot;VGltZXN0YW1wKG1zKSxWZWhpY2xlIFNwZWVkW2ttL2hdLEhWIEJhdHRlcnkgQ3VycmVudFtBXSxIViBCYXR0ZXJ5IFZvbHRhZ2VbVl0sSFYgQmF0dGVyeSBTT0NbJV0sT0FUW0RlZ0NdDQowLDI5LjU5OTk5ODQ3NDEsLTIyLjUsMzgwLDcxLjcwNzMyMTE2Nyw0LjUNCjEwMCwzMy40Nzk5OTk1NDIyLC02Ny41LDM3MS41LDcxLjcwNzMyMTE2Nyw0LjUNCjEyMDAsMzQuODQwMDAwMTUyNiwtNjcuNSwzNzEuNSw3MS43MDczMjExNjcsNC41DQoyMjAwLDM2LjI5OTk5OTIzNzEsLTY3LjUsMzcxLjUsNzEuNzA3MzIxMTY3LDQuNQ0KMzMwMCwzNy4wNDAwMDA5MTU1LC02Ny41LDM3MS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ0MDAsMzYuMjE5OTk3NDA2LC02Ny41LDM3MS41LDcxLjcwNzMyMTE2Nyw0LjUNCjUwMDAsMzYuMjE5OTk3NDA2LC02Ny41LDM3MS41LDcxLjcwNzMyMTE2Nyw0LjUNCjUxMDAsMzYuMjE5OTk3NDA2LC02Ny41LDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjUyMDAsMzYuMjE5OTk3NDA2LC0xMS41LDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjU1MDAsMzQuOTM5OTk4NjI2NywtMTEuNSwzNzguNSw3MS43MDczMjExNjcsNC41DQo2NTAwLDMyLjIxOTk5NzQwNiwtMTEuNSwzNzguNSw3MS43MDczMjExNjcsNC41DQo3NTAwLDI4LjgyOTk5OTkyMzcsLTExLjUsMzc4LjUsNzEuNzA3MzIxMTY3LDQuNQ0KODYwMCwyNC43Nzk5OTg3NzkzLC0xMS41LDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjk2MDAsMjAuNDg5OTk5NzcxMSwtMTEuNSwzNzguNSw3MS43MDczMjExNjcsNC41DQoxMDEwMCwyMC40ODk5OTk3NzExLC0xMS41LDM4Miw3MS43MDczMjExNjcsNC41DQoxMDIwMCwyMC40ODk5OTk3NzExLC0xMS41LDM4Miw3MS43MDczMjExNjcsNC41DQoxMDMwMCwyMC40ODk5OTk3NzExLDYsMzgyLDcxLjcwNzMyMTE2Nyw0LjUNCjEwNzAwLDE2LjUyMDAwMDQ1NzgsNiwzODIsNzEuNzA3MzIxMTY3LDQuNQ0KMTE3MDAsMTMuMTQ5OTk5NjE4NSw2LDM4Miw3MS43MDczMjExNjcsNC41DQoxMjcwMCwxMC41MTAwMDAyMjg5LDYsMzgyLDcxLjcwNzMyMTE2Nyw0LjUNCjEzODAwLDkuNjk5OTk5ODA5MjcsNiwzODIsNzEuNzA3MzIxMTY3LDQuNQ0KMTQ4MDAsOC41OTAwMDAxNTI1OSw2LDM4Miw3MS43MDczMjExNjcsNC41DQoxNTEwMCw4LjU5MDAwMDE1MjU5LDYsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMTUyMDAsOC41OTAwMDAxNTI1OSw2LDM3OS41LDcxLjcwNzMyMTE2Nyw0LjUNCjE1MzAwLDguNTkwMDAwMTUyNTksLTcuNSwzNzkuNSw3MS43MDczMjExNjcsNC41DQoxNTkwMCw2Ljc1LC03LjUsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMTY5MDAsNS4yODk5OTk5NjE4NSwtNy41LDM3OS41LDcxLjcwNzMyMTE2Nyw0LjUNCjE3OTAwLDUuMjMwMDAwMDE5MDcsLTcuNSwzNzkuNSw3MS43MDczMjExNjcsNC41DQoxOTAwMCw1LjY5OTk5OTgwOTI3LC03LjUsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjAwMDAsNi42NDk5OTk2MTg1MywtNy41LDM3OS41LDcxLjcwNzMyMTE2Nyw0LjUNCjIwMzAwLDYuNjQ5OTk5NjE4NTMsLTEyLjUsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjExMDAsNi45NDAwMDAwNTcyMiwtMTIuNSwzNzkuNSw3MS43MDczMjExNjcsNC41DQoyMjEwMCw3LjI5OTk5OTcxMzksLTEyLjUsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjMxMDAsNi43MzAwMDAwMTkwNywtMTIuNSwzNzkuNSw3MS43MDczMjExNjcsNC41DQoyNDIwMCw1LjUsLTEyLjUsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjUyMDAsNC40Mjk5OTk4MjgzNCwtMTIuNSwzNzkuNSw3MS43MDczMjExNjcsNC41DQoyNTMwMCw0LjQyOTk5OTgyODM0LC0xMi41LDM3OS41LDcxLjcwNzMyMTE2Nyw0LjUNCjI1NDAwLDQuNDI5OTk5ODI4MzQsLTgsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjYzMDAsMy42NDk5OTk4NTY5NSwtOCwzNzkuNSw3MS43MDczMjExNjcsNC41DQoyNzMwMCwzLjA1OTk5OTk0Mjc4LC04LDM3OS41LDcxLjcwNzMyMTE2Nyw0LjUNCjI4MzAwLDMuNjc5OTk5ODI4MzQsLTgsMzc5LjUsNzEuNzA3MzIxMTY3LDQuNQ0KMjk0MDAsOC4zNDAwMDAxNTI1OSwtOCwzNzkuNSw3MS43MDczMjExNjcsNC41DQozMDMwMCw4LjM0MDAwMDE1MjU5LC04LDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjMwNDAwLDEyLjg1OTk5OTY1NjcsLTMzLDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjMxNTAwLDE1LjA1OTk5OTQ2NTksLTMzLDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjMyNTAwLDE3LjExOTk5ODkzMTksLTMzLDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjMzNTAwLDE5LjEyOTk5OTE2MDgsLTMzLDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjM0NjAwLDIwLjY0OTk5OTYxODUsLTMzLDM3Ny41LDcxLjcwNzMyMTE2Nyw0LjUNCjM1MzAwLDIwLjY0OTk5OTYxODUsLTMzLDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM1NDAwLDIwLjY0OTk5OTYxODUsLTMzLDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM1NTAwLDIwLjY0OTk5OTYxODUsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM1NjAwLDIxLjU2OTk5OTY5NDgsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM2NzAwLDIxLjkzOTk5ODYyNjcsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM3NzAwLDIyLjcxOTk5OTMxMzQsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM4ODAwLDI0Ljk4OTk5OTc3MTEsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjM5OTAwLDI3LjM0OTk5ODQ3NDEsLTI1LDM3Ni41LDcxLjcwNzMyMTE2Nyw0LjUNCjQwNDAwLDI3LjM0OTk5ODQ3NDEsLTI1LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQwNTAwLDI3LjM0OTk5ODQ3NDEsLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQxMDAwLDI5LjE0OTk5OTYxODUsLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQyMTAwLDMwLjU1OTk5OTQ2NTksLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQzMTAwLDMwLjcxOTk5OTMxMzQsLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ0MTAwLDI5Ljg5OTk5OTYxODUsLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ1MjAwLDMwLjA5OTk5ODQ3NDEsLTM0LDM3NS41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ1NDAwLDMwLjA5OTk5ODQ3NDEsLTM0LDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ1NTAwLDMwLjA5OTk5ODQ3NDEsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ1NjAwLDMwLjA5OTk5ODQ3NDEsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ2MjAwLDMzLjg2OTk5ODkzMTksLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ3MzAwLDM4LjExMDAwMDYxMDQsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ4MzAwLDQxLjkwOTk5OTg0NzQsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjQ5MzAwLDQ1LjA5MDAwMDE1MjYsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjUwNDAwLDQ3LjgxOTk5OTY5NDgsLTQzLDM3OC41LDcxLjcwNzMyMTE2Nyw0LjUNCjUwNTAwLDQ3LjgxOTk5OTY5NDgsLTY3LjUsMzcwLjUsNzEuNzA3MzIxMTY3LDQuNQ0KNTA2MDAsNDcuODE5OTk5Njk0OCwtNjcuNSwzNzAuNSw3MS43MDczMjExNjcsNC41DQo1MTQwMCw0OS44MDk5OTc1NTg2LC02Ny41LDM3MC41LDcxLjcwNzMyMTE2Nyw0LjUNCjUyNTAwLDUxLjUwOTk5ODMyMTUsLTY3LjUsMzcwLjUsNzEuNzA3MzIxMTY3LDQuNQ0KNTM1MDAsNTIuMzY5OTk4OTMxOSwtNjcuNSwzNzAuNSw3MS43MDczMjExNjcsNC41DQo1NDUwMCw1My4wNDk5OTkyMzcxLC02Ny41LDM3MC41LDcxLjcwNzMyMTE2Nyw0LjUNCjU0OTAwLDUzLjA0OTk5OTIzNzEsLTY3LjUsMzcwLjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjU1NTAwLDUzLjA0OTk5OTIzNzEsLTY3LjUsMzcxLDcwLjYwOTc1NjQ2OTcsNC41DQo1NTYwMCw1Mi4wMjk5OTg3NzkzLC00OC41LDM3MSw3MC42MDk3NTY0Njk3LDQuNQ0KNTU3MDAsNTIuMDI5OTk4Nzc5MywtNDguNSwzNzEsNzAuNjA5NzU2NDY5Nyw0LjUNCjU2NjAwLDQ5LjQzOTk5ODYyNjcsLTQ4LjUsMzcxLDcwLjYwOTc1NjQ2OTcsNC41DQo1NzcwMCw0Ny41OTAwMDAxNTI2LC00OC41LDM3MSw3MC42MDk3NTY0Njk3LDQuNQ0KNTg3MDAsNDYuMDkwMDAwMTUyNiwtNDguNSwzNzEsNzAuNjA5NzU2NDY5Nyw0LjUNCjU5NzAwLDQ0LjY1OTk5OTg0NzQsLTQ4LjUsMzcxLDcwLjYwOTc1NjQ2OTcsNC41DQo2MDUwMCw0NC42NTk5OTk4NDc0LC00OC41LDM3NC41LDcwLjYwOTc1NjQ2OTcsNC41DQo2MDYwMCw0NC42NTk5OTk4NDc0LC0zNiwzNzQuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNjA3MDAsNDQuNjU5OTk5ODQ3NCwtMzYsMzc0LjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjYwODAwLDQzLjAwOTk5ODMyMTUsLTM2LDM3NC41LDcwLjYwOTc1NjQ2OTcsNC41DQo2MTgwMCw0MC44Njk5OTg5MzE5LC0zNiwzNzQuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNjI5MDAsMzcuNDU5OTk5MDg0NSwtMzYsMzc0LjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjYzOTAwLDMxLjUyOTk5ODc3OTMsLTM2LDM3NC41LDcwLjYwOTc1NjQ2OTcsNC41DQo2NDkwMCwyNS4wMTAwMDAyMjg5LC0zNiwzNzQuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNjUwMDAsMjUuMDEwMDAwMjI4OSwtMzYsMzc0LjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjY1NjAwLDI1LjAxMDAwMDIyODksLTM2LDM4MS41LDcwLjYwOTc1NjQ2OTcsNC41DQo2NTcwMCwyNS4wMTAwMDAyMjg5LDkuNSwzODEuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNjYwMDAsMjAuMTA5OTk4NzAzLDkuNSwzODEuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNjcwMDAsMTYuNDc5OTk5NTQyMiw5LjUsMzgxLjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjY4MTAwLDEyLjYwOTk5OTY1NjcsOS41LDM4MS41LDcwLjYwOTc1NjQ2OTcsNC41DQo2OTEwMCw4LjcyMDAwMDI2NzAzLDkuNSwzODEuNSw3MC42MDk3NTY0Njk3LDQuNQ0KNzAxMDAsNS41Nzk5OTk5MjM3MSw5LjUsMzgxLjUsNzAuNjA5NzU2NDY5Nyw0LjUNCjcwNjAwLDUuNTc5OTk5OTIzNzEsOS41LDM3OSw3MC42MDk3NTY0Njk3LDQuNQ0KNzA3MDAsNS41Nzk5OTk5MjM3MSwtOS41LDM3OSw3MC42MDk3NTY0Njk3LDQuNQ0KNzA4MDAsNS41Nzk5OTk5MjM3MSwtOS41LDM3OSw3MC42MDk3NTY0Njk3LDQuNQ0KNzEyMDAsMy4zNTk5OTk4OTUxLC05LjUsMzc5LDcwLjYwOTc1NjQ2OTcsNC41DQo3MTUwMCwwLC05LjUsMzc5LDcwLjM2NTg1OTk4NTQsNC41DQo3MTYwMCwwLC05LjUsMzc4LjUsNzAuMzY1ODU5OTg1NCw0LjUNCjcxNzAwLDAsLTcuNSwzNzguNSw3MC4zNjU4NTk5ODU0LDQuNQ0KNzE5MDAsMCwtNy41LDM3OC41LDcwLjM2NTg1OTk4NTQsNQ0KNzIwMDAsMCwtNy41LDM3OC41LDcwLjM2NTg1OTk4NTQsNQ0KNzIxMDAsMCwtNy41LDM3OC41LDcwLjM2NTg1OTk4NTQsNQ0KNzY3MDAsMCwtOSwzNzguNSw3MC4zNjU4NTk5ODU0LDUNCjgxNjAwLDAsLTksMzc5LDcwLjM2NTg1OTk4NTQsNQ0KODE4MDAsMCwtNiwzNzksNzAuMzY1ODU5OTg1NCw1DQo4NjgwMCwwLC03LjUsMzc5LDcwLjM2NTg1OTk4NTQsNQ0KOTE5MDAsMCwtNiwzNzksNzAuMzY1ODU5OTg1NCw1DQoxMDA4MDAsMCwtNiwzNzksNzAuMzY1ODU5OTg1NCw1DQoxMDE4MDAsMCwtNiwzNzkuNSw3MC4zNjU4NTk5ODU0LDUNCjEwMTkwMCwwLC03LDM3OS41LDcwLjM2NTg1OTk4NTQsNQ0KMTEwNzAwLDMuMzg5OTk5ODY2NDksLTcsMzc5LjUsNzAuMTIxOTU1ODcxNiw1DQoxMTA4MDAsMy4zODk5OTk4NjY0OSwtNywzNzksNzAuMTIxOTU1ODcxNiw1DQoxMTA5MDAsMy4zODk5OTk4NjY0OSwtMjYsMzc5LDcwLjEyMTk1NTg3MTYsNQ0KMTExNTAwLDMuMzg5OTk5ODY2NDksLTI2LDM3OSw3MC4xMjE5NTU4NzE2LDUNCjExMTgwMCw5LjQ4OTk5OTc3MTEyLC0yNiwzNzksNzAuMTIxOTU1ODcxNiw1DQoxMTI5MDAsMTUuNTE5OTk5NTA0MSwtMjYsMzc5LDcwLjEyMTk1NTg3MTYsNQ0KMTEzOTAwLDIwLjE5OTk5ODg1NTYsLTI2LDM3OSw3MC4xMjE5NTU4NzE2LDUNCjExNDkwMCwyMi40MDk5OTk4NDc0LC0yNiwzNzksNzAuMTIxOTU1ODcxNiw1DQoxMTU3MDAsMjIuNDA5OTk5ODQ3NCwtMjYsMzc5LDcwLjEyMTk1NTg3MTYsNQ0KMTE1ODAwLDIyLjQwOTk5OTg0NzQsLTI2LDM3My41LDcwLjEyMTk1NTg3MTYsNQ0KMTE2MDAwLDIxLjUsLTE4LjUsMzczLjUsNzAuMTIxOTU1ODcxNiw1DQoxMTcwMDAsMjAuNDU5OTk5MDg0NSwtMTguNSwzNzMuNSw3MC4xMjE5NTU4NzE2LDUNCjExODEwMCwyMC40MzAwMDAzMDUyLC0xOC41LDM3My41LDcwLjEyMTk1NTg3MTYsNQ0KMTE5MTAwLDIzLjAyOTk5ODc3OTMsLTE4LjUsMzczLjUsNzAuMTIxOTU1ODcxNiw1DQoxMjAxMDAsMjUuNjQ5OTk5NjE4NSwtMTguNSwzNzMuNSw3MC4xMjE5NTU4NzE2LDUNCjEyMDgwMCwyNS42NDk5OTk2MTg1LC0xOC41LDM3My41LDcwLjEyMTk1NTg3MTYsNQ0KMTIwOTAwLDI1LjY0OTk5OTYxODUsLTE4LjUsMzc0LjUsNzAuMTIxOTU1ODcxNiw1DQoxMjEwMDAsMjUuNjQ5OTk5NjE4NSwtNDcuNSwzNzQuNSw3MC4xMjE5NTU4NzE2LDUNCjEyMTIwMCwyOS40MjAwMDAwNzYzLC00Ny41LDM3NC41LDcwLjEyMTk1NTg3MTYsNQ0KMTIyMjAwLDMzLjY1OTk5OTg0NzQsLTQ3LjUsMzc0LjUsNzAuMTIxOTU1ODcxNiw1DQoxMjMzMDAsMzcuMzYwMDAwNjEwNCwtNDcuNSwzNzQuNSw3MC4xMjE5NTU4NzE2LDUNCjEyNDMwMCw0MC4wNzk5OTgwMTY0LC00Ny41LDM3NC41LDcwLjEyMTk1NTg3MTYsNQ0KMTI1MDAwLDQwLjA3OTk5ODAxNjQsLTQ3LjUsMzc0LjUsNzAuMTIxOTU1ODcxNiw1DQoxMjUzMDAsNDEuNzcwMDAwNDU3OCwtNDcuNSwzNzQuNSw3MC4xMjE5NTU4NzE2LDUNCjEyNTgwMCw0MS43NzAwMDA0NTc4LC00Ny41LDM3NC41LDcwLjEyMTk1NTg3MTYsNQ0KMTI1OTAwLDQxLjc3MDAwMDQ1NzgsLTQ3LjUsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTI2MTAwLDQxLjc3MDAwMDQ1NzgsLTM1LDM3NCw3MC4xMjE5NTU4NzE2LDUNCjEyNjQwMCw0My4zNDk5OTg0NzQxLC0zNSwzNzQsNzAuMTIxOTU1ODcxNiw1DQoxMjc0MDAsNDQuNTM5OTk3MTAwOCwtMzUsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTI4NTAwLDQ1LjUwOTk5ODMyMTUsLTM1LDM3NCw3MC4xMjE5NTU4NzE2LDUNCjEyOTUwMCw0NS44Nzk5OTcyNTM0LC0zNSwzNzQsNzAuMTIxOTU1ODcxNiw1DQoxMzA1MDAsNDUuNzc5OTk4Nzc5MywtMzUsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTMwOTAwLDQ1Ljc3OTk5ODc3OTMsLTM1LDM3Myw3MC4xMjE5NTU4NzE2LDUNCjEzMTEwMCw0NS43Nzk5OTg3NzkzLC00NywzNzMsNzAuMTIxOTU1ODcxNiw1DQoxMzE2MDAsNDUuMDk5OTk4NDc0MSwtNDcsMzczLDcwLjEyMTk1NTg3MTYsNQ0KMTMyNjAwLDQzLjUyOTk5ODc3OTMsLTQ3LDM3Myw3MC4xMjE5NTU4NzE2LDUNCjEzMzcwMCw0Mi4wNzk5OTgwMTY0LC00NywzNzMsNzAuMTIxOTU1ODcxNiw1DQoxMzQ3MDAsNDAuNDUwMDAwNzYyOSwtNDcsMzczLDcwLjEyMTk1NTg3MTYsNQ0KMTM1NzAwLDM3Ljc3MDAwMDQ1NzgsLTQ3LDM3Myw3MC4xMjE5NTU4NzE2LDUNCjEzNTkwMCwzNy43NzAwMDA0NTc4LC00NywzNzMsNzAuMTIxOTU1ODcxNiw1DQoxMzYwMDAsMzcuNzcwMDAwNDU3OCwtNDcsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTM2MTAwLDM3Ljc3MDAwMDQ1NzgsLTE4LDM3NCw3MC4xMjE5NTU4NzE2LDUNCjEzNjgwMCwzMy44MTk5OTk2OTQ4LC0xOCwzNzQsNzAuMTIxOTU1ODcxNiw1DQoxMzc4MDAsMjcuNjcwMDAwMDc2MywtMTgsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTM4OTAwLDE2Ljc5OTk5OTIzNzEsLTE4LDM3NCw3MC4xMjE5NTU4NzE2LDUNCjEzOTkwMCw4LjA5MDAwMDE1MjU5LC0xOCwzNzQsNzAuMTIxOTU1ODcxNiw1DQoxNDA5MDAsNC4wOTk5OTk5MDQ2MywtMTgsMzc0LDcwLjEyMTk1NTg3MTYsNQ0KMTQxMDAwLDQuMDk5OTk5OTA0NjMsLTE4LDM4Mi41LDcwLjEyMTk1NTg3MTYsNQ0KMTQxMjAwLDQuMDk5OTk5OTA0NjMsMCwzODIuNSw3MC4xMjE5NTU4NzE2LDUNCjE0MjAwMCw4Ljc4OTk5OTk2MTg1LDAsMzgyLjUsNzAuMTIxOTU1ODcxNiw1DQoxNDMwMDAsMTYuMTk5OTk4ODU1NiwwLDM4Mi41LDcwLjEyMTk1NTg3MTYsNQ0KMTQ0MTAwLDI0LjQyMDAwMDA3NjMsMCwzODIuNSw3MC4xMjE5NTU4NzE2LDUNCjE0NTEwMCwzMi4wMjk5OTg3NzkzLDAsMzgyLjUsNzAuMTIxOTU1ODcxNiw1DQoxNDYwMDAsMzIuMDI5OTk4Nzc5MywwLDM4Mi41LDcwLjEyMTk1NTg3MTYsNQ0KMTQ2MTAwLDMyLjAyOTk5ODc3OTMsMCwzNjYuNSw3MC4xMjE5NTU4NzE2LDUNCjE0NjIwMCwzOC4zMTk5OTk2OTQ4LC05MS41LDM2Ni41LDcwLjEyMTk1NTg3MTYsNQ0KMTQ3MzAwLDQyLjk1MDAwMDc2MjksLTkxLjUsMzY2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNDg0MDAsNDYuMDY5OTk5Njk0OCwtOTEuNSwzNjYuNSw3MC4xMjE5NTU4NzE2LDUNCjE0OTQwMCw0Ny40Mzk5OTg2MjY3LC05MS41LDM2Ni41LDcwLjEyMTk1NTg3MTYsNQ0KMTUwNDAwLDQ3LjMwOTk5NzU1ODYsLTkxLjUsMzY2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTExMDAsNDcuMzA5OTk3NTU4NiwtOTEuNSwzNzYuNSw3MC4xMjE5NTU4NzE2LDUNCjE1MTIwMCw0Ny4zMDk5OTc1NTg2LC0xMCwzNzYuNSw3MC4xMjE5NTU4NzE2LDUNCjE1MTUwMCw0Ny4wNjk5OTk2OTQ4LC0xMCwzNzYuNSw3MC4xMjE5NTU4NzE2LDUNCjE1MjUwMCw0Ni4zMTk5OTk2OTQ4LC0xMCwzNzYuNSw3MC4xMjE5NTU4NzE2LDUNCjE1MzUwMCw0NiwtMTAsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTQ2MDAsNDUuNDUwMDAwNzYyOSwtMTAsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTU2MDAsNDQuMDk5OTk4NDc0MSwtMTAsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTYxMDAsNDQuMDk5OTk4NDc0MSwtMTAsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTYyMDAsNDQuMDk5OTk4NDc0MSwtMTAsMzc4LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTYzMDAsNDQuMDk5OTk4NDc0MSwzMiwzNzguNSw3MC4xMjE5NTU4NzE2LDUNCjE1NjcwMCw0MC45Nzk5OTk1NDIyLDMyLDM3OC41LDcwLjEyMTk1NTg3MTYsNQ0KMTU3NzAwLDM3LjczOTk5Nzg2MzgsMzIsMzc4LjUsNzAuMTIxOTU1ODcxNiw1DQoxNTg3MDAsMzQuNjg5OTk4NjI2NywzMiwzNzguNSw3MC4xMjE5NTU4NzE2LDUNCjE1OTgwMCwzMS4xOTk5OTg4NTU2LDMyLDM3OC41LDcwLjEyMTk1NTg3MTYsNQ0KMTYwODAwLDI0LjY3MDAwMDA3NjMsMzIsMzc4LjUsNzAuMTIxOTU1ODcxNiw1DQoxNjExMDAsMjQuNjcwMDAwMDc2MywzMiwzNzguNSw3MC4xMjE5NTU4NzE2LDUNCjE2MTIwMCwyNC42NzAwMDAwNzYzLDMyLDM4NSw3MC4xMjE5NTU4NzE2LDUNCjE2MTMwMCwyNC42NzAwMDAwNzYzLDQzLjUsMzg1LDcwLjEyMTk1NTg3MTYsNQ0KMTYxOTAwLDE2LjQwOTk5OTg0NzQsNDMuNSwzODUsNzAuMTIxOTU1ODcxNiw1DQoxNjI5MDAsNy43Nzk5OTk3MzI5Nyw0My41LDM4NSw3MC4xMjE5NTU4NzE2LDUNCjE2MzkwMCw1LjQ0OTk5OTgwOTI3LDQzLjUsMzg1LDcwLjEyMTk1NTg3MTYsNQ0KMTY1MDAwLDExLjgwOTk5OTQ2NTksNDMuNSwzODUsNzAuMTIxOTU1ODcxNiw1DQoxNjYwMDAsMTUuNTU5OTk5NDY1OSw0My41LDM4NSw3MC4xMjE5NTU4NzE2LDUNCjE2NjIwMCwxNS41NTk5OTk0NjU5LDQzLjUsMzg1LDcwLjEyMTk1NTg3MTYsNQ0KMTY2MzAwLDE1LjU1OTk5OTQ2NTksLTEsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNjcxMDAsMTIuNzUsLTEsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNjgxMDAsNi44MTk5OTk2OTQ4MiwtMSwzNzYuNSw3MC4xMjE5NTU4NzE2LDUNCjE2OTEwMCwzLjM2OTk5OTg4NTU2LC0xLDM3Ni41LDcwLjEyMTk1NTg3MTYsNQ0KMTcwMjAwLDQuNDQwMDAwMDU3MjIsLTEsMzc2LjUsNzAuMTIxOTU1ODcxNiw1DQoxNzA3MDAsNC40NDAwMDAwNTcyMiwtMSwzNzYuNSw2OS4wMjQzOTExNzQzLDUNCjE3MTIwMCwxMi4wNzk5OTk5MjM3LC0xLDM3Ni41LDY5LjAyNDM5MTE3NDMsNQ0KMTcxMzAwLDEyLjA3OTk5OTkyMzcsLTEsMzc5LDY5LjAyNDM5MTE3NDMsNQ0KMTcxNDAwLDEyLjA3OTk5OTkyMzcsLTI0LjUsMzc5LDY5LjAyNDM5MTE3NDMsNQ0KMTcyMzAwLDIwLjc1LC0yNC41LDM3OSw2OS4wMjQzOTExNzQzLDUNCjE3MzMwMCwyOC40NDk5OTg4NTU2LC0yNC41LDM3OSw2OS4wMjQzOTExNzQzLDUNCjE3NDMwMCwzNC4yOTAwMDA5MTU1LC0yNC41LDM3OSw2OS4wMjQzOTExNzQzLDUNCjE3NTQwMCwzNy43Mzk5OTc4NjM4LC0yNC41LDM3OSw2OS4wMjQzOTExNzQzLDUNCjE3NjMwMCwzNy43Mzk5OTc4NjM4LC0yNC41LDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTc2NDAwLDQwLjEzOTk5OTM4OTYsLTQwLDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTc3NTAwLDQxLjcwMDAwMDc2MjksLTQwLDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTc4NTAwLDQzLjIyOTk5OTU0MjIsLTQwLDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTc5NjAwLDQ0LjMwOTk5NzU1ODYsLTQwLDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTgwNzAwLDQzLjI3MDAwMDQ1NzgsLTQwLDM3MS41LDY5LjAyNDM5MTE3NDMsNQ0KMTgxNDAwLDQzLjI3MDAwMDQ1NzgsLTQwLDM3Ni41LDY5LjAyNDM5MTE3NDMsNQ0KMTgxNTAwLDQzLjI3MDAwMDQ1NzgsMzAsMzc2LjUsNjkuMDI0MzkxMTc0Myw1DQoxODE3MDAsMzcuNTIwMDAwNDU3OCwzMCwzNzYuNSw2OS4wMjQzOTExNzQzLDUNCjE4MjgwMCwyOC41MTAwMDAyMjg5LDMwLDM3Ni41LDY5LjAyNDM5MTE3NDMsNQ0KMTgzOTAwLDE3Ljg3OTk5OTE2MDgsMzAsMzc2LjUsNjkuMDI0MzkxMTc0Myw1DQoxODQ5MDAsMTAuNSwzMCwzNzYuNSw2OS4wMjQzOTExNzQzLDUNCjE4NTAwMCwxMC41LDMwLDM3Ni41LDY5LjAyNDM5MTE3NDMsNQ0KMTg2MDAwLDExLjIzOTk5OTc3MTEsMzAsMzc2LjUsNjkuMDI0MzkxMTc0Myw1DQoxODY0MDAsMTEuMjM5OTk5NzcxMSwzMCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE4NjUwMCwxMS4yMzk5OTk3NzExLC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE4NzAwMCwxNS40Njk5OTkzMTM0LC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE4ODEwMCwyMC4xMDAwMDAzODE1LC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE4OTEwMCwyNC4zMTk5OTk2OTQ4LC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE5MDEwMCwyNy42Mjk5OTkxNjA4LC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE5MTIwMCwyOS4wMTk5OTg1NTA0LC0yNCwzODQuNSw2OS4wMjQzOTExNzQzLDUNCjE5MTQwMCwyOS4wMTk5OTg1NTA0LC0yNCwzNzgsNjkuMDI0MzkxMTc0Myw1DQoxOTE1MDAsMjkuMDE5OTk4NTUwNCwtMjQsMzc4LDY5LjAyNDM5MTE3NDMsNQ0KMTkxNjAwLDI5LjAxOTk5ODU1MDQsLTcuNSwzNzgsNjkuMDI0MzkxMTc0Myw1DQoxOTIyMDAsMjkuMTM5OTk5Mzg5NiwtNy41LDM3OCw2OS4wMjQzOTExNzQzLDUNCjE5MzMwMCwyNy41MTAwMDAyMjg5LC03LjUsMzc4LDY5LjAyNDM5MTE3NDMsNQ0KMTk0MzAwLDI0Ljk0OTk5ODg1NTYsLTcuNSwzNzgsNjkuMDI0MzkxMTc0Myw1DQoxOTUzMDAsMjIuNTY5OTk5Njk0OCwtNy41LDM3OCw2OS4wMjQzOTExNzQzLDUNCjE5NjQwMCwyMC4yODk5OTkwMDgyLC03LjUsMzc4LDY5LjAyNDM5MTE3NDMsNQ0KMTk2NTAwLDIwLjI4OTk5OTAwODIsLTcuNSwzODEsNjkuMDI0MzkxMTc0Myw1DQoxOTY2MDAsMjAuMjg5OTk5MDA4Miw3LjUsMzgxLDY5LjAyNDM5MTE3NDMsNQ0KMTk3NDAwLDE1Ljg0OTk5OTQyNzgsNy41LDM4MSw2OS4wMjQzOTExNzQzLDUNCjE5ODUwMCwxMS43MTAwMDAwMzgxLDcuNSwzODEsNjkuMDI0MzkxMTc0Myw1DQoxOTk1MDAsOC40NzAwMDAyNjcwMyw3LjUsMzgxLDY5LjAyNDM5MTE3NDMsNQ0KMjAwNTAwLDUuODc5OTk5NjM3Niw3LjUsMzgxLDY5LjAyNDM5MTE3NDMsNQ0KMjAxMjAwLDUuODc5OTk5NjM3Niw3LjUsMzgxLDY5LjAyNDM5MTE3NDMsNQ0KMjAxMzAwLDAsNy41LDM4MCw2OC43ODA0OTQ2ODk5LDUNCjIwMTQwMCwwLC02LjUsMzgwLDY4Ljc4MDQ5NDY4OTksNQ0KMjA2NDAwLDAsLTYuNSwzNzksNjguNzgwNDk0Njg5OSw1DQoyMDY1MDAsMCwtNS41LDM3OSw2OC43ODA0OTQ2ODk5LDUNCjIxMTUwMCwwLC04LDM3OSw2OC43ODA0OTQ2ODk5LDUNCjIxNjQwMCwwLC04LDM3OS41LDY4Ljc4MDQ5NDY4OTksNQ0KMjE2NTAwLDAsLTYuNSwzNzkuNSw2OC43ODA0OTQ2ODk5LDUNCjIyMTUwMCwwLC02LDM3OS41LDY4Ljc4MDQ5NDY4OTksNQ0KMjI2NjAwLDAsLTYsMzc5LjUsNjguNzgwNDk0Njg5OSw1DQoyMzE2MDAsMCwtNywzNzkuNSw2OC43ODA0OTQ2ODk5LDUNCjIzNjcwMCwwLC01LjUsMzc5LjUsNjguNzgwNDk0Njg5OSw1DQoyMzk5MDAsMy4wMDk5OTk5OTA0NiwtNS41LDM3OS41LDY4LjUzNjU5MDU3NjIsNQ0KMjQwMDAwLDMuMDA5OTk5OTkwNDYsLTExLjUsMzc5LjUsNjguNTM2NTkwNTc2Miw1DQoyNDEwMDAsOC42MDk5OTk2NTY2OCwtMTEuNSwzNzkuNSw2OC41MzY1OTA1NzYyLDUNCjI0MjAwMCwxNS4wNDk5OTkyMzcxLC0xMS41LDM3OS41LDY4LjUzNjU5MDU3NjIsNQ0KMjQzMTAwLDIwLjY0OTk5OTYxODUsLTExLjUsMzc5LjUsNjguNTM2NTkwNTc2Miw1DQoyNDQxMDAsMjUuNjI5OTk5MTYwOCwtMTEuNSwzNzkuNSw2OC41MzY1OTA1NzYyLDUNCjI0NDkwMCwyNS42Mjk5OTkxNjA4LC0xMS41LDM3OS41LDY4LjUzNjU5MDU3NjIsNQ0KMjQ1MDAwLDI1LjYyOTk5OTE2MDgsLTExLjUsMzc1LDY4LjUzNjU5MDU3NjIsNQ0KMjQ1MTAwLDI5LjUzOTk5OTAwODIsLTQyLjUsMzc1LDY4LjUzNjU5MDU3NjIsNQ0KMjQ2MjAwLDMyLjc1LC00Mi41LDM3NSw2OC41MzY1OTA1NzYyLDUNCjI0NzIwMCwzNS41NDk5OTkyMzcxLC00Mi41LDM3NSw2OC41MzY1OTA1NzYyLDUNCjI0ODMwMCwzOC4wOTk5OTg0NzQxLC00Mi41LDM3NSw2OC41MzY1OTA1NzYyLDUNCjI0OTMwMCw0MC4zMTk5OTk2OTQ4LC00Mi41LDM3NSw2OC41MzY1OTA1NzYyLDUNCjI1MDAwMCw0MC4zMTk5OTk2OTQ4LC00Mi41LDM3NS41LDY4LjUzNjU5MDU3NjIsNQ0KMjUwMTAwLDQwLjMxOTk5OTY5NDgsLTI5LjUsMzc1LjUsNjguNTM2NTkwNTc2Miw1DQoyNTA0MDAsNDIuMzA5OTk3NTU4NiwtMjkuNSwzNzUuNSw2OC41MzY1OTA1NzYyLDUNCjI1MTUwMCw0Mi44OTk5OTc3MTEyLC0yOS41LDM3NS41LDY4LjUzNjU5MDU3NjIsNQ0KMjUyNTAwLDQyLjM5OTk5NzcxMTIsLTI5LjUsMzc1LjUsNjguNTM2NTkwNTc2Miw1DQoyNTM2MDAsNDIuNDM5OTk4NjI2NywtMjkuNSwzNzUuNSw2OC41MzY1OTA1NzYyLDUNCjI1NDcwMCw0NC4wMDk5OTgzMjE1LC0yOS41LDM3NS41LDY4LjUzNjU5MDU3NjIsNQ0KMjU1MDAwLDQ0LjAwOTk5ODMyMTUsLTI5LjUsMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU1MTAwLDQ0LjAwOTk5ODMyMTUsLTI5LjUsMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU1MjAwLDQ0LjAwOTk5ODMyMTUsLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU1NzAwLDQzLjQxOTk5ODE2ODksLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU2ODAwLDQzLjgxOTk5OTY5NDgsLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU3ODAwLDQzLjkzMDAwMDMwNTIsLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU4OTAwLDQyLjk4OTk5Nzg2MzgsLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjU5OTAwLDQyLjQ1MDAwMDc2MjksLTksMzc3LDY4LjUzNjU5MDU3NjIsNQ0KMjYwMTAwLDQyLjQ1MDAwMDc2MjksLTksMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjYwMjAwLDQyLjQ1MDAwMDc2MjksLTEzLjUsMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjYwOTAwLDQyLjU3OTk5ODAxNjQsLTEzLjUsMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjYyMDAwLDQyLjUyOTk5ODc3OTMsLTEzLjUsMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjYzMDAwLDQxLjcwMDAwMDc2MjksLTEzLjUsMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjY0MTAwLDM3LjYxMDAwMDYxMDQsLTEzLjUsMzgwLDY4LjUzNjU5MDU3NjIsNQ0KMjY1MTAwLDMwLjk3OTk5OTU0MjIsLTEzLjUsMzg0LDY4LjUzNjU5MDU3NjIsNQ0KMjY1MjAwLDMwLjk3OTk5OTU0MjIsLTEzLjUsMzg0LDY4LjUzNjU5MDU3NjIsNQ0KMjY1MzAwLDMwLjk3OTk5OTU0MjIsNDMuNSwzODQsNjguNTM2NTkwNTc2Miw1DQoyNjYxMDAsMjIuODA5OTk5NDY1OSw0My41LDM4NCw2OC41MzY1OTA1NzYyLDUNCjI2NzIwMCwxNC45Mjk5OTkzNTE1LDQzLjUsMzg0LDY4LjUzNjU5MDU3NjIsNQ0KMjY4MjAwLDguMzU5OTk5NjU2NjgsNDMuNSwzODQsNjguNTM2NTkwNTc2Miw1DQoyNjkzMDAsNCw0My41LDM4NCw2OC41MzY1OTA1NzYyLDUNCjI2OTcwMCwwLDQzLjUsMzgwLjUsNjguMjkyNjg2NDYyNCw1DQoyNjk4MDAsMCwtNC41LDM4MC41LDY4LjI5MjY4NjQ2MjQsNQ0KMjcyNDAwLDMuMDI5OTk5OTcxMzksLTQuNSwzODAuNSw2OC4yOTI2ODY0NjI0LDUNCjI3MjUwMCwzLjAyOTk5OTk3MTM5LC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3MzQwMCw4LjU3OTk5OTkyMzcxLC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3NDUwMCwxNC43MTk5OTkzMTM0LC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3NTUwMCwxOS41NTk5OTk0NjU5LC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3NjUwMCwxOS41Nzk5OTk5MjM3LC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3NzQwMCwxOS41Nzk5OTk5MjM3LC0xMy41LDM4MCw2OC4yOTI2ODY0NjI0LDUNCjI3NzUwMCwxOS41Nzk5OTk5MjM3LC0xMy41LDM3Nyw2OC4yOTI2ODY0NjI0LDUNCjI3NzYwMCwxNS41Njk5OTk2OTQ4LDcsMzc3LDY4LjI5MjY4NjQ2MjQsNQ0KMjc4NjAwLDguNSw3LDM3Nyw2OC4yOTI2ODY0NjI0LDUNCjI3OTYwMCwwLDcsMzc3LDY4LjE3MDczODIyMDIsNQ0KMjc5NzAwLDAsLTYsMzgwLDY4LjE3MDczODIyMDIsNQ0KMjgwMDAwLDAsLTYsMzgwLDY4LjE3MDczODIyMDIsNC41DQoyODA2MDAsNy4wNTk5OTk5NDI3OCwtNiwzODAsNjguMTcwNzM4MjIwMiw0LjUNCjI4MDcwMCw3LjA1OTk5OTk0Mjc4LC02LDM3OS41LDY4LjE3MDczODIyMDIsNC41DQoyODA4MDAsNy4wNTk5OTk5NDI3OCwtMzEuNSwzNzkuNSw2OC4xNzA3MzgyMjAyLDQuNQ0KMjgxMDAwLDcuMDU5OTk5OTQyNzgsLTMxLjUsMzc5LjUsNjguMTcwNzM4MjIwMiw1DQoyODE3MDAsMTQuNDIwMDAwMDc2MywtMzEuNSwzNzkuNSw2OC4xNzA3MzgyMjAyLDUNCjI4MjUwMCwxNC40MjAwMDAwNzYzLC0zMS41LDM3OS41LDY4LjE3MDczODIyMDIsNQ0KMjgyNzAwLDE5LjkyMDAwMDA3NjMsLTMxLjUsMzc5LjUsNjguMTcwNzM4MjIwMiw1DQoyODM3MDAsMjQuNDMwMDAwMzA1MiwtMzEuNSwzNzkuNSw2OC4xNzA3MzgyMjAyLDUNCjI4NDgwMCwyNy44NDk5OTg0NzQxLC0zMS41LDM3OS41LDY4LjE3MDczODIyMDIsNQ0KMjg1ODAwLDMxLjE5OTk5ODg1NTYsLTU0LDM3NCw2OC4xNzA3MzgyMjAyLDUNCjI4NjkwMCwzNC40Mzk5OTg2MjY3LC01NCwzNzQsNjguMTcwNzM4MjIwMiw1DQoyODc2MDAsMzQuNDM5OTk4NjI2NywtNTQsMzc0LDY4LjE3MDczODIyMDIsNQ0KMjg3OTAwLDM2LjgwOTk5NzU1ODYsLTU0LDM3NCw2OC4xNzA3MzgyMjAyLDUNCjI4OTAwMCwzNC4yNSwtNTQsMzc0LDY4LjE3MDczODIyMDIsNQ0KMjkwMTAwLDI4LjYxOTk5ODkzMTksLTU0LDM3NCw2OC4xNzA3MzgyMjAyLDUNCjI5MDgwMCwyOC42MTk5OTg5MzE5LDM4LjUsMzgyLjUsNjguMTcwNzM4MjIwMiw1DQoyOTExMDAsMjEuNjI5OTk5MTYwOCwzOC41LDM4Mi41LDY4LjE3MDczODIyMDIsNQ0KMjkyMjAwLDE0Ljk4OTk5OTc3MTEsMzguNSwzODIuNSw2OC4xNzA3MzgyMjAyLDUNCjI5MjcwMCwxNC45ODk5OTk3NzExLDM4LjUsMzgyLjUsNjguMTcwNzM4MjIwMiw1DQoyOTMyMDAsMTAuNjU5OTk5ODQ3NCwzOC41LDM4Mi41LDY4LjE3MDczODIyMDIsNQ0KMjk0MzAwLDUuNzY5OTk5OTgwOTMsMzguNSwzODIuNSw2OC4xNzA3MzgyMjAyLDUNCjI5NDkwMCwwLDM4LjUsMzgyLjUsNjcuOTI2ODM0MTA2NCw1DQoyOTUwMDAsMCwzOC41LDM4MCw2Ny45MjY4MzQxMDY0LDUNCjI5NTEwMCwwLC03LDM4MCw2Ny45MjY4MzQxMDY0LDUNCjI5NTUwMCwwLC03LDM4MCw2Ny45MjY4MzQxMDY0LDUNCjI5NzEwMCwyLjkxOTk5OTgzNzg4LC04LDM3OS41LDY3LjkyNjgzNDEwNjQsNQ0KMjk3NzAwLDIuOTE5OTk5ODM3ODgsLTgsMzc5LjUsNjcuOTI2ODM0MTA2NCw1DQoyOTgxMDAsNC4zNjAwMDAxMzM1MSwtOCwzNzkuNSw2Ny45MjY4MzQxMDY0LDUNCjI5OTEwMCw5LjcxMDAwMDAzODE1LC04LDM3OS41LDY3LjkyNjgzNDEwNjQsNQ0KMzAwMjAwLDguODA5OTk5NDY1OTQsLTgsMzc5LjUsNjcuOTI2ODM0MTA2NCw1DQozMDEyMDAsNS43Nzk5OTk3MzI5NywtOCwzNzkuNSw2Ny45MjY4MzQxMDY0LDUNCjMwMjIwMCw1Ljc3OTk5OTczMjk3LC0xNC41LDM3OS41LDY3LjkyNjgzNDEwNjQsNQ0KMzAyMzAwLDExLjYwOTk5OTY1NjcsLTE0LjUsMzc5LjUsNjcuOTI2ODM0MTA2NCw1DQozMDI3MDAsMTEuNjA5OTk5NjU2NywtMTQuNSwzNzkuNSw2Ny45MjY4MzQxMDY0LDUNCjMwMzMwMCwxOC41Mjk5OTg3NzkzLC0xNC41LDM3OS41LDY3LjkyNjgzNDEwNjQsNQ0KMzA0MzAwLDI0LjczOTk5OTc3MTEsLTE0LjUsMzc5LjUsNjcuOTI2ODM0MTA2NCw1DQozMDUxMDAsMjQuNzM5OTk5NzcxMSwtMTQuNSwzNzkuNSw2Ny45MjY4MzQxMDY0LDUNCjMwNTQwMCwzMC4xODk5OTg2MjY3LC0xNC41LDM3OS41LDY3LjkyNjgzNDEwNjQsNQ0KMzA2NDAwLDM0LjExOTk5ODkzMTksLTE0LjUsMzc5LjUsNjcuOTI2ODM0MTA2NCw1DQozMDcxMDAsMzQuMTE5OTk4OTMxOSwtMTQuNSwzNzEuNSw2Ny45MjY4MzQxMDY0LDUNCjMwNzIwMCwzNC4xMTk5OTg5MzE5LC00NS41LDM3MS41LDY3LjkyNjgzNDEwNjQsNQ0KMzA3NTAwLDM1Ljg0MDAwMDE1MjYsLTQ1LjUsMzcxLjUsNjcuOTI2ODM0MTA2NCw1DQozMDc4MDAsMzUuODQwMDAwMTUyNiwtNDUuNSwzNzEuNSw2Ny45MjY4MzQxMDY0LDUNCjMwODUwMCwzNS4xMTAwMDA2MTA0LC00NS41LDM3MS41LDY3LjkyNjgzNDEwNjQsNQ0KMzA5NTAwLDMyLjU0MDAwMDkxNTUsLTQ1LjUsMzcxLjUsNjcuOTI2ODM0MTA2NCw1DQozMTA2MDAsMjguODc5OTk5MTYwOCwtNDUuNSwzNzEuNSw2Ny45MjY4MzQxMDY0LDUNCjMxMTYwMCwyNC4yMDk5OTkwODQ1LC00NS41LDM3MS41LDY3LjkyNjgzNDEwNjQsNQ0KMzEyMjAwLDI0LjIwOTk5OTA4NDUsLTQ1LjUsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzEyMzAwLDI0LjIwOTk5OTA4NDUsMzEsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzEyNzAwLDE4LjUzOTk5OTAwODIsMzEsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzEyODAwLDE4LjUzOTk5OTAwODIsMzEsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzEzNzAwLDEyLjU2OTk5OTY5NDgsMzEsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzE0NzAwLDYuNzMwMDAwMDE5MDcsMzEsMzgyLDY3LjkyNjgzNDEwNjQsNQ0KMzE1NjAwLDYuNzMwMDAwMDE5MDcsMzEsMzgyLDY3LjgwNDg3ODIzNDksNQ0KMzE1NzAwLDAsMzEsMzgwLDY3LjgwNDg3ODIzNDksNQ0KMzE1ODAwLDAsLTUuNSwzODAsNjcuODA0ODc4MjM0OSw1DQozMjA3MDAsMCwtNS41LDM3OS41LDY3LjgwNDg3ODIzNDksNQ0KMzIwODAwLDAsLTUsMzc5LjUsNjcuODA0ODc4MjM0OSw1DQozMjU4MDAsMCwtNC41LDM3OS41LDY3LjgwNDg3ODIzNDksNQ0KMzMwOTAwLDAsLTYsMzc5LjUsNjcuODA0ODc4MjM0OSw1DQozMzU5MDAsMCwtNi41LDM3OS41LDY3LjgwNDg3ODIzNDksNQ0KMzQwOTAwLDAsLTUuNSwzNzkuNSw2Ny44MDQ4NzgyMzQ5LDUNCjM0MjYwMCwzLjA1OTk5OTk0Mjc4LC01LjUsMzc5LjUsNjcuNTYwOTgxNzUwNSw1DQozNDI4MDAsMy4wNTk5OTk5NDI3OCwtMTcsMzc5LjUsNjcuNTYwOTgxNzUwNSw1DQozNDMwMDAsMy4wNTk5OTk5NDI3OCwtMTcsMzc5LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM0MzIwMCwzLjA1OTk5OTk0Mjc4LC0xNywzNzkuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzQzNzAwLDkuMTQ5OTk5NjE4NTMsLTE3LDM3OS41LDY3LjU2MDk4MTc1MDUsNC41DQozNDQ3MDAsMTUuMDA5OTk5Mjc1MiwtMTcsMzc5LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM0NTcwMCwyMC4xMDk5OTg3MDMsLTE3LDM3OS41LDY3LjU2MDk4MTc1MDUsNC41DQozNDY4MDAsMjQuNTQ5OTk5MjM3MSwtMTcsMzc5LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM0NzcwMCwyNC41NDk5OTkyMzcxLC0xNywzNzQuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzQ3ODAwLDI4Ljg1OTk5ODcwMywtNTEsMzc0LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM0ODkwMCwzMS44MTk5OTk2OTQ4LC01MSwzNzQuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzQ5OTAwLDMyLjk3OTk5OTU0MjIsLTUxLDM3NC41LDY3LjU2MDk4MTc1MDUsNC41DQozNTA5MDAsMzMuNDY5OTk3NDA2LC01MSwzNzQuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzUyMDAwLDMyLjAwOTk5ODMyMTUsLTUxLDM3NC41LDY3LjU2MDk4MTc1MDUsNC41DQozNTI3MDAsMzIuMDA5OTk4MzIxNSwtNTEsMzc0LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM1MjgwMCwzMi4wMDk5OTgzMjE1LC01MSwzNzksNjcuNTYwOTgxNzUwNSw0LjUNCjM1MjkwMCwzMi4wMDk5OTgzMjE1LDMsMzc5LDY3LjU2MDk4MTc1MDUsNC41DQozNTMwMDAsMzEuNzc5OTk4Nzc5MywzLDM3OSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzU0MTAwLDI4LjgxOTk5OTY5NDgsMywzNzksNjcuNTYwOTgxNzUwNSw0LjUNCjM1NTEwMCwyNi40Nzk5OTk1NDIyLDMsMzc5LDY3LjU2MDk4MTc1MDUsNC41DQozNTYxMDAsMjQuODUwMDAwMzgxNSwzLDM3OSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzU3MjAwLDIxLjE4OTk5ODYyNjcsMywzNzksNjcuNTYwOTgxNzUwNSw0LjUNCjM1NzgwMCwyMS4xODk5OTg2MjY3LDMsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM1NzkwMCwyMS4xODk5OTg2MjY3LDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM1ODMwMCwxNC45MjAwMDAwNzYzLDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM1OTMwMCw5LDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2MDQwMCw4LjE0OTk5OTYxODUzLDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2MTUwMCwxNC4yMzk5OTk3NzExLDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2MjUwMCwyMC42OTk5OTg4NTU2LDI4LjUsMzgxLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2MjgwMCwyMC42OTk5OTg4NTU2LDI4LjUsMzc1LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2MjkwMCwyMC42OTk5OTg4NTU2LC01MSwzNzUuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzYzNTAwLDI2Ljk3OTk5OTU0MjIsLTUxLDM3NS41LDY3LjU2MDk4MTc1MDUsNC41DQozNjQ2MDAsMzIuMjkwMDAwOTE1NSwtNTEsMzc1LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2NTEwMCwzMi4yOTAwMDA5MTU1LC01MSwzNzUuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzY1NjAwLDM2LjIyOTk5OTU0MjIsLTUxLDM3NS41LDY3LjU2MDk4MTc1MDUsNC41DQozNjY3MDAsMzcuODc5OTk3MjUzNCwtNTEsMzc1LjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM2NzcwMCwzNi4yMDk5OTkwODQ1LC01MSwzNzUuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzY3OTAwLDM2LjIwOTk5OTA4NDUsMTMsMzgxLDY3LjU2MDk4MTc1MDUsNC41DQozNjg3MDAsMzMuNzE5OTk3NDA2LDEzLDM4MSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzY5ODAwLDMxLjI2MDAwMDIyODksMTMsMzgxLDY3LjU2MDk4MTc1MDUsNC41DQozNzA4MDAsMjcuMzE5OTk5Njk0OCwxMywzODEsNjcuNTYwOTgxNzUwNSw0LjUNCjM3MTkwMCwyMC4wMzk5OTkwMDgyLDEzLDM4MSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzcyOTAwLDEwLjEzMDAwMDExNDQsMTMsMzgyLjUsNjcuNTYwOTgxNzUwNSw0LjUNCjM3MzAwMCwxMC4xMzAwMDAxMTQ0LDUuNSwzODIuNSw2Ny41NjA5ODE3NTA1LDQuNQ0KMzczOTAwLDAsNS41LDM4MCw2Ny4zMTcwNzc2MzY3LDQuNQ0KMzc0MDAwLDAsLTcsMzgwLDY3LjMxNzA3NzYzNjcsNC41DQozNzQzMDAsMCwtNywzODAsNjcuMzE3MDc3NjM2Nyw0LjUNCjM3OTAwMCwwLC03LDM3OS41LDY3LjMxNzA3NzYzNjcsNC41DQozNzkxMDAsMCwtNSwzNzkuNSw2Ny4zMTcwNzc2MzY3LDQuNQ0KMzg0MTAwLDAsLTguNSwzNzkuNSw2Ny4zMTcwNzc2MzY3LDQuNQ0KMzg5MTAwLDAsLTQuNSwzNzkuNSw2Ny4zMTcwNzc2MzY3LDQuNQ0KMzkwNDAwLDMuMDA5OTk5OTkwNDYsLTQuNSwzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KMzkwNjAwLDMuMDA5OTk5OTkwNDYsLTgsMzc5LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjM5MDkwMCwzLjAwOTk5OTk5MDQ2LC04LDM3OS41LDY3LjE5NTEyMTc2NTEsNC41DQozOTEwMDAsMy4wMDk5OTk5OTA0NiwtOCwzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KMzkxNTAwLDUuNjc5OTk5ODI4MzQsLTgsMzc5LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjM5MjYwMCw2LjQ2MDAwMDAzODE1LC04LDM3OS41LDY3LjE5NTEyMTc2NTEsNC41DQozOTM3MDAsNS4wNjk5OTk2OTQ4MiwtOCwzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KMzk0NDAwLDAsLTgsMzc5LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjM5NDYwMCwwLC03LDM3OS41LDY3LjE5NTEyMTc2NTEsNC41DQozOTU1MDAsNS42MTk5OTk4ODU1NiwtNywzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KMzk1NzAwLDUuNjE5OTk5ODg1NTYsLTIyLjUsMzc5LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjM5NjUwMCwxMi4xODk5OTk1ODA0LC0yMi41LDM3OS41LDY3LjE5NTEyMTc2NTEsNC41DQozOTc2MDAsMTYuNDQwMDAwNTM0MSwtMjIuNSwzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KMzk4NjAwLDIwLjQ3OTk5OTU0MjIsLTIyLjUsMzc5LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjM5OTcwMCwyNC4wNDk5OTkyMzcxLC0yMi41LDM3OS41LDY3LjE5NTEyMTc2NTEsNC41DQo0MDA1MDAsMjQuMDQ5OTk5MjM3MSwtMjIuNSwzNzkuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDAwNjAwLDI0LjA0OTk5OTIzNzEsLTIyLjUsMzc0LDY3LjE5NTEyMTc2NTEsNC41DQo0MDA3MDAsMjYuNzc5OTk4Nzc5MywtNDcuNSwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQwMTcwMCwyNy4xMTk5OTg5MzE5LC00Ny41LDM3NCw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDAyODAwLDI1LjQwOTk5OTg0NzQsLTQ3LjUsMzc0LDY3LjE5NTEyMTc2NTEsNC41DQo0MDM4MDAsMjEuNjcwMDAwMDc2MywtNDcuNSwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQwNDkwMCwxOC4xNTk5OTk4NDc0LC00Ny41LDM3NCw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDA1NjAwLDE4LjE1OTk5OTg0NzQsLTQ3LjUsMzc0LDY3LjE5NTEyMTc2NTEsNC41DQo0MDU3MDAsMTguMTU5OTk5ODQ3NCw2LDM4MSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDA1OTAwLDE0LjkyMDAwMDA3NjMsNiwzODEsNjcuMTk1MTIxNzY1MSw0LjUNCjQwNjkwMCwxMi4zNDAwMDAxNTI2LDYsMzgxLDY3LjE5NTEyMTc2NTEsNC41DQo0MDgwMDAsMTAuNTU5OTk5NDY1OSw2LDM4MSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDA5MDAwLDExLjk0OTk5OTgwOTMsNiwzODEsNjcuMTk1MTIxNzY1MSw0LjUNCjQxMDEwMCwxNC45Mzk5OTk1ODA0LDYsMzgxLDY3LjE5NTEyMTc2NTEsNC41DQo0MTA2MDAsMTQuOTM5OTk5NTgwNCw2LDM4MSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDEwNzAwLDE0LjkzOTk5OTU4MDQsNiwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxMDgwMCwxNC45Mzk5OTk1ODA0LC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxMTEwMCwxOC4zNzk5OTkxNjA4LC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxMjEwMCwyMS45MjAwMDAwNzYzLC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxMzIwMCwyNS4yNzk5OTg3NzkzLC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxNDIwMCwyOC41Njk5OTk2OTQ4LC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxNTMwMCwzMS44ODk5OTkzODk2LC0zMCwzNzgsNjcuMTk1MTIxNzY1MSw0LjUNCjQxNTcwMCwzMS44ODk5OTkzODk2LC0zMCwzNzMuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDE1ODAwLDMxLjg4OTk5OTM4OTYsLTUyLDM3My41LDY3LjE5NTEyMTc2NTEsNC41DQo0MTYzMDAsMzUuNTQ5OTk5MjM3MSwtNTIsMzczLjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQxNzMwMCwzOC4yMjk5OTk1NDIyLC01MiwzNzMuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDE4NDAwLDQwLjQzMDAwMDMwNTIsLTUyLDM3My41LDY3LjE5NTEyMTc2NTEsNC41DQo0MTk0MDAsNDIuMjUsLTUyLDM3My41LDY3LjE5NTEyMTc2NTEsNC41DQo0MjA1MDAsNDMuMTI5OTk3MjUzNCwtNTIsMzczLjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQyMDcwMCw0My4xMjk5OTcyNTM0LC01MiwzNzMuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDIwODAwLDQzLjEyOTk5NzI1MzQsLTUyLDM3NCw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDIwOTAwLDQzLjEyOTk5NzI1MzQsLTMwLDM3NCw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDIxNTAwLDQ0LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyMjUwMCw0NS4wMjAwMDA0NTc4LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyMzYwMCw0NS4zNzk5OTcyNTM0LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyNDYwMCw0NS44NjAwMDA2MTA0LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyNTEwMCw0NS44NjAwMDA2MTA0LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyNTcwMCw0Ny4yMzk5OTc4NjM4LC0zMCwzNzQsNjcuMTk1MTIxNzY1MSw0LjUNCjQyNTgwMCw0Ny4yMzk5OTc4NjM4LC0zMCwzNzYuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDI1OTAwLDQ3LjIzOTk5Nzg2MzgsLTIxLDM3Ni41LDY3LjE5NTEyMTc2NTEsNC41DQo0MjY3MDAsNDguNTk5OTk4NDc0MSwtMjEsMzc2LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQyNzcwMCw1MC4wMjk5OTg3NzkzLC0yMSwzNzYuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDI4ODAwLDUwLjc5OTk5OTIzNzEsLTIxLDM3Ni41LDY3LjE5NTEyMTc2NTEsNC41DQo0Mjk5MDAsNTAuOTU5OTk5MDg0NSwtMjEsMzc2LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQzMDkwMCw1MC45NTk5OTkwODQ1LC0yMSwzNzYuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDMxMDAwLDUxLjAzOTk5NzEwMDgsLTE1LjUsMzc2LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQzMjAwMCw1MC45MTk5OTgxNjg5LC0xNS41LDM3Ni41LDY3LjE5NTEyMTc2NTEsNC41DQo0MzMxMDAsNTAuNTk5OTk4NDc0MSwtMTUuNSwzNzYuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDM0MTAwLDUwLjQwOTk5OTg0NzQsLTE1LjUsMzc2LjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQzNTEwMCw0OS45NTk5OTkwODQ1LC0xNS41LDM3Ni41LDY3LjE5NTEyMTc2NTEsNC41DQo0MzU5MDAsNDkuOTU5OTk5MDg0NSwtMTUuNSwzNzcsNjcuMTk1MTIxNzY1MSw0LjUNCjQzNjAwMCw0OS45NTk5OTkwODQ1LC0xMi41LDM3Nyw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDM2MjAwLDQ5Ljg2MDAwMDYxMDQsLTEyLjUsMzc3LDY3LjE5NTEyMTc2NTEsNC41DQo0MzcyMDAsNDcuNjI5OTk3MjUzNCwtMTIuNSwzNzcsNjcuMTk1MTIxNzY1MSw0LjUNCjQzODMwMCw0My4yMDAwMDA3NjI5LC0xMi41LDM3Nyw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDM5MzAwLDM4Ljk1OTk5OTA4NDUsLTEyLjUsMzc3LDY3LjE5NTEyMTc2NTEsNC41DQo0NDAzMDAsMzUuMjA5OTk5MDg0NSwtMTIuNSwzNzcsNjcuMTk1MTIxNzY1MSw0LjUNCjQ0MDkwMCwzNS4yMDk5OTkwODQ1LC0xMi41LDM4Myw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDQxMDAwLDM1LjIwOTk5OTA4NDUsLTEyLjUsMzgzLDY3LjE5NTEyMTc2NTEsNC41DQo0NDExMDAsMzUuMjA5OTk5MDg0NSwyNCwzODMsNjcuMTk1MTIxNzY1MSw0LjUNCjQ0MTQwMCwzMS45MDk5OTk4NDc0LDI0LDM4Myw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDQyNDAwLDI3Ljk4OTk5OTc3MTEsMjQsMzgzLDY3LjE5NTEyMTc2NTEsNC41DQo0NDM1MDAsMjQuMzA5OTk5NDY1OSwyNCwzODMsNjcuMTk1MTIxNzY1MSw0LjUNCjQ0NDUwMCwxOS40Njk5OTkzMTM0LDI0LDM4Myw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDQ1NTAwLDExLjE4OTk5OTU4MDQsMjQsMzgzLDY3LjE5NTEyMTc2NTEsNC41DQo0NDU5MDAsMTEuMTg5OTk5NTgwNCwyNCwzODMuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDQ2MDAwLDExLjE4OTk5OTU4MDQsMjQsMzgzLjUsNjcuMTk1MTIxNzY1MSw0LjUNCjQ0NjEwMCwxMS4xODk5OTk1ODA0LDcuNSwzODMuNSw2Ny4xOTUxMjE3NjUxLDQuNQ0KNDQ2NjAwLDQuODE5OTk5Njk0ODIsNy41LDM4My41LDY3LjE5NTEyMTc2NTEsNC41DQo0NDcxMDAsMCw3LjUsMzgwLDY2LjU4NTM2NTI5NTQsNC41DQo0NDcyMDAsMCwtNiwzODAsNjYuNTg1MzY1Mjk1NCw0LjUNCjQ0OTAwMCwyLjkzOTk5OTgxODgsLTYsMzgwLDY2LjQ2MzQxNzA1MzIsNC41DQo0NDkxMDAsMi45Mzk5OTk4MTg4LC0xMC41LDM3OSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDQ5NTAwLDIuOTM5OTk5ODE4OCwtMTAuNSwzNzksNjYuNDYzNDE3MDUzMiw0LjUNCjQ1MDAwMCw0LjIxMDAwMDAzODE1LC0xMC41LDM3OSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDUxMTAwLDQuMzYwMDAwMTMzNTEsLTEwLjUsMzc5LDY2LjQ2MzQxNzA1MzIsNC41DQo0NTIxMDAsNC4zNjk5OTk4ODU1NiwtMTAuNSwzNzksNjYuNDYzNDE3MDUzMiw0LjUNCjQ1MzEwMCw0Ljc1OTk5OTc1MjA0LC0xMC41LDM3OSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDU0MjAwLDQuNTc5OTk5OTIzNzEsLTkuNSwzNzksNjYuNDYzNDE3MDUzMiw0LjUNCjQ1NTIwMCw0LjU4OTk5OTY3NTc1LC05LjUsMzc5LDY2LjQ2MzQxNzA1MzIsNC41DQo0NTYxMDAsNC41ODk5OTk2NzU3NSwtOS41LDM3OSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDU3MzAwLDUuODY5OTk5ODg1NTYsLTkuNSwzNzksNjYuNDYzNDE3MDUzMiw0LjUNCjQ1ODMwMCw4LjU5OTk5OTQyNzgsLTkuNSwzNzksNjYuNDYzNDE3MDUzMiw0LjUNCjQ1OTEwMCw4LjU5OTk5OTQyNzgsLTkuNSwzNzguNSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDU5MjAwLDguNTk5OTk5NDI3OCwtMTQsMzc4LjUsNjYuNDYzNDE3MDUzMiw0LjUNCjQ1OTQwMCw5LjY5OTk5OTgwOTI3LC0xNCwzNzguNSw2Ni40NjM0MTcwNTMyLDQuNQ0KNDYwNDAwLDkuMDM5OTk5OTYxODUsLTE0LDM3OC41LDY2LjQ2MzQxNzA1MzIsNC41DQo=&quot;,
+      &quot;mappings_confirmed&quot;: true,
+      &quot;readiness_configuration&quot;: null,
+      &quot;selected_events&quot;: null
+    },
+    &quot;vehicle&quot;: {
+      &quot;appearance&quot;: &quot;sedan&quot;,
+      &quot;assumptions&quot;: {
+        &quot;air_density_kg_m3&quot;: 1.225,
+        &quot;drivetrain&quot;: &quot;single_equivalent_motor&quot;,
+        &quot;electrical_architecture&quot;: &quot;custom_dc_bus&quot;,
+        &quot;friction_coefficient&quot;: 0.9,
+        &quot;grade_percent&quot;: 0,
+        &quot;initial_soc&quot;: 0.8,
+        &quot;regen_efficiency&quot;: 0.7,
+        &quot;thermal_model&quot;: &quot;not_modelled&quot;
+      },
+      &quot;battery&quot;: {
+        &quot;charge_limit_a&quot;: 250,
+        &quot;chemistry&quot;: &quot;NMC&quot;,
+        &quot;discharge_limit_a&quot;: 700,
+        &quot;gross_capacity_kwh&quot;: 64,
+        &quot;mass_kg&quot;: 420,
+        &quot;maximum_voltage_v&quot;: 450,
+        &quot;minimum_voltage_v&quot;: 300,
+        &quot;nominal_voltage_v&quot;: 400,
+        &quot;resistance_ohm&quot;: 0.05,
+        &quot;usable_capacity_kwh&quot;: 60
+      },
+      &quot;body&quot;: {
+        &quot;drag_coefficient&quot;: 0.25,
+        &quot;frontal_area_m2&quot;: 2.2,
+        &quot;mass_excluding_components_kg&quot;: 1191,
+        &quot;rolling_resistance_coefficient&quot;: 0.011,
+        &quot;wheel_radius_m&quot;: 0.32
+      },
+      &quot;catalogue_version&quot;: &quot;representative-v1&quot;,
+      &quot;charging&quot;: {
+        &quot;efficiency_assumption&quot;: 0.93,
+        &quot;mass_kg&quot;: 12,
+        &quot;maximum_ac_kw&quot;: 11,
+        &quot;maximum_dc_current_a&quot;: 300,
+        &quot;maximum_dc_kw&quot;: 100,
+        &quot;maximum_dc_voltage_v&quot;: 500,
+        &quot;minimum_dc_voltage_v&quot;: 250
+      },
+      &quot;classification&quot;: &quot;illustrative&quot;,
+      &quot;component_ids&quot;: {
+        &quot;battery&quot;: &quot;battery-s1&quot;,
+        &quot;body&quot;: &quot;body-s1&quot;,
+        &quot;charging&quot;: &quot;charger-11&quot;,
+        &quot;dcdc&quot;: &quot;dcdc-wide-2&quot;,
+        &quot;gearbox&quot;: &quot;gearbox-9&quot;,
+        &quot;inverter&quot;: &quot;inverter-260&quot;,
+        &quot;motor&quot;: &quot;motor-s1&quot;
+      },
+      &quot;dcdc&quot;: {
+        &quot;input_maximum_v&quot;: 950,
+        &quot;input_minimum_v&quot;: 250,
+        &quot;mass_kg&quot;: 4,
+        &quot;output_voltage_v&quot;: 12,
+        &quot;rated_power_kw&quot;: 2
+      },
+      &quot;gearbox&quot;: {
+        &quot;mass_kg&quot;: 18,
+        &quot;maximum_input_torque_nm&quot;: 350,
+        &quot;mechanical_efficiency&quot;: 0.97,
+        &quot;reduction_ratio&quot;: 9
+      },
+      &quot;inverter&quot;: {
+        &quot;continuous_power_kw&quot;: 200,
+        &quot;efficiency_assumption&quot;: 0.97,
+        &quot;mass_kg&quot;: 30,
+        &quot;maximum_dc_current_a&quot;: 800,
+        &quot;maximum_dc_voltage_v&quot;: 500,
+        &quot;maximum_phase_current_a&quot;: null,
+        &quot;minimum_dc_voltage_v&quot;: 250,
+        &quot;peak_duration_s&quot;: null,
+        &quot;peak_power_kw&quot;: 260,
+        &quot;technology&quot;: &quot;SiC&quot;
+      },
+      &quot;motor&quot;: {
+        &quot;drive_dc_maximum_v&quot;: 500,
+        &quot;drive_dc_minimum_v&quot;: 250,
+        &quot;efficiency_assumption&quot;: 0.94,
+        &quot;mass_kg&quot;: 75,
+        &quot;maximum_speed_rpm&quot;: 14000,
+        &quot;peak_duration_s&quot;: null,
+        &quot;peak_power_kw&quot;: 180,
+        &quot;peak_torque_nm&quot;: 350,
+        &quot;rated_power_kw&quot;: 145,
+        &quot;rated_torque_nm&quot;: 220,
+        &quot;topology&quot;: &quot;PMSM&quot;
+      },
+      &quot;name&quot;: &quot;VEUS S1 \u2014 Electric Sedan&quot;,
+      &quot;operating_point&quot;: {
+        &quot;dc_power_kw&quot;: 80,
+        &quot;dc_voltage_v&quot;: 400,
+        &quot;motor_torque_nm&quot;: 100
+      },
+      &quot;schema_version&quot;: 2
+    }
+  },
+  &quot;residuals&quot;: null,
+  &quot;schema_version&quot;: 1,
+  &quot;signal_definitions&quot;: {
+    &quot;columns&quot;: {
+      &quot;ambient_temperature_c&quot;: {
+        &quot;column&quot;: &quot;OAT[DegC]&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;\u00b0C&quot;
+      },
+      &quot;battery_current_a&quot;: {
+        &quot;column&quot;: &quot;HV Battery Current[A]&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;A&quot;
+      },
+      &quot;battery_soc&quot;: {
+        &quot;column&quot;: &quot;HV Battery SOC[%]&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;%&quot;
+      },
+      &quot;battery_voltage_v&quot;: {
+        &quot;column&quot;: &quot;HV Battery Voltage[V]&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;V&quot;
+      },
+      &quot;time_s&quot;: {
+        &quot;column&quot;: &quot;Timestamp(ms)&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;ms&quot;
+      },
+      &quot;vehicle_speed_ms&quot;: {
+        &quot;column&quot;: &quot;Vehicle Speed[km/h]&quot;,
+        &quot;sign&quot;: 1,
+        &quot;unit&quot;: &quot;km/h&quot;
+      }
+    },
+    &quot;comparison_interpolation&quot;: &quot;linear&quot;,
+    &quot;input_interpolation&quot;: &quot;previous&quot;,
+    &quot;max_gap_s&quot;: 2,
+    &quot;zero_time&quot;: true
+  },
+  &quot;source_sha256&quot;: &quot;cd9b56254f59cd9acb46dc516fc9a505b3d165e23bf82aa78999d8d6572ac0e9&quot;,
+  &quot;split&quot;: {
+    &quot;calibration_interval_s&quot;: [
+      0,
+      150
+    ],
+    &quot;evaluation_interval_s&quot;: [
+      200,
+      350
+    ],
+    &quot;no_sample_overlap&quot;: true
+  },
+  &quot;status&quot;: &quot;INCONCLUSIVE&quot;
+}
+</pre></html>

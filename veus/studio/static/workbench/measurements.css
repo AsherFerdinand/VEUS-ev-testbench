@@ -218,3 +218,4 @@
 #measure-frozen-name {
   font-size: 11px;
 }
+#validation-result{font-size:11px;overflow-x:auto}#validation-result table{width:100%;font-size:10px}#validation-result td,#validation-result th{text-align:left;padding:7px;border-bottom:1px solid var(--line)}

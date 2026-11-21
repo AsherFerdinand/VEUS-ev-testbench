@@ -1,0 +1,25 @@
+{
+  "scope": "Same S1 complete urban + continuous acceleration; four serial HTTP calls per mode, first excluded; shared cloud, not isolated CPU or laptop guarantee",
+  "models": {
+    "legacy": {
+      "warmup_excluded_ms": [
+        101.23513899816317,
+        172.4318950000452,
+        105.62868600027286
+      ],
+      "median_ms": 105.62868600027286,
+      "http_json_bytes": 134089,
+      "insights_sha256": "eb11ec7ee115881d56797ca2bd059edd819eb78075f3fc7e9522e1fa744e6aa4"
+    },
+    "illustrative_map": {
+      "warmup_excluded_ms": [
+        359.5936990022892,
+        150.4867310031841,
+        149.8520989989629
+      ],
+      "median_ms": 150.4867310031841,
+      "http_json_bytes": 264452,
+      "insights_sha256": "11be1e161bec369761ad76f6dc441f98aff2ddbc5adab065f8e3f5c53ed16703"
+    }
+  }
+}

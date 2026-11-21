@@ -11,7 +11,7 @@ Install Git and Python 3.12 using an approved method on your PC. University-mana
 may already provide Python through Anaconda; use that environment as described below.
 
 ```powershell
-git clone --branch feature/veus-2.0-engineering-workbench https://github.com/AsherFerdinand/VEUS-ev-testbench.git
+git clone --branch main https://github.com/AsherFerdinand/VEUS-ev-testbench.git
 Set-Location VEUS-ev-testbench
 py -3.12 --version
 py -3.12 -m venv .venv
@@ -38,7 +38,7 @@ folder; use `Get-ChildItem` to find the one containing `veus`.
 ```powershell
 Set-Location 'C:\path\to\VEUS-ev-testbench'
 git status --short
-git switch feature/veus-2.0-engineering-workbench
+git switch main
 git pull --ff-only
 .\.venv\Scripts\python.exe -m pip install -r requirements-report.txt
 .\.venv\Scripts\python.exe -m uvicorn veus.studio.main:app --port 8770
@@ -90,14 +90,14 @@ node --test tests/browser/replay-controller.test.cjs tests/browser/driving-scene
 
 ## Common startup problems
 
-| Symptom | Check |
-| --- | --- |
-| `py` / `python` not found | Open the Anaconda Prompt where Python is available, or use the approved Python executable path. |
-| Cannot find `.venv\Scripts\python.exe` | Create `.venv` on this PC; verify its directory with `Get-ChildItem .venv\Scripts`. |
-| `No module named veus` | Change to the project root containing `veus`, not the outer ZIP directory or `.venv` directory. |
-| Missing FastAPI / plotting package | Install using the same `.venv` Python used to launch the server. |
-| Port 8770 already in use | Stop the old VEUS process or use `--port 8771`, then browse that port. |
-| Saved designs appear missing | Use the same browser/origin/port, or import your exported design JSON. |
+| Symptom                                | Check                                                                                           |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `py` / `python` not found              | Open the Anaconda Prompt where Python is available, or use the approved Python executable path. |
+| Cannot find `.venv\Scripts\python.exe` | Create `.venv` on this PC; verify its directory with `Get-ChildItem .venv\Scripts`.             |
+| `No module named veus`                 | Change to the project root containing `veus`, not the outer ZIP directory or `.venv` directory. |
+| Missing FastAPI / plotting package     | Install using the same `.venv` Python used to launch the server.                                |
+| Port 8770 already in use               | Stop the old VEUS process or use `--port 8771`, then browse that port.                          |
+| Saved designs appear missing           | Use the same browser/origin/port, or import your exported design JSON.                          |
 
 The server runs on the PC where you execute these commands. Cloud Codex editing and
 GitHub pushes do not update an already downloaded local copy or automatically host it.

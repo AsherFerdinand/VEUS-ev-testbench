@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "source_commit": "deecbd7f7497a2bb095583d45036a4015be05a06",
+  "scope": "Documentation/media/instructions only; application, tests, datasets, dependency manifests and export/numerical contracts unchanged",
+  "reused_verification": {
+    "python_cases": 314,
+    "clock": 9,
+    "scene": 8,
+    "browser_suites": 11,
+    "record": "../refocus/evidence/verification.json"
+  },
+  "new_checks": {
+    "targeted_root_isolation_python": 1,
+    "node_clock_scene": 17,
+    "local_GFM_render": "marked + Chromium; 8 internal images loaded, four tables, no horizontal overflow",
+    "mermaid": "Standard GitHub-supported fenced flowcharts; native GitHub rendering is not emulated by local marked preview",
+    "internal_links_and_anchors": 47,
+    "media_decode": "Every GIF frame and five PNGs loaded; per-GIF timing/size bounds passed",
+    "decoded_gif_pixels": "Every decoded GIF frame matches a captured frame after the declared resize/palette transformation",
+    "gif_pixel_check": [
+      {
+        "name": "vehicle-architecture",
+        "matches": 11,
+        "decoded": 11,
+        "unmatched": []
+      },
+      {
+        "name": "simulation-lab",
+        "matches": 63,
+        "decoded": 63,
+        "unmatched": []
+      },
+      {
+        "name": "overtaking",
+        "matches": 51,
+        "decoded": 51,
+        "unmatched": []
+      }
+    ],
+    "example_values": "Matched existing frozen S1 urban legacy/map results; no fresh numerical estimates",
+    "installation": "Python3.12, actual dependency files and veus.studio.main:app verified; clean Windows not executed"
+  },
+  "external_badges": "Technology labels verified from source/manifests; shields.io fetching excluded from local preview",
+  "media": {
+    "overtaking.gif": {
+      "format": "GIF",
+      "width": 1100,
+      "height": 765,
+      "frames": 51,
+      "duration_s": 11.79,
+      "bytes": 3148080,
+      "sha256": "19d4336ed93409a220d3626308aa5a6667561c6d4ecdff887fe019486926f55b"
+    },
+    "vehicle-architecture.png": {
+      "format": "PNG",
+      "bytes": 377885,
+      "sha256": "c685f2e1edee4d1d5921f24e69e5ca4d1135c5265a45e2bf0d18c74f7c636bb2"
+    },
+    "vehicle-presets.png": {
+      "format": "PNG",
+      "bytes": 49507,
+      "sha256": "0c6b23c39665e29b848f197c8601c033a52bd5563fa6239b8e3924129bbd2549"
+    },
+    "ev-challenges.png": {
+      "format": "PNG",
+      "bytes": 117348,
+      "sha256": "a27e82ea32ac72a13ac5aa79ffd8e8a3879d5a352857390e21c2e55c23f7faf3"
+    },
+    "simulation-lab.gif": {
+      "format": "GIF",
+      "width": 1100,
+      "height": 765,
+      "frames": 63,
+      "duration_s": 13.56,
+      "bytes": 3773117,
+      "sha256": "49b398f6c520ac8df2e50cd06df55b19c58369bd68d2f8133f1cc31017f2362e"
+    },
+    "vehicle-architecture.gif": {
+      "format": "GIF",
+      "width": 1100,
+      "height": 765,
+      "frames": 11,
+      "duration_s": 12.51,
+      "bytes": 1125088,
+      "sha256": "52d5ad6c84421d2a7a10df27be3c012a09fb1d911b241db19deefa71a3f4b833"
+    },
+    "simulation-lab.png": {
+      "format": "PNG",
+      "bytes": 260478,
+      "sha256": "6a0f21eb2d8872751dc19f64119f651bb4baefe331b552f0d82e6dc7f6533fef"
+    },
+    "measurements.png": {
+      "format": "PNG",
+      "bytes": 303564,
+      "sha256": "72cbdd5fc5561a8e25915032acc0b311045a1d96f602ce808800a5951d64743d"
+    }
+  },
+  "licence": "No root project licence. Upstream data notices preserved; no new stock imagery/fonts",
+  "branch_rules_inspection": "GitHub API returned Forbidden; publication uses normal non-force Git push and server-side enforcement, with no protection changes",
+  "publication": {
+    "authorized_target": "main",
+    "expected_main_before": "1c4560bcf6e4a80dcb38f105daddebcb73173c8b",
+    "method": "Fast-forward only if ancestry remains verified; remote result verified after push",
+    "release_or_tag": false
+  }
+}

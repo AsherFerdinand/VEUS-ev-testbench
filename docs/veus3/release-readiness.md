@@ -66,3 +66,11 @@ old routes remain compatible. [Current checks and captures](../refocus/evidence/
 supersede the five-workspace UX observations above. Numerical/report contracts and
 licensing/Windows/non-Chromium/physical-validation limitations remain unchanged.
 No main merge or GitHub release is authorized by this refocus.
+
+
+## Final README and main publication
+
+The subsequent documentation brief explicitly authorizes merging/pushing the verified
+engineering refocus to main. This supersedes earlier feature-branch-only instructions
+for that publication operation. It does not authorize a GitHub Release/tag or change
+licensing, physical-validation status or platform verification. [Actual media and checks](../media/README.md).

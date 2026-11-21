@@ -1,5 +1,4 @@
-import { mountAnalysis } from "./design-analysis.js";
-import { mountInsights } from "./engineering-insights.js";
+import { simplifyConfiguration } from "./configuration-ui.js";
 import {
   appearanceOf,
   appearances,
@@ -188,9 +187,18 @@ export async function mountStudio(root, { content, header, notice }) {
   ]);
   let selectedPreset = presetData.presets[0]?.id;
   if (!root.isConnected) return () => {};
-  if (!state.design) state.design = await request("design");
+  if (!state.design)
+    state.design = structuredClone(presetData.presets[0].design);
+  selectedPreset =
+    presetData.presets.find(
+      (p) => p.design.appearance === state.design.appearance,
+    )?.id || null;
   const find = (id) => root.querySelector("#" + id);
   const connected = () => alive && root.isConnected;
+  const drawingSVG = () =>
+    document.querySelector("#schematic-slot .anatomy-svg") ||
+    root.querySelector(".anatomy-svg");
+  root.refocusBind = bind;
   function syncLabel() {
     const status = root.querySelector("#design-draft-status");
     if (status)
@@ -225,7 +233,7 @@ export async function mountStudio(root, { content, header, notice }) {
    )
    .join(
      "",
-   )}</select></label><label>Layers<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, drawingOptions())}</div><p id="anatomy-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>${state.design.appearance ? "Selected visual class" : "Legacy appearance fallback: R1"} · illustrative packaging, not CAD</span><span>Single equivalent drive unit · no AWD or downforce model</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><section id="engineering-insights"></section><section id="controlled-analysis"></section><div class="studio-evidence"><details id="compatibility-details"><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
+   )}</select></label><label>Layers<select id="studio-body"><option value="cutaway">Cutaway</option><option value="transparent">Transparent</option><option value="opaque">Complete body</option></select></label><label><input id="studio-annotations" type="checkbox" checked> Annotations</label></div></div><div id="design-schematic">${anatomySVG(content.components, true, drawingOptions())}</div><p id="configuration-tooltip" aria-live="polite">Select a component or subsystem to inspect its configuration.</p><div class="drawing-footer"><span>${state.design.appearance ? "Selected visual class" : "Legacy appearance fallback: R1"} · illustrative packaging, not CAD</span><span>Single equivalent drive unit · no AWD or downforce model</span></div></div><div id="specifications" class="specification-strip" aria-live="polite"></div><section id="engineering-insights"></section><section id="controlled-analysis"></section><div class="studio-evidence"><details id="compatibility-details"><summary>Engineering compatibility <span id="compatibility-status"></span></summary><div id="compatibility-checks"></div></details><details><summary>Equations, inputs & assumptions</summary><div id="calculation-details"></div></details><details><summary>Prepare for the retained physics model</summary><div id="adapter-panel"></div></details><details id="comparison-details"><summary>Baseline versus modified specifications</summary><label>Saved baseline<select id="comparison-baseline"><option value="">Choose a saved design</option>${state.library.map((r) => `<option value="${esc(r.id)}">${esc(r.design.name)}</option>`).join("")}</select></label><button id="compare-designs">Compare with active design</button><div id="design-comparison"></div></details></div></div>
  <aside class="design-form studio-editor"><label>Subsystem<select id="design-group">${Object.entries(
    names,
  )
@@ -239,9 +247,8 @@ export async function mountStudio(root, { content, header, notice }) {
     editor();
     bind();
     presetControls();
-    insightCleanup = mountInsights(find("engineering-insights"));
-    analysisCleanup = mountAnalysis(find("controlled-analysis"));
-    updateSchematic(root.querySelector(".anatomy-svg"), {
+
+    updateSchematic(drawingSVG(), {
       selected: componentId[group],
       body: "cutaway",
     });
@@ -253,6 +260,32 @@ export async function mountStudio(root, { content, header, notice }) {
       find("configuration-status").textContent =
         "Checked · " + statusText(state.evaluation.compatibility_status);
     } else evaluation();
+    simplifyConfiguration(root, {
+      evaluate: evaluation,
+      changed: invalidateComparison,
+    });
+    const ih = find("engineering-insights"),
+      ah = find("controlled-analysis"),
+      advanced = find("advanced-analysis");
+    let loading = false;
+    advanced.ontoggle = async () => {
+      if (!advanced.open || loading || ih.children.length) return;
+      loading = true;
+      try {
+        const [i, a] = await Promise.all([
+          import("./engineering-insights.js"),
+          import("./design-analysis.js"),
+        ]);
+        if (!connected() || !ih.isConnected) return;
+        insightCleanup = i.mountInsights(ih);
+        analysisCleanup = a.mountAnalysis(ah);
+      } catch (e) {
+        if (connected())
+          ih.textContent = "Advanced analysis unavailable: " + e.message;
+      } finally {
+        loading = false;
+      }
+    };
     syncLabel();
   }
   function drawingOptions() {
@@ -266,7 +299,7 @@ export async function mountStudio(root, { content, header, notice }) {
     };
   }
   function redraw() {
-    find("design-schematic").innerHTML = anatomySVG(
+    drawingSVG().outerHTML = anatomySVG(
       content.components,
       true,
       drawingOptions(),
@@ -280,19 +313,26 @@ export async function mountStudio(root, { content, header, notice }) {
         for (const item of root.querySelectorAll("[data-preset]"))
           item.setAttribute("aria-pressed", String(item === card));
         const preset = presetData.presets.find((p) => p.id === selectedPreset);
-        find("preset-preview-label").textContent =
-          "Preview: " +
-          preset.name +
-          " · apply explicitly to create an unsaved draft. Saved designs are not replaced.";
+        applyPreset();
       };
-    find("preset-apply").onclick = () => {
+    const applyPreset = () => {
       if (
         state.dirty &&
         !confirm(
           "Discard unsaved edits and customize this preset? Saved designs will remain unchanged.",
         )
-      )
+      ) {
+        selectedPreset =
+          presetData.presets.find(
+            (p) => p.design.appearance === state.design.appearance,
+          )?.id || null;
+        for (const card of root.querySelectorAll("[data-preset]"))
+          card.setAttribute(
+            "aria-pressed",
+            String(card.dataset.preset === selectedPreset),
+          );
         return;
+      }
       const preset = presetData.presets.find((p) => p.id === selectedPreset);
       state.design = structuredClone(preset.design);
       state.activeId = null;
@@ -302,6 +342,7 @@ export async function mountStudio(root, { content, header, notice }) {
       shell();
       syncLabel();
     };
+    find("preset-apply").onclick = applyPreset;
     find("studio-appearance").onchange = (e) => {
       state.design.appearance = e.target.value;
       state.dirty = true;
@@ -430,10 +471,7 @@ export async function mountStudio(root, { content, header, notice }) {
         statusText(result.compatibility_status) +
         " · not physical validation";
       renderResults(result);
-      if (
-        find("design-schematic")?.querySelector("svg")?.dataset.appearance !==
-        appearanceOf(state.design)
-      )
+      if (drawingSVG()?.dataset.appearance !== appearanceOf(state.design))
         redraw();
       syncLabel();
     } catch (e) {
@@ -526,11 +564,11 @@ export async function mountStudio(root, { content, header, notice }) {
     find("design-group").onchange = (e) => {
       group = e.target.value;
       editor();
-      updateSchematic(root.querySelector(".anatomy-svg"), {
+      updateSchematic(drawingSVG(), {
         selected: componentId[group],
       });
     };
-    const svg = root.querySelector(".anatomy-svg");
+    const svg = drawingSVG();
     for (const g of svg.querySelectorAll("[data-component]")) {
       const choose = () => {
         const kind =
@@ -550,15 +588,22 @@ export async function mountStudio(root, { content, header, notice }) {
         }
         updateSchematic(svg, { selected: g.dataset.component });
       };
-      g.onclick = choose;
+      if (!g._hasArchitectureHook) {
+        g._architectureChoose = g.onclick;
+        g._hasArchitectureHook = true;
+      }
+      g.onclick = () => {
+        g._architectureChoose?.();
+        choose();
+      };
       g.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          choose();
+          g.onclick();
         }
       };
       g.onfocus = g.onmouseenter = () => {
-        find("anatomy-tooltip").textContent =
+        document.getElementById("anatomy-tooltip").textContent =
           content.components.find((c) => c.id === g.dataset.component)
             ?.function || g.dataset.component;
       };
@@ -722,6 +767,7 @@ export async function mountStudio(root, { content, header, notice }) {
   shell();
   syncLabel();
   return () => {
+    root.refocusLife?.abort();
     insightCleanup?.();
     analysisCleanup?.();
     alive = false;

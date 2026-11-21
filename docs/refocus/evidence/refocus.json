@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "unified_vehicle": true,
+  "saved_protection": true,
+  "configuration_transfer": true,
+  "single_explicit_ack": true,
+  "backend_flags": 5,
+  "side_views": 4,
+  "top_down_overtaking": true,
+  "deterministic_seek": true,
+  "urban_run_sha256": "e02b6deeb26d1c4aa1eb89e51b3f8096a973b0cad9a4be95f91bd3397ac36ae2",
+  "preview_without_consent": true,
+  "mapping_confirmation_retained": true,
+  "event_report_export": true,
+  "failed_selection_clears_old_result": true,
+  "interactive_learning": 3,
+  "physical_validation": "INCONCLUSIVE",
+  "errors": []
+}

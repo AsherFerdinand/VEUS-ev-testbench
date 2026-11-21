@@ -1,0 +1,18 @@
+[
+  {
+    "label": "before",
+    "summary": "University of Michigan VED · measured · 367 samples · source SHA256 e1a2c68d6640117ef2fc02964966ac0e3154f613093d7bb2f70fd7573946244a. Unverified polarity: signed power/energy conclusions stay gated.",
+    "plot_available": null,
+    "mapping_confirmed": false,
+    "investigation_present": false,
+    "status": "Source loaded. Review mapping and confirm before investigation."
+  },
+  {
+    "label": "after",
+    "summary": "University of Michigan VED · measured · 367 samples · source SHA256 e1a2c68d6640117ef2fc02964966ac0e3154f613093d7bb2f70fd7573946244a. Unverified polarity: signed power/energy conclusions stay gated. Duration 370.3 s · available signals: vehicle_speed_ms, battery_current_a, battery_voltage_v, battery_soc, ambient_temperature_c. Preview readiness: recorded channels available; model validation INCONCLUSIVE.",
+    "plot_available": "true",
+    "mapping_confirmed": false,
+    "investigation_present": false,
+    "status": "Original telemetry preview loaded. Review the published mapping and confirm to investigate events or export a report. Power remains gated by polarity."
+  }
+]

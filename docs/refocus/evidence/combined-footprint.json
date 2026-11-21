@@ -1,0 +1,283 @@
+{
+  "scope": "Single targeted decoded-resource audit to explain merged initial-page growth; not a repeated runtime benchmark. Same environment, configuration then advanced tools.",
+  "results": [
+    {
+      "tag": "before",
+      "configuration_bytes": 278786,
+      "advanced_bytes": 278786,
+      "configuration": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25882
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 19911
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3183
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11582
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/design-studio.js",
+          "bytes": 31072
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/engineering-insights.js",
+          "bytes": 9967
+        },
+        {
+          "path": "/static/workbench/design-analysis.js",
+          "bytes": 7996
+        },
+        {
+          "path": "/static/workbench/design-studio.css",
+          "bytes": 11857
+        },
+        {
+          "path": "/api/workbench/v2/catalogue",
+          "bytes": 71904
+        },
+        {
+          "path": "/api/workbench/v2/presets",
+          "bytes": 32833
+        },
+        {
+          "path": "/api/workbench/v2/design",
+          "bytes": 2000
+        },
+        {
+          "path": "/api/workbench/v2/evaluate",
+          "bytes": 10635
+        }
+      ],
+      "advanced": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 25882
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 19911
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 3183
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11582
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/design-studio.js",
+          "bytes": 31072
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/engineering-insights.js",
+          "bytes": 9967
+        },
+        {
+          "path": "/static/workbench/design-analysis.js",
+          "bytes": 7996
+        },
+        {
+          "path": "/static/workbench/design-studio.css",
+          "bytes": 11857
+        },
+        {
+          "path": "/api/workbench/v2/catalogue",
+          "bytes": 71904
+        },
+        {
+          "path": "/api/workbench/v2/presets",
+          "bytes": 32833
+        },
+        {
+          "path": "/api/workbench/v2/design",
+          "bytes": 2000
+        },
+        {
+          "path": "/api/workbench/v2/evaluate",
+          "bytes": 10635
+        }
+      ]
+    },
+    {
+      "tag": "after",
+      "configuration_bytes": 272026,
+      "advanced_bytes": 290942,
+      "configuration": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 27524
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 22066
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 4222
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11582
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/design-studio.js",
+          "bytes": 32408
+        },
+        {
+          "path": "/static/workbench/configuration-ui.js",
+          "bytes": 7226
+        },
+        {
+          "path": "/static/workbench/design-studio.css",
+          "bytes": 11857
+        },
+        {
+          "path": "/api/workbench/v2/catalogue",
+          "bytes": 71904
+        },
+        {
+          "path": "/api/workbench/v2/presets",
+          "bytes": 32833
+        },
+        {
+          "path": "/api/workbench/v2/evaluate",
+          "bytes": 10643
+        }
+      ],
+      "advanced": [
+        {
+          "path": "/static/workbench/workbench.css",
+          "bytes": 27524
+        },
+        {
+          "path": "/static/workbench/vehicle.css",
+          "bytes": 9713
+        },
+        {
+          "path": "/static/workbench/app.js",
+          "bytes": 22066
+        },
+        {
+          "path": "/static/workbench/schematic.js",
+          "bytes": 26567
+        },
+        {
+          "path": "/static/workbench/vehicle-appearance.js",
+          "bytes": 4222
+        },
+        {
+          "path": "/static/workbench/design-state.js",
+          "bytes": 3278
+        },
+        {
+          "path": "/api/workbench/content",
+          "bytes": 11582
+        },
+        {
+          "path": "/static/workbench/mark.svg",
+          "bytes": 203
+        },
+        {
+          "path": "/static/workbench/design-studio.js",
+          "bytes": 32408
+        },
+        {
+          "path": "/static/workbench/configuration-ui.js",
+          "bytes": 7226
+        },
+        {
+          "path": "/static/workbench/design-studio.css",
+          "bytes": 11857
+        },
+        {
+          "path": "/api/workbench/v2/catalogue",
+          "bytes": 71904
+        },
+        {
+          "path": "/api/workbench/v2/presets",
+          "bytes": 32833
+        },
+        {
+          "path": "/api/workbench/v2/evaluate",
+          "bytes": 10643
+        },
+        {
+          "path": "/static/workbench/engineering-insights.js",
+          "bytes": 10416
+        },
+        {
+          "path": "/static/workbench/design-analysis.js",
+          "bytes": 7996
+        },
+        {
+          "path": "/static/workbench/assumptions.js",
+          "bytes": 504
+        }
+      ]
+    }
+  ]
+}

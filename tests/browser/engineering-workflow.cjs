@@ -31,6 +31,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
       ),
     presets,
   );
+  require("./advanced-disclosure.cjs")(page);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base + "/?workspace=design");
   await page.locator("#insights-panel summary").click();
@@ -320,7 +321,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
         "Measurements overflow " + width,
       );
     }
-    await page.click("#tab-design");
+    await page.click("#tab-anatomy");
     await page.waitForTimeout(150);
     assert.equal(await page.evaluate(() => !!window.VEUSMeasurements), false);
     fs.writeFileSync(

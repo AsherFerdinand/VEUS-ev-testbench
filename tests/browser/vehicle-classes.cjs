@@ -30,11 +30,12 @@ const fs = require("node:fs"),
     if (!localStorage.getItem("veus.design-library.v2"))
       localStorage.setItem("veus.design-library.v2", JSON.stringify(data));
   }, library);
+  require("./advanced-disclosure.cjs")(page);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base + "/?workspace=design");
-  await page.locator("#preset-apply").waitFor();
+  await page.locator("[data-preset]").first().waitFor();
   assert.equal(
-    await page.locator("#design-schematic svg").getAttribute("data-appearance"),
+    await page.locator("#schematic-slot svg").getAttribute("data-appearance"),
     "performance",
   );
   const drawings = {},
@@ -53,12 +54,13 @@ const fs = require("node:fs"),
       await page.evaluate(() => localStorage.getItem("veus.design-library.v2")),
       beforePreview,
     );
-    assert.equal(await page.locator("#design-name").inputValue(), activeBefore);
-    await page.click("#preset-apply");
+    assert.match(
+      await page.locator("#design-name").inputValue(),
+      new RegExp("VEUS " + id.toUpperCase()),
+    );
     await page.waitForFunction(
       (a) =>
-        document.querySelector("#design-schematic svg")?.dataset.appearance ===
-        a,
+        document.querySelector("#schematic-slot svg")?.dataset.appearance === a,
       appearance,
     );
     await page.waitForFunction(
@@ -72,7 +74,7 @@ const fs = require("node:fs"),
       old,
     );
     assert.equal(
-      await page.locator("#design-schematic .motor-cylinder").count(),
+      await page.locator("#schematic-slot .motor-cylinder").count(),
       1,
     );
     if (id === "s1") {
@@ -114,7 +116,7 @@ const fs = require("node:fs"),
         () => !document.getElementById("design-save").disabled,
       );
     }
-    await page.locator('#design-schematic [data-component="motor"]').focus();
+    await page.locator('#schematic-slot [data-component="motor"]').focus();
     await page.keyboard.press("Enter");
     assert.equal(await page.locator("#design-group").inputValue(), "motor");
     await page.selectOption("#design-group", "body");
@@ -138,9 +140,7 @@ const fs = require("node:fs"),
       `Customized ${id.toUpperCase()}`,
     );
     assert.equal(
-      await page
-        .locator("#design-schematic svg")
-        .getAttribute("data-appearance"),
+      await page.locator("#schematic-slot svg").getAttribute("data-appearance"),
       appearance,
     );
     const layout = await page
@@ -148,7 +148,7 @@ const fs = require("node:fs"),
       .getAttribute("data-layout");
     assert(layout.startsWith(appearance));
     drawings[id] = await page
-      .locator("#design-schematic .class-body")
+      .locator("#schematic-slot .class-body")
       .innerHTML();
     const [download] = await Promise.all([
       page.waitForEvent("download"),
@@ -200,8 +200,8 @@ const fs = require("node:fs"),
       await page.evaluate(() => VEUSLab.result.vehicle.appearance),
       frozen,
     );
-    await page.click("#tab-design");
-    await page.locator("#preset-apply").waitFor();
+    await page.click("#tab-anatomy");
+    await page.locator("[data-preset]").first().waitFor();
   }
   assert.equal(new Set(Object.values(drawings)).size, 3);
   // Import keeps appearance; the original legacy record remains intact throughout.
@@ -209,7 +209,7 @@ const fs = require("node:fs"),
   await page.locator("#design-import").setInputFiles(out + "/s1.json");
   await page.waitForFunction(
     () =>
-      document.querySelector("#design-schematic svg")?.dataset.appearance ===
+      document.querySelector("#schematic-slot svg")?.dataset.appearance ===
       "sedan",
   );
   for (const width of [1024, 820, 390]) {
@@ -224,8 +224,8 @@ const fs = require("node:fs"),
   }
   await page.goto(base + "/?workspace=optimization");
   await page.locator("#compare-designs").waitFor({ state: "attached" });
-  assert(new URL(page.url()).searchParams.get("workspace") === "design");
-  assert.equal(await page.locator("[role=tab]").count(), 5);
+  assert(new URL(page.url()).searchParams.get("workspace") === "anatomy");
+  assert.equal(await page.locator("[role=tab]").count(), 4);
   await page.click("#tab-measurements");
   await page.waitForFunction(() =>
     document

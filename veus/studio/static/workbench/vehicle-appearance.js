@@ -73,3 +73,11 @@ export function sideVehicle(
 }
 export const vehicleThumbnail = (kind) =>
   `<svg viewBox="20 25 530 260" role="img" aria-label="${appearances[kind].name} ${appearances[kind].label}">${sideVehicle(kind, "thumb-" + kind, "#cbdbe3")}</svg>`;
+
+// Original plan view shares the fictional class identity; not CAD or lateral dynamics.
+export function topVehicle(kind = "sedan", id = "plan-car", color = "#c7dce5") {
+  const k = appearances[kind] ? kind : "sedan",
+    w = k === "suv" ? 55 : 48,
+    l = k === "performance" ? 135 : 128;
+  return `<g id="${id}" data-appearance="${k}" aria-label="${appearances[k].name} illustrative plan view"><ellipse rx="${l / 2 + 6}" ry="${w / 2 + 6}" fill="#020711" opacity=".35"/>${[-1, 1].flatMap((x) => [-1, 1].map((y) => `<rect x="${x * l * 0.3 - 10}" y="${y * (w / 2 + 2) - 5}" width="20" height="10" rx="3" fill="#0b1720"/>`)).join("")}<rect x="${-l / 2}" y="${-w / 2}" width="${l}" height="${w}" rx="${w * 0.3}" fill="${color}" stroke="#83a6b8" stroke-width="2"/><path d="M-25 -19Q-43 0 -25 19H24Q35 0 24 -19Z" fill="#18334a"/><rect x="-15" y="-16" width="30" height="32" rx="4" fill="#b1c9d5"/><path d="M${-l / 2 + 5} -15v30" stroke="#78dbe5" stroke-width="4"/><text y="4" text-anchor="middle" fill="#233f51" font-size="9">${appearances[k].name}</text></g>`;
+}

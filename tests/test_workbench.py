@@ -16,7 +16,7 @@ def test_new_root_isolated_from_legacy_shell_and_migration_preserved():
     with TestClient(app) as client:
         root = client.get("/")
         assert root.status_code == 200
-        assert "Electric Vehicle Engineering Workbench" in root.text
+        assert "EV Longitudinal Simulation &amp; Measurement Analysis Workbench" in root.text
         assert "/static/workbench/app.js" in root.text
         for name in [
             "drive.js",

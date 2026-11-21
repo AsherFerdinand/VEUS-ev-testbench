@@ -1,30 +1,32 @@
-# VEUS — Electric Vehicle Engineering Workbench
+# VEUS — EV Longitudinal Simulation & Measurement Analysis Workbench
 
-**Learn → Design → Evaluate → Simulate → Investigate Measurements**
+**Configure → Simulate → Analyze → Investigate Measurements**
 
-VEUS is a Python and browser application for exploring EV design assumptions,
-reproducible longitudinal experiments and recorded vehicle data. It connects explicit
-vehicle configurations to energy calculations, controlled comparisons and engineering
-reports, while keeping illustrative predictions separate from measured evidence.
+Configure an EV, simulate its longitudinal behaviour, investigate energy/performance,
+and assess what real measurements can support. VEUS demonstrates reproducible vehicle
+simulation, powertrain modelling, data analysis and evidence-specific validation readiness.
+It targets EV powertrain, vehicle simulation, model-based development and testing roles.
+
+[Three-minute engineering demonstration](docs/refocus/workflow.md) ·
+[Refocus verification, performance and actual captures](docs/refocus/evidence/README.md)
 
 **Version 3.0.0rc1 — release candidate for review.** Development remains on
 `feature/veus-2.0-engineering-workbench`; no stable release or merge to `main` is implied.
 Physical vehicle validation remains **INCONCLUSIVE**.
 
-![Design Studio with S1, R1 and X1](docs/veus3/evidence/design-studio.png)
+![Vehicle Architecture and configuration](docs/refocus/evidence/vehicle-architecture.png)
 
-## Five connected workspaces
+## Four connected workspaces
 
-| Workspace | What you can do |
+| Workspace | Engineering task |
 | --- | --- |
-| **EV Anatomy** | Inspect ten systems in an original isometric cutaway; follow qualitative propulsion, regeneration, charging and auxiliary energy paths. |
-| **EV Challenges** | Explore eight source-referenced engineering questions and their physical trade-offs. |
-| **Design Studio** | Customize components and declared limits; check compatibility, evaluate energy/range, save designs, compare snapshots and run bounded sensitivity studies. |
-| **Simulation Lab** | Run five coupled experiments or sourced driving profiles/routes; inspect constraints and replay frozen telemetry with perspective SVG driving scenes. |
-| **Measurements** | Import CSV/JSON, review mappings and readiness, inspect original signals/events, compare recordings and export evidence-specific validation reports. |
+| **Vehicle Architecture** | Inspect the interactive cutaway, select S1/R1/X1 and configure basic vehicle assumptions. Component limits and advanced analysis remain expandable. |
+| **Simulation Lab** | Choose a scenario or driving cycle, run the active configuration and inspect achieved speed, battery power, SOC, energy and constraints. |
+| **Measurements & Validation** | Select bundled or imported data, preview real signals, investigate events, assess comparison readiness and export evidence. |
+| **EV Challenges** | Optional interactive aero/speed, battery mass/capacity and regeneration examples, plus retained source-referenced explanations. |
 
-The active design is shared across workspaces. Preset previews do not replace it until
-explicitly applied. Saved designs, unsaved edits and frozen calculated results are labelled.
+The active design is shared across workspaces. Preset cards select the active configuration directly; unsaved edits require confirmation
+before replacement. Saved records are preserved. Saved designs, unsaved edits and frozen calculated results are labelled.
 The browser-local library holds up to **16 designs / 180 KB**; export JSON for portable
 backup. Storage is specific to the browser and origin. Legacy v1 designs require manual
 reconstruction because their mass boundary differs.
@@ -106,8 +108,8 @@ node --test tests/browser/replay-controller.test.cjs tests/browser/driving-scene
 ```
 
 Browser tooling is optional and is not a runtime dependency. The final regression covers
-**314 Python tests, 9 clock tests, 8 scene tests and 10 browser suites**. See the
-[verification and performance evidence](docs/veus3/evidence/README.md) for exact scope,
+**314 Python tests, 9 clock tests, 8 scene tests and 11 browser suites**. See the
+[verification and performance evidence](docs/refocus/evidence/README.md) for exact scope,
 commands, hashes and limitations. Only Chromium has been exercised in this environment.
 
 Engineering exports preserve supported model versions, configuration/source hashes,
@@ -118,16 +120,11 @@ from the application release-candidate version.
 
 ## Genuine application views
 
-Existing verified captures are reused where the workflow is unchanged. Their older version
-badges describe the capture checkpoint; they are not mock-ups or new validation evidence.
+These are actual Chromium captures of the refocused application.
 
-| Anatomy | Engineering Insights |
-| --- | --- |
-| ![Original EV Anatomy](docs/veus2/evidence-2.1/complete-cutaway-light.png) | ![Engineering Insights](docs/veus2/evidence-2.5/engineering-insights.png) |
-| **Simulation Lab** | **Design Comparison** |
-| ![Recorded driving scene](docs/veus2/evidence-2.6/overtaking-lane-change.png) | ![Controlled design comparison](docs/veus2/evidence-2.5/design-comparison.png) |
-| **Measurements investigation** | |
-| ![Actual VED investigation](docs/veus2/evidence-2.5/measurements-investigation.png) | |
+![Top-down illustrative overtaking](docs/refocus/evidence/simulation-overtaking.png)
+
+![Real VED signal investigation](docs/refocus/evidence/measurements.png)
 
 ## Architecture and engineering limits
 
@@ -155,7 +152,7 @@ fully validated digital twin, production ADAS or safety certification is claimed
 - [Release readiness and outstanding checks](docs/veus3/release-readiness.md) · [Current checkpoint](docs/PROGRESS.md)
 
 The retained toolset remains at **http://localhost:8770/engineering**; its APIs, ADAS
-scenarios and historical reports are preserved outside the primary five-workspace flow.
+scenarios and historical reports are preserved outside the primary four-workspace flow.
 The pre-2.0 implementation also remains on `archive/veus-pre-2.0`.
 
 ## Licensing and third-party data

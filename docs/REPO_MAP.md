@@ -35,3 +35,10 @@ No model/schema/dependency version changes.
 
 Read `PROGRESS.md` next. The roadmap is `veus2/roadmap.md`; do not create another.
 Application changes must not overwrite historical evidence in phase-specific directories.
+
+Refocus: `configuration-ui.js` composes the existing editor below the shared cutaway;
+`lab-ui.js` supplies progressive controls; `assumptions.js` records deliberate session
+confirmation; `learning.js` calls existing Python models. Measurements selection previews
+via the unchanged replay analyser. `tests/browser/refocus.cjs` verifies the normal path;
+`advanced-disclosure.cjs` only adapts retained advanced UI tests to collapsed controls.
+Current workflow/evidence: `refocus/workflow.md`, `refocus/evidence/README.md`.

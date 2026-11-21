@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "base_commit": "344376e9d4504089124ddd4c1f43acbdaefac799",
+  "python": {
+    "cases_verified": 314,
+    "full_run": {
+      "passed": 313,
+      "failed": 1,
+      "seconds": 25.42,
+      "failure": "Old application title literal in root-shell isolation test"
+    },
+    "targeted_correction": {
+      "passed": 1,
+      "seconds": 0.29,
+      "scope": "Same root-shell test with requested new title; all isolation/migration assertions retained"
+    },
+    "full_runs": 1,
+    "warning": "Existing Starlette/httpx testclient deprecation"
+  },
+  "node": {
+    "clock_passed": 9,
+    "scene_passed": 8
+  },
+  "browser_suites": {
+    "workbench": {
+      "status": "PASS",
+      "log_sha256": "747d3c346d3c344fe2a13f265391b6b410f232a7a4b1fa2be9ddebd7a2e14f1f"
+    },
+    "vehicle-classes": {
+      "status": "PASS",
+      "log_sha256": "ce39121a44a3fea2ee7ee47a91970f7bd255c8851ae79484bfa09b9945dbc27b"
+    },
+    "lab": {
+      "status": "PASS",
+      "log_sha256": "825ea4686843801c23d09cfc3ba57c55bc2ad8b09e563e6db21b6294009e1e83"
+    },
+    "engineering-workflow": {
+      "status": "PASS",
+      "log_sha256": "62d3177459525037f2d59ed42ea2dfdf788b1cf0b05e482eb2529bac6b8b8e4c"
+    },
+    "advanced": {
+      "status": "PASS",
+      "log_sha256": "9ae19b539959ff677c1e10128be5692054f269f23e72bd00829f9237a05dcd63"
+    },
+    "release": {
+      "status": "PASS",
+      "log_sha256": "08de782b3c3f3f0cedf93b43e5fbe6cea27d378e563fa231b4a00bfbaf51abda"
+    },
+    "refocus": {
+      "status": "PASS",
+      "log_sha256": "3df10aa7dc45f65a46a8039cc5bdf14240408298626ec42260c4e01c21682211"
+    },
+    "drive": {
+      "status": "PASS",
+      "log_sha256": "a7a7fe047d6f37b1a461fbdefc5857e5fce3fe36b5a1704a15c3fa609804b901"
+    },
+    "replay": {
+      "status": "PASS",
+      "log_sha256": "ee8984e6955748f2fed1d315a29d282b8433b09d4cdf8ecdfeb672f974165e13"
+    },
+    "guidance": {
+      "status": "PASS",
+      "log_sha256": "4fd798e542b420a4810ab5d4a10e0844373c0670eafd5786650ae19719218090"
+    },
+    "investigation": {
+      "status": "PASS",
+      "log_sha256": "6f5bdae4a8d83f1aa468e7563ba6f0dbb4c3bd5b235dd618c4536bef60ec828b"
+    }
+  },
+  "unchanged_from_base": [
+    "veus/model",
+    "veus/sim",
+    "veus/lab",
+    "veus/workbench",
+    "datasets",
+    "all dependency files"
+  ],
+  "legacy_evidence": {
+    "preset_run_hashes": "Exact three historical S1/R1/X1 hashes preserved",
+    "five_experiment_hashes": "Exact historical Lab hashes preserved",
+    "exports": "Historical numerical and measurement JSON/CSV/HTML parity passed"
+  },
+  "test_changes": "Four-tab/deep-link/atomic-preset expectations follow requested UX; explicit historical analytical fixture retained. Advanced controls are opened via test-only adapter; normal UX tested independently. No numerical assertion relaxed.",
+  "platform": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)"
+  },
+  "physical_validation": "INCONCLUSIVE",
+  "known_limits": [
+    "Illustrative presets/maps and lateral choreography",
+    "No clean Windows or other-browser execution",
+    "Root project licence absent"
+  ],
+  "captures": [
+    "vehicle-architecture.png",
+    "simulation-overtaking.png",
+    "measurements.png"
+  ],
+  "targeted_post_gate": {
+    "cycle_switch_guard": "PASS; pending/failed selected input cannot reuse prior cycle; stale source responses rejected",
+    "lab_suite": "PASS",
+    "normal_refocus_suite": "PASS",
+    "lab_log_sha256": "36ab3d9823e5613a8101fa64dfb252fca0fe4e8ee260506c0aadfe733b35d956",
+    "refocus_log_sha256": "3df10aa7dc45f65a46a8039cc5bdf14240408298626ec42260c4e01c21682211"
+  }
+}

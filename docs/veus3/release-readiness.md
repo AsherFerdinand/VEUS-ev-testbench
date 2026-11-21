@@ -57,3 +57,12 @@ calibration, certified range, production ADAS, collision-avoidance or safety cla
 5. Obtain explicit repository-owner authorization for any merge or GitHub release.
 
 Physical validation remains **INCONCLUSIVE** regardless of release-preparation status.
+
+
+## Subsequent engineering refocus
+
+The current UI has four workspaces and a unified Architecture/configuration surface;
+old routes remain compatible. [Current checks and captures](../refocus/evidence/README.md)
+supersede the five-workspace UX observations above. Numerical/report contracts and
+licensing/Windows/non-Chromium/physical-validation limitations remain unchanged.
+No main merge or GitHub release is authorized by this refocus.

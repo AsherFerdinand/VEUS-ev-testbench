@@ -1,4 +1,5 @@
 import { icon, anatomySVG, updateSchematic } from "./schematic.js";
+import { appearanceOf } from "./vehicle-appearance.js";
 import { state, loadLibrary } from "./design-state.js";
 const $ = (id) => document.getElementById(id);
 const esc = (v) =>
@@ -10,11 +11,10 @@ const esc = (v) =>
       ],
   );
 const workspaces = [
-  ["anatomy", "EV Anatomy", "UNDERSTAND"],
-  ["challenges", "EV Challenges", "ASK BETTER QUESTIONS"],
-  ["design", "Design Studio", "DEFINE THE SYSTEM"],
-  ["simulation", "Simulation Lab", "REPEAT THE EXPERIMENT"],
-  ["measurements", "Measurements", "FOLLOW THE EVIDENCE"],
+  ["anatomy", "Vehicle Architecture", "CONFIGURE"],
+  ["simulation", "Simulation Lab", "SIMULATE & ANALYZE"],
+  ["measurements", "Measurements & Validation", "INVESTIGATE"],
+  ["challenges", "EV Challenges", "OPTIONAL LEARNING"],
 ];
 let content,
   selectedComponent = "battery",
@@ -104,10 +104,10 @@ for (const button of document.querySelectorAll(".workspace-tab")) {
 }
 function navigate(key, update = true) {
   if (!content) return;
-  if (key === "optimization") {
-    key = "design";
-    history.replaceState({}, "", "/?workspace=design");
-    notice("Design comparisons are now in Design Studio.");
+  if (["design", "optimization"].includes(key)) {
+    key = "anatomy";
+    history.replaceState({}, "", "/?workspace=anatomy#configure-vehicle");
+    update = false;
   }
   if (!workspaces.some((w) => w[0] === key)) key = "anatomy";
   studioCleanup?.();
@@ -115,29 +115,24 @@ function navigate(key, update = true) {
   active = key;
   const guidance = {
     anatomy: [
-      "Learn how the systems connect.",
-      "challenges",
-      "Explore engineering questions",
-    ],
-    challenges: [
-      "Turn a question into an explicit design assumption.",
-      "design",
-      "Open Design Studio",
-    ],
-    design: [
-      "Choose a preset, edit and evaluate; save a named snapshot for reuse.",
+      "Configure → Simulate → Analyze → Investigate Measurements.",
       "simulation",
-      "Simulate the active design",
+      "Run Simulation",
     ],
     simulation: [
-      "Run the active design, then replay its frozen result.",
+      "Run a selected vehicle and condition. Inspect achieved movement, energy and constraints.",
       "measurements",
-      "Investigate measured evidence",
+      "Open real measurements",
     ],
     measurements: [
-      "Import → Check readiness → Inspect → Investigate → Compare → Export.",
-      "design",
-      "Return to Design Studio",
+      "Select dataset → Inspect signals → Investigate events → Compare with Simulation.",
+      "anatomy",
+      "Return to vehicle configuration",
+    ],
+    challenges: [
+      "Optional interactive explanations; illustrative predictions, not physical validation.",
+      "anatomy",
+      "Configure a vehicle",
     ],
   }[key];
   $("workflow-hint").innerHTML =
@@ -159,20 +154,44 @@ function navigate(key, update = true) {
   ({
     anatomy: renderAnatomy,
     challenges: renderChallenges,
-    design: renderDesign,
     simulation: renderSimulation,
     measurements: renderMeasurements,
   })[key]();
   scrollTo(0, 0);
 }
-window.addEventListener("popstate", () =>
-  navigate(new URLSearchParams(location.search).get("workspace"), false),
-);
-function renderAnatomy() {
+document.addEventListener("click", (event) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.shiftKey ||
+    event.altKey
+  )
+    return;
+  const a = event.target.closest("a[href]");
+  if (!a || a.target || a.download) return;
+  const u = new URL(a.href, location.href),
+    key = u.searchParams.get("workspace");
+  if (u.origin === location.origin && u.pathname === "/" && key) {
+    event.preventDefault();
+    navigate(key);
+  }
+});
+window.addEventListener("popstate", () => {
+  const key =
+    new URLSearchParams(location.search).get("workspace") || "anatomy";
+  if ((["design", "optimization"].includes(key) ? "anatomy" : key) !== active)
+    navigate(key, false);
+});
+async function renderAnatomy() {
+  studioCleanup?.();
+  studioCleanup = null;
+  const panel = $("workspace-panel");
   $("workspace-panel").innerHTML =
     header(
-      "01 / SYSTEMS & ENERGY PATHS",
-      "Understand the whole vehicle.",
+      "01 / VEHICLE ARCHITECTURE",
+      "Understand and configure your EV.",
       "Ten connected systems. Start with a component, then follow the energy through the vehicle.",
       "INTERACTIVE SCHEMATIC",
     ) +
@@ -192,8 +211,29 @@ function renderAnatomy() {
   drawAnatomy();
   if (anatomyMode === "flow") inspectFlow();
   else inspectComponent();
+  const divider = document.createElement("section");
+  divider.id = "configure-vehicle";
+  divider.innerHTML =
+    '<hr><h2>Configure Your Vehicle</h2><p>Select an illustrative EV, review its basic parameters, then run a longitudinal experiment. No JSON transfer is required.</p><div id="configuration-host" role="region" aria-label="Vehicle configuration"></div>';
+  panel.append(divider);
+  try {
+    const module = await import("./design-studio.js");
+    if (!panel.isConnected || active !== "anatomy") return;
+    const cleanup = await module.mountStudio(
+      divider.querySelector("#configuration-host"),
+      { content, header, notice, sourceLinks },
+    );
+    if (!panel.isConnected || active !== "anatomy") cleanup();
+    else studioCleanup = cleanup;
+    if (location.hash === "#configure-vehicle") divider.scrollIntoView();
+  } catch (e) {
+    if (panel.isConnected)
+      divider.querySelector("#configuration-host").textContent =
+        "Vehicle configuration unavailable: " + e.message;
+  }
 }
 function drawAnatomy() {
+  vehicleOptions.appearance = appearanceOf(state.design);
   const slot = $("schematic-slot");
   slot.innerHTML = `<div class="vehicle-options"><label>System view<select id="vehicle-view">${["complete", "electrical", "drivetrain", "battery", "thermal"].map((v) => `<option value="${v}" ${vehicleOptions.view === v ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label>Body<select id="vehicle-body">${["cutaway", "transparent", "opaque"].map((v) => `<option ${vehicleOptions.body === v ? "selected" : ""}>${v}</option>`).join("")}</select></label><label><input type="checkbox" id="vehicle-annotations" ${vehicleOptions.annotations ? "checked" : ""}> Annotations</label><button id="vehicle-clear">Show all systems</button></div>${
     anatomyMode === "flow"
@@ -326,6 +366,8 @@ function inspectComponent() {
   };
 }
 function renderChallenges() {
+  const referenceOpen =
+    document.getElementById("challenge-reference")?.open || false;
   $("workspace-panel").innerHTML =
     header(
       "02 / QUESTIONS BEFORE SOLUTIONS",
@@ -355,29 +397,25 @@ function renderChallenges() {
       renderChallenges();
       document.querySelector(`[data-challenge="${challenge}"]`).focus();
     };
+  const reference = document.createElement("details");
+  reference.id = "challenge-reference";
+  reference.open = referenceOpen;
+  reference.innerHTML =
+    "<summary>Engineering reference questions and sources</summary>";
+  $("workspace-panel").append(reference);
+  reference.append(document.querySelector(".challenge-layout"));
+  const learning = document.createElement("section");
+  reference.before(learning);
+  import("./learning.js").then((module) => {
+    if (learning.isConnected) {
+      studioCleanup?.();
+      studioCleanup = module.mountLearning(learning);
+    }
+  });
   $("challenge-experiment").onclick = (e) => {
     e.preventDefault();
     navigate(c.workspace);
   };
-}
-async function renderDesign() {
-  const panel = $("workspace-panel");
-  panel.innerHTML = '<p class="quiet" role="status">Loading Design Studio…</p>';
-  try {
-    const module = await import("./design-studio.js");
-    if (active !== "design" || !panel.isConnected) return;
-    const cleanup = await module.mountStudio(panel, {
-      content,
-      header,
-      notice,
-      sourceLinks,
-    });
-    if (active !== "design" || !panel.isConnected) cleanup();
-    else studioCleanup = cleanup;
-  } catch (e) {
-    if (active === "design" && panel.isConnected)
-      panel.textContent = "Design Studio could not load: " + e.message;
-  }
 }
 async function renderSimulation() {
   const panel = $("workspace-panel");
@@ -424,7 +462,20 @@ function activeLabel() {
         (state.evaluation ? "" : " · unchecked")
       : "Understand · Design · Simulate · Optimize";
 }
-window.addEventListener("veus:design", activeLabel);
+window.addEventListener("veus:design", () => {
+  activeLabel();
+  if (active === "anatomy" && $("schematic-slot")) {
+    const svg = $("schematic-slot").querySelector(".anatomy-svg");
+    if (svg?.dataset.appearance !== appearanceOf(state.design)) {
+      drawAnatomy();
+      $("configuration-host")?.refocusBind?.();
+    } else
+      updateSchematic(svg, {
+        ...vehicleOptions,
+        batteryId: state.design?.component_ids?.battery,
+      });
+  }
+});
 activeLabel();
 try {
   content = await get("/api/workbench/content");

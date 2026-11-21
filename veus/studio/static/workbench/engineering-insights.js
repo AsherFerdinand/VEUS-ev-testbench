@@ -1,3 +1,4 @@
+import { acknowledged, confirmAssumptions } from "./assumptions.js";
 // Click-driven, bounded model analyses. Every numerical quantity comes from Python.
 import { state } from "./design-state.js";
 const ACKS = [
@@ -56,8 +57,17 @@ export function mountInsights(root) {
     last = null;
   const $ = (id) => root.querySelector("#" + id);
   root.innerHTML = `<details id="insights-panel"><summary>Engineering Insights · cycle energy, range and daily cost</summary><p class="quiet">Numerical model estimates, not certified or real-world range. Run the same complete profile for meaningful comparisons.</p><form id="insights-form" class="analysis-form"><label>Driving profile<select id="insights-profile"><option value="urban">Illustrative urban</option><option value="motorway">Illustrative motorway</option><option value="udds">FASTSim UDDS reference</option><option value="hwfet">FASTSim HWFET reference</option></select></label><label>Daily distance · km<input id="insights-distance" type="number" min="0" max="1000" step="any" value="40" required></label><label>User tariff · €/kWh<input id="insights-tariff" type="number" min="0" max="10" step="any" value=".30" required></label><label>Optional charging efficiency · 0–1<input id="insights-efficiency" type="number" min=".01" max="1" step="any" placeholder="Unknown"></label><label>Driving days / month<input id="insights-days" type="number" min="0" max="31" value="20" required></label><label>Acceleration target · km/h<input id="insights-target" type="number" min="1" max="250" value="100" required></label><label class="analysis-ack"><input id="insights-ack" type="checkbox" required>I acknowledge illustrative inputs, constant OCV/efficiencies, longitudinal motion only and unmodelled thermal/charging dynamics. Distance/tariff/days are editable user assumptions.</label><button id="insights-run">Evaluate active design</button><button id="insights-presets" type="button">Compare three default presets</button></form><p id="insights-status" role="status">No analysis executed.</p><div id="insights-result"></div><div id="insights-charts" class="analysis-charts"></div><button id="insights-export" disabled>Export analysis JSON</button></details>`;
+  $("insights-ack").checked = acknowledged();
+  $("insights-ack").addEventListener(
+    "change",
+    () => confirmAssumptions($("insights-ack").checked),
+    { signal: life.signal },
+  );
   function request(vehicle = state.design) {
     return {
+      ...(state.powertrainModel
+        ? { efficiency_model: state.powertrainModel }
+        : {}),
       vehicle: structuredClone(vehicle),
       acknowledgements: ACKS,
       profile_id: $("insights-profile").value,
@@ -169,6 +179,8 @@ export function mountInsights(root) {
         const result = await post("insights", request(), controller.signal);
         view(result);
         window.VEUSInsights = result;
+        state.lastInsights = result;
+        window.dispatchEvent(new Event("veus:run"));
       }
       $("insights-status").textContent =
         "Completed; frozen evidence. Changing the saved design never relabels these results.";

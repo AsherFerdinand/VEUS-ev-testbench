@@ -32,6 +32,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
       ),
     presets,
   );
+  require("./advanced-disclosure.cjs")(page);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base + "/?workspace=simulation");
   await page.locator("#lab-config").evaluate((e) => (e.open = true));

@@ -1,25 +1,37 @@
 # Current checkpoint
 
-- **VEUS 3.0.0rc1 release preparation complete**, feature branch only; base `b3d9832`.
-  A–D and final applicable regression passed. Candidate ready for engineering review.
-  No main merge, GitHub release, visibility/protection change or new physics feature.
-- A: five-workspace contextual next/return guidance, explicit saved/draft labels,
-  visible validation-model selection, loading/status semantics and mobile control sizing.
-  Thirty theme/width/workspace combinations and keyboard/return checks pass.
-- B: demonstrated delayed-evaluation overwrite fixed using submitted-snapshot guards;
-  complete saved snapshot reaches Insights/Lab; Lab changes update the active label.
-  Failed validation retries clear old exports; in-flight cleanup is guarded.
-  Focused integration and five existing parity/comparison Python tests pass.
-- C: no dependency/model/schema changes. Comparable initial subresources98,289→100,319 B,
-  startup RSS44,388→44,392 KiB, representative Insights118.7→116.2 ms. Tiny shared-cloud
-  samples, not speedup or Windows/laptop guarantees. No pending static callbacks/requests.
-- D: professional README, current architecture, PowerShell/Anaconda setup, release checklist,
-  one new genuine capture plus five reused views. Application metadata3.0.0rc1; model/export
-  versions remain separate. No root licence added or invented.
-- Final verification: **314 Python, 9 clock, 8 scene tests and 10 browser suites pass**.
-  One existing testclient/httpx deprecation warning. Full Python run once; no old tests weakened.
-- Review limits: root project licence absent; clean Windows install and Firefox/Safari/Edge
-  untested; physical validation INCONCLUSIVE due missing independent inputs/polarity/alignment.
-  Full checklist: [release readiness](veus3/release-readiness.md).
-- Evidence and final verification: [3.0 evidence](veus3/evidence/README.md).
-  Prior314 Python/9clock/8scene/9browser baseline remains in [2.6 evidence](veus2/evidence-2.6/README.md).
+- **Engineering refocus complete**, from `344376e`, feature branch only. Final applicable
+  verification passed. No main merge, release or additional phase.
+- Purpose: EV Longitudinal Simulation & Measurement Analysis Workbench.
+  Configure → Simulate → Analyze → Investigate Measurements.
+- Four workspaces: Vehicle Architecture + configuration; Simulation Lab;
+  Measurements & Validation; optional EV Challenges. Old design/optimization deep links
+  redirect safely. One shared cutaway and authoritative active snapshot; preset changes
+  protect unsaved edits and never silently overwrite saved records.
+- Basic vehicle fields precede collapsed advanced configuration/analysis. Selected vehicle
+  reaches the Lab directly without JSON transfer. One deliberate session acknowledgement
+  maps to the exact five backend flags; measurement mapping consent stays independent.
+- Side-view cruise/braking/coast and grade-aligned climb; top-down two-lane overtaking uses
+  unchanged deterministic illustrative choreography. No new lateral/safety/physics model.
+- Measurements defect reproduced: selection formerly loaded metadata only and retained old
+  results. Selection now previews original signals via existing replay analysis, clears old
+  plots/exports, checks HTTP errors and guards stale responses. Confirmed event/report and
+  source/polarity/gap safeguards remain. Quantitative validation INCONCLUSIVE.
+- Focused normal journey, five analytical/parity tests, five-scenario hashes, three-preset
+  hashes, custom data and advanced browser workflows checked during development.
+- Comparable combined architecture/configuration resource bodies278,786→272,026 B;
+  all advanced analysis278,786→290,942 B. Startup RSS44,388→44,376 KiB; calculation
+  medians similar. Different initial-page scope, shared Linux sampling; no laptop guarantee.
+- [Workflow/defect/camera boundaries](refocus/workflow.md),
+  [current evidence and three captures](refocus/evidence/README.md).
+  Root licence absent; clean Windows/non-Chromium and independent physical validation
+  remain unverified. Existing numerical models, datasets, exports and dependency files unchanged.
+
+- Final gate: **314 Python cases verified**, **9 clock + 8 scene tests**, **11 browser suites**.
+  One full Python run313 passed/one old title assertion failed; the corrected title-only
+  root-isolation test passed targeted rerun. No numerical assertion relaxed; existing
+  Starlette/httpx warning remains. Three actual Chromium screenshots inspected.
+- Stop after this refocus. No main merge, public release or additional phase.
+
+- Final cycle-switch guard prevents reuse of a pending/failed source; stale source responses
+  are rejected. Its focused race check and targeted Lab/normal workflow reruns passed.

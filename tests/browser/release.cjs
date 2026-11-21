@@ -12,6 +12,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
         viewport: { width: 1440, height: 1100 },
       }),
       errors = [];
+    require("./advanced-disclosure.cjs")(page);
     page.on("pageerror", (e) => errors.push(e.message));
     const operations = [];
     page.on("requestfinished", (req) => {
@@ -70,7 +71,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
       "Release review draft",
     );
     // Roving tabs retain keyboard access and browser Back/deep links.
-    await page.focus("#tab-design");
+    await page.focus("#tab-anatomy");
     await page.keyboard.press("ArrowRight");
     await page.locator("#lab-run").waitFor();
     assert.equal(
@@ -81,7 +82,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
       await page.locator("#tab-simulation").getAttribute("aria-selected"),
       "true",
     );
-    await page.keyboard.press("End");
+    await page.keyboard.press("ArrowRight");
     await page.locator("#measurement-recording").waitFor();
     assert.equal(
       await page.locator(":focus").getAttribute("id"),
@@ -103,7 +104,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
     await page.goBack();
     await page.locator("#measurement-recording").waitFor();
     if (process.env.VEUS_STAGE !== "A") {
-      await page.click("#tab-design");
+      await page.click("#tab-anatomy");
       await page.waitForFunction(() =>
         document
           .querySelector("#configuration-status")

@@ -48,6 +48,7 @@ const fs = require("node:fs"),
       ),
     { design, second },
   );
+  require("./advanced-disclosure.cjs")(page);
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("websocket", (s) => sockets.push(s.url()));
   page.on("request", (r) => {
@@ -417,7 +418,7 @@ const fs = require("node:fs"),
   fs.writeFileSync(profileCSV, "time_s,speed_ms\n0,0\n1,5\n2,0\n");
   await page
     .locator("#lab-profile-controls details")
-    .filter({ hasText: "Import a custom CSV" })
+    .filter({ hasText: "Import Driving Data" })
     .locator("summary")
     .first()
     .click();

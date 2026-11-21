@@ -1,7 +1,7 @@
 # VEUS development guide
 
 ## Mission and boundaries
-- VEUS is an Electric Vehicle Engineering Workbench: Understand · Design · Simulate · Optimize.
+- VEUS is an EV Longitudinal Simulation & Measurement Analysis Workbench: Configure → Simulate → Analyze → Investigate Measurements.
 - Continue on `feature/veus-2.0-engineering-workbench`. Do not merge main, rewrite history or publish a stable release unless explicitly requested.
 - Preserve user edits. Start with `git status --short`, `docs/PROGRESS.md`, `docs/REPO_MAP.md`, and targeted symbol searches.
 - `docs/veus2/roadmap.md` is the authoritative roadmap; do not repeat the foundation audit.
@@ -9,7 +9,7 @@
 - `veus/lab/` owns coupled experiments and bounded profile/route execution; preserve requested versus achieved demand and explicit source/grade coverage.
 - Workbench Insights/studies reuse Lab runs; measurements delegate to retained investigation services. Preserve sequential evidence gates and unknown-polarity/model-comparison restrictions.
 - `veus/workbench/` owns design/catalogue/compatibility/calculation/adapter contracts. Never infer efficiency or electrical parameters from technology labels.
-- `static/workbench/` owns the five-workspace shell and shared original SVG. Use one active design state; load editor code on demand.
+- `static/workbench/` owns the four-workspace shell and shared original SVG. Use one active design state; load editor code on demand.
 - Preserve `/engineering` and its assets until essential replacement workflows pass equivalence. Do not add manual-driving or ADAS features.
 
 ## Environment and commands

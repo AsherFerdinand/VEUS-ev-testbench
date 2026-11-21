@@ -1450,3 +1450,89 @@ pre {
     min-height: 44px;
   }
 }
+/* One vehicle state, four workspaces, progressive engineering controls. */
+#configure-vehicle {
+  margin-top: 2rem;
+  scroll-margin-top: 1rem;
+}
+#configure-vehicle > hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+.basic-grid,
+.learning-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.basic-grid label {
+  display: grid;
+  gap: 0.4rem;
+}
+.basic-grid input,
+.basic-grid select {
+  width: 100%;
+}
+#basic-configuration {
+  margin: 1rem 0;
+}
+.run-configuration {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  background: var(--accent);
+  color: var(--paper);
+  border-radius: 0.4rem;
+}
+#advanced-configuration,
+#advanced-analysis {
+  margin: 1rem 0;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+.lab-simple-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.lab-simple-controls label:first-child {
+  display: grid;
+}
+#lab-primary-results {
+  padding: 0.6rem 1rem;
+  color: #d4e7ee;
+}
+.workspace-dock #workspace-tabs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.learning-grid article {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+.learning-grid h2 {
+  font-size: 1.2rem;
+}
+.learning-grid svg,
+.learning-grid input {
+  width: 100%;
+}
+@media (max-width: 760px) {
+  .basic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .workspace-tab small {
+    display: none;
+  }
+  .learning-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 440px) {
+  .basic-grid {
+    grid-template-columns: 1fr;
+  }
+}

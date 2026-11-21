@@ -1,12 +1,12 @@
 # VEUS workbench architecture
 
 Current application: **3.0.0rc1**. Configuration/schema/model versions are independent
-and remain compatible with historical results. Five workspaces share one active design;
+and remain compatible with historical results. Four workspaces share one active design;
 Python owns numerical calculations and the browser owns presentation and replay.
 
 ```mermaid
 flowchart TD
-    UI[Five browser workspaces: Anatomy / Challenges / Design / Lab / Measurements]
+    UI[Four browser workspaces: Architecture + configuration / Lab / Measurements / optional Challenges]
     CFG[Versioned complete design snapshot + bounded local library]
     API[FastAPI workbench / Lab / measurement APIs]
     CAT[Illustrative catalogue + compatibility + explicit model adapter]
@@ -50,7 +50,7 @@ flowchart TD
 | Shared clock / pure driving visualization | `static/replay-controller.js`, `workbench/lab-scene.js`, `workbench/driving-scene-state.mjs`; no lateral physics |
 
 The main entry is `/`; deep links use `?workspace=anatomy`, `challenges`, `design`,
-`simulation` or `measurements`. The former `optimization` link redirects to Design Studio.
+`simulation` or `measurements`. The former `design` and `optimization` links redirect to Vehicle Architecture configuration.
 Browser Back and roving keyboard tabs preserve navigation. The retained toolset lives
 at `/engineering`; legacy APIs/WebSockets remain isolated from the modern shell.
 `/engineering-docs/` serves checked-in documentation; Markdown may download as text.
@@ -132,3 +132,16 @@ software regression success does not establish physical validation.
 See [design contracts](design-engineering.md), [Lab equations](simulation-lab.md),
 [analysis](engineering-analysis.md), [map boundaries](powertrain2.6.md),
 [measurement parity](measurement-migration.md) and [release readiness](../veus3/release-readiness.md).
+
+
+## Engineering refocus
+
+The original cutaway and configuration now share one SVG/active snapshot. Preset clicks
+atomically apply a protected unsaved draft. Basic controls precede collapsed advanced
+configuration/analysis; analysis modules load on disclosure. Internal workspace links
+preserve unsaved state, while in-page history changes do not remount measurements.
+The Lab has one explicit session acknowledgement mapped to its existing five flags,
+simple cycle selection and side/top-down scene views. Preview selection uses the existing
+replay analyser; confirmed investigation and report processing are unchanged. Aborts,
+request identity checks, HTTP errors and old-result clearing guard recording changes.
+[Workflow, defect analysis and camera boundaries](../refocus/workflow.md).

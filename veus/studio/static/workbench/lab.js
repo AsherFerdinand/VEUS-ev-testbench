@@ -1,3 +1,4 @@
+import { simplifyLab, labSummary } from "./lab-ui.js";
 import { mountModelComparison } from "./model-comparison.js";
 // Simulation is executed once by Python. This module only configures and replays results.
 import { state, loadLibrary, persist } from "./design-state.js";
@@ -178,7 +179,7 @@ export async function mountLab(root, { header, notice }) {
    .map(([id, v]) => `<option value="${id}">${v.label}</option>`)
    .join(
      "",
-   )}<option value="profile">Driving profile · sourced or illustrative</option></select></label><div id="lab-profile-controls" hidden><label>Driving profile<select id="lab-profile"><option value="">Choose a profile</option></select></label><label>Analysis mode<select id="lab-analysis-mode"><option value="predictive">Predictive achieved movement</option><option value="prescribed">Prescribed demand & feasibility</option></select></label><label>Optional distance-indexed route<select id="lab-route"><option value="">No route · time/speed profile only</option></select></label><label>Missing profile / route gradient policy<select id="lab-grade-policy"><option value="require">Require sourced gradient/elevation</option><option value="experiment_constant_assumption">Explicitly use experiment constant gradient</option></select></label><p id="lab-input-note" class="quiet">Loading lightweight profile catalogue…</p><details><summary>Import a custom CSV</summary><label>Input contract<select id="lab-import-kind"><option value="profile">Time-indexed speed profile</option><option value="route">Distance-indexed route</option></select></label><label>CSV<input id="lab-import-file" type="file" accept=".csv"></label><label>Source name<input id="lab-import-name" type="text" value="Custom engineering profile" maxlength="120"></label><div class="lab-field-grid"><label>Time column<input data-column="time" value="time_s"></label><label>Speed column<input data-column="speed" value="speed_ms"></label><label>Distance column<input data-column="distance" value="distance_m"></label><label>Latitude column<input data-column="latitude" value="latitude"></label><label>Longitude column<input data-column="longitude" value="longitude"></label><label>Elevation column<input data-column="elevation" value="elevation_m"></label><label>Gradient column<input data-column="grade" value=""></label><label>Speed unit<select id="lab-speed-unit"><option value="m/s">m/s</option><option value="km/h">km/h</option></select></label><label>Time unit<select id="lab-time-unit"><option value="s">s</option><option value="ms">ms</option></select></label><label>Distance unit<select id="lab-distance-unit"><option value="m">m</option><option value="km">km</option></select></label><label>Gradient unit<select id="lab-grade-unit"><option value="percent">percent</option><option value="fraction">fraction</option></select></label><label>Maximum time gap · s<input id="lab-max-gap-s" type="number" min=".01" max="60" step="any" value="2"></label><label>Maximum route gap · m<input id="lab-max-gap-m" type="number" min="1" max="10000" step="any" value="1000"></label></div><label class="lab-check"><input id="lab-import-confirm" type="checkbox"> I reviewed source origin, column names and units. Importing does not authenticate measurements.</label><button id="lab-import" type="button">Validate and import CSV</button><p class="quiet">Leave absent optional column names blank. Source hashes and original sampling are retained; bounded server validation rejects gaps/inconsistent units rather than truncating.</p></details><details><summary>Selected input source and coverage</summary><pre id="lab-input-source">No profile selected.</pre></details></div><p id="lab-mode-description" class="quiet"></p><div class="lab-field-grid"><label>Initial speed · km/h<input id="lab-initial" type="number" min="0" max="300" step="any" value="80" required></label><label id="lab-target-label">Target speed · km/h<input id="lab-target" type="number" min="0" max="300" step="any" value="80" required></label><label>Duration · s<input id="lab-duration" type="number" min=".01" max="1800" step="any" value="30" required></label><label>Gradient · %<input id="lab-grade" type="number" min="-30" max="30" step="any" value="0" required></label></div><details><summary>Numerical and braking settings</summary><div class="lab-field-grid"><label>Powertrain loss model<select id="lab-efficiency-model"><option value="">Legacy constant efficiency</option><option value="illustrative_map">Illustrative operating-point map</option></select></label><label>Timestep · s<input id="lab-dt" type="number" min=".01" max=".25" step=".01" value=".01" required></label><label>Braking demand · m/s²<input id="lab-brake" type="number" min=".1" max="12" step=".1" value="4" required></label></div><label class="lab-check"><input id="lab-regen" type="checkbox" checked> Enable regenerative braking within modelled limits</label></details><details id="lab-assumptions"><summary>Required model acknowledgements</summary>${ACKS.map((id, i) => `<label class="lab-check"><input type="checkbox" class="lab-ack" value="${id}">${ACK_TEXT[i]}</label>`).join("")}</details></form></div></details><button type="submit" form="lab-form" id="lab-run" class="primary">Run scenario <span aria-hidden="true">↗</span></button></div>
+   )}<option value="profile">Driving profile · sourced or illustrative</option></select></label><div id="lab-profile-controls" hidden><label>Driving profile<select id="lab-profile"><option value="">Choose a profile</option></select></label><label>Analysis mode<select id="lab-analysis-mode"><option value="predictive">Predictive achieved movement</option><option value="prescribed">Prescribed demand & feasibility</option></select></label><label>Optional distance-indexed route<select id="lab-route"><option value="">No route · time/speed profile only</option></select></label><label>Missing profile / route gradient policy<select id="lab-grade-policy"><option value="require">Require sourced gradient/elevation</option><option value="experiment_constant_assumption">Explicitly use experiment constant gradient</option></select></label><p id="lab-input-note" class="quiet">Loading lightweight profile catalogue…</p><details id="lab-import-data"><summary>Import Driving Data · custom CSV / route</summary><label>Input contract<select id="lab-import-kind"><option value="profile">Time-indexed speed profile</option><option value="route">Distance-indexed route</option></select></label><label>CSV<input id="lab-import-file" type="file" accept=".csv"></label><label>Source name<input id="lab-import-name" type="text" value="Custom engineering profile" maxlength="120"></label><div class="lab-field-grid"><label>Time column<input data-column="time" value="time_s"></label><label>Speed column<input data-column="speed" value="speed_ms"></label><label>Distance column<input data-column="distance" value="distance_m"></label><label>Latitude column<input data-column="latitude" value="latitude"></label><label>Longitude column<input data-column="longitude" value="longitude"></label><label>Elevation column<input data-column="elevation" value="elevation_m"></label><label>Gradient column<input data-column="grade" value=""></label><label>Speed unit<select id="lab-speed-unit"><option value="m/s">m/s</option><option value="km/h">km/h</option></select></label><label>Time unit<select id="lab-time-unit"><option value="s">s</option><option value="ms">ms</option></select></label><label>Distance unit<select id="lab-distance-unit"><option value="m">m</option><option value="km">km</option></select></label><label>Gradient unit<select id="lab-grade-unit"><option value="percent">percent</option><option value="fraction">fraction</option></select></label><label>Maximum time gap · s<input id="lab-max-gap-s" type="number" min=".01" max="60" step="any" value="2"></label><label>Maximum route gap · m<input id="lab-max-gap-m" type="number" min="1" max="10000" step="any" value="1000"></label></div><label class="lab-check"><input id="lab-import-confirm" type="checkbox"> I reviewed source origin, column names and units. Importing does not authenticate measurements.</label><button id="lab-import" type="button">Validate and import CSV</button><p class="quiet">Leave absent optional column names blank. Source hashes and original sampling are retained; bounded server validation rejects gaps/inconsistent units rather than truncating.</p></details><details><summary>Selected input source and coverage</summary><pre id="lab-input-source">No profile selected.</pre></details></div><p id="lab-mode-description" class="quiet"></p><div class="lab-field-grid"><label>Initial speed · km/h<input id="lab-initial" type="number" min="0" max="300" step="any" value="80" required></label><label id="lab-target-label">Target speed · km/h<input id="lab-target" type="number" min="0" max="300" step="any" value="80" required></label><label>Duration · s<input id="lab-duration" type="number" min=".01" max="1800" step="any" value="30" required></label><label>Gradient · %<input id="lab-grade" type="number" min="-30" max="30" step="any" value="0" required></label></div><details><summary>Numerical and braking settings</summary><div class="lab-field-grid"><label>Powertrain loss model<select id="lab-efficiency-model"><option value="">Legacy constant efficiency</option><option value="illustrative_map">Illustrative operating-point map</option></select></label><label>Timestep · s<input id="lab-dt" type="number" min=".01" max=".25" step=".01" value=".01" required></label><label>Braking demand · m/s²<input id="lab-brake" type="number" min=".1" max="12" step=".1" value="4" required></label></div><label class="lab-check"><input id="lab-regen" type="checkbox" checked> Enable regenerative braking within modelled limits</label></details><details id="lab-assumptions"><summary>Required model acknowledgements</summary>${ACKS.map((id, i) => `<label class="lab-check"><input type="checkbox" class="lab-ack" value="${id}">${ACK_TEXT[i]}</label>`).join("")}</details></form></div></details><button type="submit" form="lab-form" id="lab-run" class="primary">Run scenario <span aria-hidden="true">↗</span></button></div>
  <p id="lab-status" class="configuration-status" role="status">Ready to configure. Acknowledge model assumptions before your first run.</p></div>
  <div class="lab-results"><section class="lab-instrument"><div class="lab-identity"><span id="lab-result-name">YOUR DESIGN / NO RECORDED RUN</span><span id="lab-result-mode">AWAITING RUN</span></div><p id="lab-frozen-note" class="lab-frozen-note">Fictional vehicle body · illustrative model, not physically validated</p>
  <div class="lab-cockpit"><div class="lab-speed-panel"><span class="lab-kicker">VEHICLE SPEED</span><svg id="lab-speedometer" viewBox="0 0 240 220" role="img" aria-label="Achieved speed unavailable"><path class="lab-speed-track" d="M43 175 A96 96 0 1 1 197 175"/><path id="lab-speed-arc" pathLength="100" d="M43 175 A96 96 0 1 1 197 175"/><g id="lab-speed-ticks"></g><text id="lab-speed" x="120" y="125" text-anchor="middle">—</text><text class="lab-gauge-unit" x="120" y="149" text-anchor="middle">km/h</text><text id="lab-acceleration" x="120" y="178" text-anchor="middle">ACHIEVED</text></svg><p id="lab-speed-limit" class="lab-instrument-note">Recorded longitudinal speed</p></div>
@@ -262,7 +263,8 @@ export async function mountLab(root, { header, notice }) {
             ? data.detail
             : JSON.stringify(data.detail),
         );
-      if (disposed) return;
+      if (disposed || inputControllers[kind] !== controller) return;
+      controller.ready = true;
       if (kind === "profile") {
         profile = data;
         applyProfileSettings(data);
@@ -784,11 +786,21 @@ export async function mountLab(root, { header, notice }) {
     $("lab-kind").value = "constant_speed";
     scenarioSelection();
   });
+  simplifyLab(root);
   defaults();
   vehicleMenu();
   on($("lab-vehicle"), "change", () => {
     const record = state.library.find((r) => r.id === $("lab-vehicle").value);
     if (!record) return;
+    if (
+      state.dirty &&
+      !confirm(
+        "Discard unsaved changes and load this saved vehicle? Saved records are not overwritten.",
+      )
+    ) {
+      vehicleMenu();
+      return;
+    }
     const previous = {
       design: state.design,
       activeId: state.activeId,
@@ -1183,6 +1195,9 @@ export async function mountLab(root, { header, notice }) {
     displayMetrics = {
       peakPower: Math.max(0, ...rows.map((r) => r.battery_power_w)),
     };
+    labSummary(root, value);
+    state.lastSimulation = value;
+    window.dispatchEvent(new Event("veus:run"));
     retainedResult = value;
     clock = new window.VEUSReplayController(recording(rows));
     $("lab-playback-rate").value = "1";
@@ -1260,16 +1275,31 @@ export async function mountLab(root, { header, notice }) {
       (x) => x.value,
     );
     if (ack.length !== ACKS.length) {
-      $("lab-config").open = true;
-      $("lab-assumptions").open = true;
+      $("model-ack").focus();
       $("lab-status").textContent =
-        "Acknowledge all listed model assumptions before running.";
+        "Confirm the single model-limitations acknowledgement checkbox above before running. Technical details remain under Advanced Simulation Settings.";
       return;
     }
     const kind = $("lab-kind").value;
     if (kind === "profile" && !profile) {
       $("lab-status").textContent =
         "Select or import a validated driving profile first.";
+      return;
+    }
+    if (
+      kind === "profile" &&
+      ["profile", "route"].some((source) => {
+        const selected = $("lab-" + source).value;
+        return (
+          selected &&
+          selected !== "imported" &&
+          inputControllers[source] &&
+          !inputControllers[source].ready
+        );
+      })
+    ) {
+      $("lab-status").textContent =
+        "Selected driving input is loading or unavailable. Wait for it to load or select another source; the previous cycle will not be reused.";
       return;
     }
     const experiment = {
@@ -1318,7 +1348,11 @@ export async function mountLab(root, { header, notice }) {
       if (disposed || token !== sequence) return;
       install(value);
       $("lab-status").textContent =
-        "Completed. Replay reads stored samples; it does not rerun the experiment.";
+        (value.summary.requested_motion_infeasible_duration_s ||
+          value.summary.requested_infeasible_duration_s ||
+          0) > 0
+          ? "Requested cycle INFEASIBLE; replay shows achieved movement and limits."
+          : "Completed. Replay reads stored samples; it does not rerun the experiment.";
     } catch (e) {
       if (e.name !== "AbortError")
         $("lab-status").textContent = "Run unavailable: " + e.message;

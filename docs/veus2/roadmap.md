@@ -70,3 +70,12 @@ presets, source data and measurement safeguards remain. See [release readiness](
 and [evidence](../veus3/evidence/README.md). Root project licensing, clean Windows and
 non-Chromium browser checks remain outstanding. No merge or release without explicit
 authorization. Stop after 3.0 release preparation.
+
+
+## Engineering refocus after 3.0 RC1
+
+Four primary workspaces: Vehicle Architecture + configuration, Simulation Lab,
+Measurements & Validation, optional EV Challenges. No new physics model or release.
+One vehicle state, progressive controls, original-signal previews with retained consent,
+and scenario-specific camera views. [Workflow and integrity boundaries](../refocus/workflow.md),
+[evidence](../refocus/evidence/README.md). Stop after this refocus; no main merge or release.

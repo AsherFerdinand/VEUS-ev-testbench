@@ -17,6 +17,7 @@ const assert = require("node:assert/strict"),
     errors = [],
     sockets = [],
     requests = [];
+  require("./advanced-disclosure.cjs")(page);
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("websocket", (w) => sockets.push(w.url()));
   page.on("request", (r) => requests.push(r.url()));
@@ -24,6 +25,19 @@ const assert = require("node:assert/strict"),
   const out = process.env.VEUS_SCREENSHOTS || "/tmp/veus21-screens";
   fs.mkdirSync(out, { recursive: true });
   await page.goto(base);
+  await page.locator("#basic-capacity").waitFor();
+  // Keep the historical analytical fixture explicit; the new default S1 journey is
+  // covered separately in refocus.cjs. No mass or export assertions are relaxed.
+  const fixture = await (
+    await page.request.get(base + "/api/workbench/v2/design")
+  ).json();
+  await page.evaluate(async (d) => {
+    const { state } = await import("/static/workbench/design-state.js");
+    state.design = d;
+    state.evaluation = null;
+    window.dispatchEvent(new Event("veus:design"));
+  }, fixture);
+  await page.click("#tab-anatomy");
   await page.locator("#component-inspector h2").waitFor();
   assert.equal(
     await page
@@ -133,7 +147,7 @@ const assert = require("node:assert/strict"),
     3,
   );
   await page.locator("#tab-anatomy").focus();
-  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("End");
   assert.equal(
     await page
       .locator('[role="tab"][aria-selected="true"]')
@@ -290,7 +304,7 @@ const assert = require("node:assert/strict"),
   assert.equal(await page.locator("#tab-optimization").count(), 0);
   await page.goto(base + "/?workspace=optimization");
   await page.locator("#compare-designs").waitFor({ state: "attached" });
-  assert.equal(new URL(page.url()).searchParams.get("workspace"), "design");
+  assert.equal(new URL(page.url()).searchParams.get("workspace"), "anatomy");
   await page.click("#tab-measurements");
   await page.selectOption("#measurement-recording", "ved-10-1567-full");
   await page.waitForFunction(() =>
@@ -308,7 +322,7 @@ const assert = require("node:assert/strict"),
   await page.goBack();
   assert.equal(
     await page.locator("body").getAttribute("data-workspace"),
-    "design",
+    "anatomy",
   );
   await page.goForward();
   assert.equal(
@@ -327,13 +341,7 @@ const assert = require("node:assert/strict"),
   for (const theme of ["light", "dark"]) {
     if ((await page.locator("html").getAttribute("data-theme")) !== theme)
       await page.click("#theme-toggle");
-    for (const key of [
-      "anatomy",
-      "challenges",
-      "design",
-      "simulation",
-      "measurements",
-    ]) {
+    for (const key of ["anatomy", "challenges", "simulation", "measurements"]) {
       await page.click("#tab-" + key);
       await page.waitForTimeout(100);
       assert.equal(
@@ -361,13 +369,7 @@ const assert = require("node:assert/strict"),
   assert.equal(await page.locator("html").getAttribute("data-theme"), "dark");
   for (const width of [1024, 820, 390]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const key of [
-      "anatomy",
-      "challenges",
-      "design",
-      "simulation",
-      "measurements",
-    ]) {
+    for (const key of ["anatomy", "challenges", "simulation", "measurements"]) {
       await page.click("#tab-" + key);
       assert.equal(
         await page.evaluate(
@@ -430,7 +432,7 @@ const assert = require("node:assert/strict"),
   const result = {
     status: "PASS",
     screenshots: out,
-    workspaces: 5,
+    workspaces: 4,
     themes: ["light", "dark"],
     widths: [1366, 1024, 820, 390],
     keyboard_components: true,

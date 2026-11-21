@@ -75,12 +75,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
     await page.waitForLoadState("networkidle");
     let loaded = Date.now() - start;
     const resources = await page.evaluate(() =>
-        performance
-          .getEntriesByType("resource")
-          .map((x) => ({
-            path: new URL(x.name).pathname,
-            bytes: x.encodedBodySize,
-          })),
+        performance.getEntriesByType("resource").map((x) => ({
+          path: new URL(x.name).pathname,
+          bytes: x.encodedBodySize,
+        })),
       ),
       n = urls.length,
       before = (await cdp.send("Performance.getMetrics")).metrics;
@@ -101,7 +99,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
         }, i),
       );
     const editStart = urls.length;
-    await page.click("#tab-design");
+    await page.click("#tab-anatomy");
     await page.locator("#configuration-status").waitFor();
     await page.waitForFunction(
       () =>
